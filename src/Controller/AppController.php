@@ -3,16 +3,21 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class AppController extends AbstractController
 {
-    #[Route('/app', name: 'app')]
-    public function index(): Response
+    #[Route('/', name: 'app', methods: 'GET')]
+    public function __invoke(Request $request): Response
     {
-        return $this->render('app/index.html.twig', [
-            'controller_name' => 'AppController',
+        return $this->render('app/index.html.twig',[
+            'nome' => 'Arthur',
+            'headTitle' => '- App',
+            'inicioActive' =>  'active',
+            'vendasActive' =>  '',
+            'produtosActive' =>  '',
         ]);
     }
 }
