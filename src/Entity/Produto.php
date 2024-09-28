@@ -17,11 +17,8 @@ class Produto
     #[ORM\Column(length: 100)]
     private ?string $nome = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $descricao = null;
-
-    #[ORM\ManyToOne(inversedBy: 'produtos')]
-    private ?Categoria $categoria_id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $data_cadastro = null;
@@ -34,6 +31,9 @@ class Produto
 
     #[ORM\Column(nullable: true)]
     private ?int $valor = null;
+
+    #[ORM\ManyToOne(inversedBy: 'produtos')]
+    private ?Categoria $categoria_id = null;
 
     public function getId(): ?int
     {
@@ -57,21 +57,9 @@ class Produto
         return $this->descricao;
     }
 
-    public function setDescricao(string $descricao): static
+    public function setDescricao(?string $descricao): static
     {
         $this->descricao = $descricao;
-
-        return $this;
-    }
-
-    public function getCategoriaId(): ?Categoria
-    {
-        return $this->categoria_id;
-    }
-
-    public function setCategoriaId(?Categoria $categoria_id): static
-    {
-        $this->categoria_id = $categoria_id;
 
         return $this;
     }
@@ -120,6 +108,18 @@ class Produto
     public function setValor(?int $valor): static
     {
         $this->valor = $valor;
+
+        return $this;
+    }
+
+    public function getCategoriaId(): ?Categoria
+    {
+        return $this->categoria_id;
+    }
+
+    public function setCategoriaId(?Categoria $categoria_id): static
+    {
+        $this->categoria_id = $categoria_id;
 
         return $this;
     }

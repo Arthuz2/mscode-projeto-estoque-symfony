@@ -18,7 +18,7 @@ class CadastrarProdutoController extends AbstractController
         private CategoriaRepository $categoriaRepository
     ){}
 
-    #[Route('/produtos/cadastrar/', name: 'cadastrar_produto_show')]
+    #[Route('/produtos/cadastrar', name: 'cadastrar_produto_show', methods: 'GET')]
     public function index(): Response
     {
         return $this->render('app/produto/cadastrar_editar.html.twig', [
@@ -28,12 +28,12 @@ class CadastrarProdutoController extends AbstractController
             'produtosActive' => 'active',
             'title' => 'Novo',
             'cadastrar' => true,
-            'produto' => '',
-            'categorias' => $this->categoriaRepository->findAll()
+            'produto' => [],
+            'categorias' => $this->categoriaRepository->findAll(),
         ]);
     }
 
-    #[Route('categorias/cadastrar', name: 'cadastrar_produto_salvar', methods: 'POST')]
+    #[Route('/produtos/cadastrar', name: 'cadastrar_produto_salvar', methods: 'POST')]
     public function salvar(Request $request): Response
     {
         $nomeProduto = $request->request->get('nome');
@@ -41,15 +41,22 @@ class CadastrarProdutoController extends AbstractController
             $this->addFlash('danger', 'Nome deve ter no máximo 100 caracteres!');
             return $this->redirectToRoute('cadastrar_produto_show');
         }
-
+        
         $produtoExistente = $this->produtoRepository->findBy(['nome' => $nomeProduto]);
         if ($produtoExistente) {
             $this->addFlash('danger', "Produto com nome \"{$nomeProduto}\" já existe!");
             return $this->redirectToRoute('cadastrar_produto_show');
         }
 
+        $request = $request->request;
+
         $produto = new Produto();
         $produto->setNome($nomeProduto);
+        $produto->setDescricao($request->get('descricao'));
+        $produto->setCategoriaId($request->get('categoriaId'));
+        $produto->setQuantidadeInicial($request->get('quantidade'));
+        $produto->setQuantidadeDisponivel($request->get('quantidade'));
+        $produto->setValor($request->get('valor'));
 
         $this->produtoRepository->salvar($produto);
 

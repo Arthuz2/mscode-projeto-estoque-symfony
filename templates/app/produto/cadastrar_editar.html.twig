@@ -3,7 +3,8 @@
 {% block content %}
 	<div class="container py-5">
 		<div class="mb-4">
-			<h1>{{ title }}produto</h1>
+			<h1>{{ title }}
+				produto</h1>
 		</div>
 		<div class="w-50 mt-2">
 			{% include "mensagens.html.twig" %}
@@ -21,8 +22,12 @@
 						<label for="categoriaId" class="form-label">Categoria:</label>
 						<select class="form-select" aria-label="Default select example" name="categoriaId" id="categoriaId">
 							{% for categoria in categorias %}
-								{% if categoria.id == produto.categoria_id %}
-									<option selected>{{categoria.nome}}</option>
+								{% if produto %}
+									{% if categoria.id == produto.categoria_id %}
+										<option selected>{{categoria.nome}}</option>
+									{% else %}
+										<option value="{{categoria.id}}">{{categoria.nome}}</option>
+									{% endif %}
 								{% else %}
 									<option value="{{categoria.id}}">{{categoria.nome}}</option>
 								{% endif %}
@@ -31,31 +36,14 @@
 					</div>
 					<div class="mb-3 col-4">
 						<label for="quantidade" class="form-label">Quantidade:</label>
-						<input type="number"
-                        {% if cadastrar == true %}
-                            ''
-                        {% else %}
-                            'disabled'
-                        {% endif %} class="form-control" id="quantidade" name="quantidade" value="{{produto.quantidade_disponivel}}">
+						<input type="number" class="form-control" id="quantidade" name="quantidade" value="{{ cadastrar ? '' : produto.quantidade_disponivel}}">
 					</div>
 					<div class="mb-3 col-4">
 						<label for="valor" class="form-label">Valor:</label>
-						<input type="text" class="form-control" id="valor" name="valor" value="{{produto.valor}}">
+						<input type="text" class="form-control" id="valor" name="valor" value="{{ cadastrar ? '' : produto.valor }}">
 					</div>
 				</div>
-				<button type="submit" class="btn btn-primary">
-			<?php
-        if (isset($data['produto'])) {
-          echo 'Atualizar';
-        } else {
-          echo 'Salvar';
-        } ?>
-        {% if cadastrar == true %}
-            
-        {% else %}
-            
-        {% endif %}
-				</button>
+				<button type="submit" class="btn btn-primary">{{ cadastrar ? 'Salvar' : 'Atualizar' }}</button>
 			</form>
 		</div>
 	</div>
