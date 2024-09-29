@@ -28,9 +28,9 @@
 							<th scope='row'>{{ produto.id }}</th>
 							<td scope='row'>{{ produto.nome }}</td>
 							<td scope='row'>{{ produto.descricao }}</td>
-							<td scope='row'>{{ produto.categoria_id }}</td>
+							<td scope='row'>{{ produto.getCategoriaId.getId }}</td>
 							<td scope='row'>{{ produto.valor }}</td>
-							<td scope='row'>{{ produto.quantidade_disponivel }}</td>
+							<td scope='row'>{{ produto.getQuantidadeDisponivel }}</td>
 							<td class="col-2 text-align-right">
 								<a href='/produto/add/{{ produto.id }}' class="btn btn-primary btn-sm">
 									{{ ux_icon('bi:plus') }}

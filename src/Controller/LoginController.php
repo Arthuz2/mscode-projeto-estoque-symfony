@@ -12,6 +12,10 @@ class LoginController extends AbstractController
     #[Route(path: '/login', name: 'login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        // if (empty($_SESSION['_sf2_meta'])){
+        //     return $this->redirectToRoute('app');
+        // }
+        
         // pega o erro de login se houver um
         $error = $authenticationUtils->getLastAuthenticationError();
         
@@ -24,11 +28,9 @@ class LoginController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/logout', name: 'logout')]
-    public function logout(): void
+    #[Route(path: '/logout', name: 'app_logout')]
+    public function logout(): Response
     {
-        $_SESSION['userLogged'] = false;
-        
-        $this->redirect('login');
+        return $this->redirect('login');
     }
 }

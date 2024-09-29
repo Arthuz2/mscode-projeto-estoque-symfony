@@ -13,19 +13,16 @@ class CadastrarCategoriaController extends AbstractController
 {
     public function __construct(
         private CategoriaRepository $categoriaRepository,
-    ) {
-    }
+    ) {}
 
     #[Route('categorias/cadastrar', name: 'cadastrar_categoria_show', methods: 'GET')]
     public function show(): Response
     {
-        return $this->render('app/categoria/cadastrar_editar.html.twig',[
+        return $this->render('app/categoria/cadastrar_editar.html.twig', [
             'headTitle' => '- Categorias',
             'title' => 'Nova',
-            'inicioActive' => '',
-            'vendasActive' => '',
-            'produtosActive' => 'active',
-            'cadastrar' => false,
+            'active' => 'produtos',
+            'cadastrar' => true,
             'title' => 'Nova',
             'nome' => '',
             'editOrSave' => 'salvar'

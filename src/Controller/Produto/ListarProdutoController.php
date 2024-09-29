@@ -18,9 +18,7 @@ class ListarProdutoController extends AbstractController
     {
         return $this->render('app/produto/listar.html.twig', [
             'headTitle' => '- Produtos',
-            'inicioActive' => '',
-            'vendasActive' => '',
-            'produtosActive' => 'active',
+            'active' => 'produtos',
             'produtos' => $this->produtoRepository->findAll(),
         ]);
     }

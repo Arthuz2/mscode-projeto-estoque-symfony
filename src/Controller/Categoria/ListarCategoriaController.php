@@ -11,18 +11,15 @@ class ListarCategoriaController extends AbstractController
 {
     public function __construct(
         private CategoriaRepository $categoriaRepository,
-    ) {
-    }
+    ) {}
 
-    #[Route('categorias', name: 'listar_categorias', methods: 'GET')]
+    #[Route('categorias', name: 'listar_categorias')]
     public function show(): Response
     {
         return $this->render('app/categoria/listar.html.twig', [
             'categorias' => $this->categoriaRepository->findAll(),
             'headTitle' => '- Categorias',
-            'inicioActive' => '',
-            'vendasActive' => '',
-            'produtosActive' => 'active',
+            'active' => 'produtos',
         ]);
     }
 }

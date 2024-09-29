@@ -2,7 +2,6 @@
 
 namespace App\Controller\Categoria;
 
-use App\Entity\Categoria;
 use App\Repository\CategoriaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,33 +12,33 @@ class EditarCategoriaController extends AbstractController
 {
     public function __construct(
         private CategoriaRepository $categoriaRepository,
-    ) {
-    }
+    ) {}
 
-    #[Route('/categorias/editar/{id}', name: 'editar_categoria_show', methods: 'GET')]
+    #[Route('/categoria/editar/{id}', name: 'editar_categoria_show', methods: 'GET')]
     public function index(int $id): Response
     {
-        $categoria = new Categoria();
-        $categoria = $this->categoriaRepository->findBy(['id' => $id]);
-        $nomeCategoria =  $categoria[0]->getNome();
+        $categoria = $this->categoriaRepository->find($id);
 
         return $this->render('app/categoria/cadastrar_editar.html.twig', [
             'headTitle' => '- Categorias',
-            'inicioActive' => '',
-            'vendasActive' => '',
-            'produtosActive' => 'active',
-            'cadastrar' => true,
+            'active' => 'produtos',
+            'cadastrar' => false,
             'title' => 'Editar',
-            'nome' => $nomeCategoria,
-            'editOrSave' => 'Atualizar',
+            'categoria' => $categoria,
         ]);
     }
 
-    #[Route('/categorias/editar', name: 'editar_categoria_salvar', methods: 'GET')]
-    public function salvar(Request $request): Response
+    #[Route('/categoria/editar/salvar/{id}', name: 'editar_categoria_salvar')]
+    public function editar(Request $request, int $id): Response
     {
         $nomeCategoria = $request->request->get('nome');
-        dd("auqi");
+
+        $categoria = $this->categoriaRepository->find($id);
+
+        $categoria->setNome($nomeCategoria);
+
+        $this->categoriaRepository->getEntityManager()->flush();
+
         return $this->redirectToRoute('listar_categorias');
     }
 }

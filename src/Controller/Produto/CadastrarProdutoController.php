@@ -16,19 +16,16 @@ class CadastrarProdutoController extends AbstractController
     public function __construct(
         private ProdutoRepository $produtoRepository,
         private CategoriaRepository $categoriaRepository
-    ){}
+    ) {}
 
     #[Route('/produtos/cadastrar', name: 'cadastrar_produto_show', methods: 'GET')]
     public function index(): Response
     {
         return $this->render('app/produto/cadastrar_editar.html.twig', [
             'headTitle' => '- Produtos',
-            'inicioActive' => '',
-            'vendasActive' => '',
-            'produtosActive' => 'active',
+            'active' => 'produtos',
             'title' => 'Novo',
             'cadastrar' => true,
-            'produto' => [],
             'categorias' => $this->categoriaRepository->findAll(),
         ]);
     }
@@ -41,7 +38,7 @@ class CadastrarProdutoController extends AbstractController
             $this->addFlash('danger', 'Nome deve ter no máximo 100 caracteres!');
             return $this->redirectToRoute('cadastrar_produto_show');
         }
-        
+
         $produtoExistente = $this->produtoRepository->findBy(['nome' => $nomeProduto]);
         if ($produtoExistente) {
             $this->addFlash('danger', "Produto com nome \"{$nomeProduto}\" já existe!");
@@ -50,10 +47,12 @@ class CadastrarProdutoController extends AbstractController
 
         $request = $request->request;
 
+        $categoria = $this->categoriaRepository->findBy(['id' => $request->get('categoriaId')])[0];
+
         $produto = new Produto();
         $produto->setNome($nomeProduto);
         $produto->setDescricao($request->get('descricao'));
-        $produto->setCategoriaId($request->get('categoriaId'));
+        $produto->setCategoriaId($categoria);
         $produto->setQuantidadeInicial($request->get('quantidade'));
         $produto->setQuantidadeDisponivel($request->get('quantidade'));
         $produto->setValor($request->get('valor'));

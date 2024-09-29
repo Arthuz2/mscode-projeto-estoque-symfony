@@ -12,12 +12,14 @@ class AppController extends AbstractController
     #[Route('/', name: 'app', methods: 'GET')]
     public function __invoke(Request $request): Response
     {
-        return $this->render('app/index.html.twig',[
+        // if (empty($_SESSION['_sf2_attributes']['_csrf/authenticate'])){
+        //     return $this->redirectToRoute('login');
+        // }
+        
+        return $this->render('app/index.html.twig', [
             'nome' => 'Arthur',
             'headTitle' => '- App',
-            'inicioActive' =>  'active',
-            'vendasActive' =>  '',
-            'produtosActive' =>  '',
+            'active' => 'inicio',
         ]);
     }
 }
