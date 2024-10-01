@@ -17,8 +17,8 @@
 						<th scope="col">Nome</th>
 						<th scope="col">Descrição</th>
 						<th scope="col">Categoria Id</th>
-						<th scope="col">Valor</th>
 						<th scope="col">Qtd. Disponível</th>
+						<th scope="col">Valor</th>
 						<th scope="col-2 text-align-right">Actions</th>
 					</tr>
 				</thead>
@@ -29,17 +29,15 @@
 							<td scope='row'>{{ produto.nome }}</td>
 							<td scope='row'>{{ produto.descricao }}</td>
 							<td scope='row'>{{ produto.getCategoriaId.getId }}</td>
-							<td scope='row'>{{ produto.valor }}</td>
 							<td scope='row'>{{ produto.getQuantidadeDisponivel }}</td>
-							<td class="col-2 text-align-right">
-								<a href='/produto/add/{{ produto.id }}' class="btn btn-primary btn-sm">
-									{{ ux_icon('bi:plus') }}
-								</a>
+							<td scope='row'>R$ {{ produto.valor }},00</td>
+							<td class="col-2">
+								<a href='/produto/add/{{ produto.id }}' class="btn btn-primary btn-sm"><i class="bi bi-plus"></i></a>
 								<a href="/produto/editar/{{ produto.id }}" class="btn btn-secondary btn-sm">
-									{{ ux_icon('bi:pencil') }}
+									<i class="bi bi-pencil"></i>
 								</a>
 								<a href="/produto/excluir/{{ produto.id }}" class="btn btn-danger btn-sm">
-									{{ ux_icon('bi:x') }}
+									<i class="bi bi-x"></i>
 								</a>
 								<a href="/produto/vender/{{ produto.id }}" class="btn btn-primary btn-sm">Vender</a>
 							</td>
