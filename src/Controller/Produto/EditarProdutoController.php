@@ -40,7 +40,13 @@ class EditarProdutoController extends AbstractController
         $nomeProduto = $request->request->get('nome');
         if (strlen($nomeProduto) > 100) {
             $this->addFlash('danger', 'Nome deve ter no máximo 100 caracteres!');
-            return $this->redirectToRoute('cadastrar_produto_show');
+            return $this->redirectToRoute('editar_produto_show',  ['id' => $id]);
+        }
+
+        $produtoExiste = $this->produtoRepository->findOneBy(['nome' => $nomeProduto]);
+        if ($produtoExiste && $produtoExiste->getId() != $id) {
+            $this->addFlash('danger', 'Já Existe um produto com este nome!');
+            $this->redirectToRoute('editar_produto_show', ['id' => $id]);
         }
 
         $request = $request->request;

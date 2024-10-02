@@ -37,9 +37,9 @@ class EditarCategoriaController extends AbstractController
         
         $categoriaExiste = $this->categoriaRepository->findOneBy(['nome' => $nomeCategoria]);
 
-        if($categoriaExiste){
+        if($categoriaExiste  && $categoriaExiste->getId() != $id){
             $this->addFlash('danger', 'Essa categoria já existe! Escolha outro nome!');
-            return $this->redirectToRoute('editar_categoria_show');
+            return $this->redirectToRoute('editar_categoria_show', ['id' => $id]);
         }
 
         $categoria->setNome($nomeCategoria);
