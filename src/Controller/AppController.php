@@ -17,7 +17,6 @@ class AppController extends AbstractController
         // }
         
         return $this->render('app/index.html.twig', [
-            'nome' => 'Arthur',
             'headTitle' => '- App',
             'active' => 'inicio',
         ]);
