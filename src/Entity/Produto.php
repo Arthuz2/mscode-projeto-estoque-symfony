@@ -35,6 +35,12 @@ class Produto
     #[ORM\ManyToOne(inversedBy: 'produtos')]
     private ?Categoria $categoria_id = null;
 
+    #[ORM\Column]
+    private ?int $valor_unitario = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $atualizado_em = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +126,30 @@ class Produto
     public function setCategoriaId(?Categoria $categoria_id): static
     {
         $this->categoria_id = $categoria_id;
+
+        return $this;
+    }
+
+    public function getValorUnitario(): ?int
+    {
+        return $this->valor_unitario;
+    }
+
+    public function setValorUnitario(int $valor_unitario): static
+    {
+        $this->valor_unitario = $valor_unitario;
+
+        return $this;
+    }
+
+    public function getAtualizadoEm(): ?\DateTimeInterface
+    {
+        return $this->atualizado_em;
+    }
+
+    public function setAtualizadoEm(\DateTimeInterface $atualizado_em): static
+    {
+        $this->atualizado_em = $atualizado_em;
 
         return $this;
     }

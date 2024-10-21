@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CategoriaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoriaRepository::class)]
@@ -23,6 +24,12 @@ class Categoria
      */
     #[ORM\OneToMany(targetEntity: Produto::class, mappedBy: 'categoria_id')]
     private Collection $produtos;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $atualizado_em = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $criado_em = null;
 
     public function __construct()
     {
@@ -72,6 +79,30 @@ class Categoria
                 $produto->setCategoriaId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAtualizadoEm(): ?\DateTimeInterface
+    {
+        return $this->atualizado_em;
+    }
+
+    public function setAtualizadoEm(\DateTimeInterface $atualizado_em): static
+    {
+        $this->atualizado_em = $atualizado_em;
+
+        return $this;
+    }
+
+    public function getCriadoEm(): ?\DateTimeInterface
+    {
+        return $this->criado_em;
+    }
+
+    public function setCriadoEm(\DateTimeInterface $criado_em): static
+    {
+        $this->criado_em = $criado_em;
 
         return $this;
     }
