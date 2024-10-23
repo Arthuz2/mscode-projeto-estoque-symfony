@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UsuarioRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -32,17 +30,6 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
-
-    /**
-     * @var Collection<int, Carrinho>
-     */
-    #[ORM\ManyToMany(targetEntity: Carrinho::class, mappedBy: 'usuario_id')]
-    private Collection $carrinhos;
-
-    public function __construct()
-    {
-        $this->carrinhos = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -117,32 +104,5 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    /**
-     * @return Collection<int, Carrinho>
-     */
-    public function getCarrinhos(): Collection
-    {
-        return $this->carrinhos;
-    }
-
-    public function addCarrinho(Carrinho $carrinho): static
-    {
-        if (!$this->carrinhos->contains($carrinho)) {
-            $this->carrinhos->add($carrinho);
-            $carrinho->addUsuarioId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCarrinho(Carrinho $carrinho): static
-    {
-        if ($this->carrinhos->removeElement($carrinho)) {
-            $carrinho->removeUsuarioId($this);
-        }
-
-        return $this;
     }
 }
