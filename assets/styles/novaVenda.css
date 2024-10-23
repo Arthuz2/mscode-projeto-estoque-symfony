@@ -1,0 +1,242 @@
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  
+}
+
+nav{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;}
+.h2{
+ 
+    margin-left: 20px;
+}
+main{
+    background-color: #D93539;
+    height: 100vh;
+}
+
+.nav-item a{
+    color: #D93539;
+    
+}
+.teste{
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.144);
+}
+.nav-item a:hover{
+    color: #f1272a;
+}
+
+
+.sair{
+    background-color: #ece9e9;
+    color: #f1272a;
+    text-decoration: none;
+    padding: 5px 30px;
+    border: 1px solid  #ece9e9;
+    border-radius: 10px;
+}
+
+.sair:hover{
+    background-color: #DCDBDB;
+    border: 1px solid #DCDBDB;
+}
+
+
+.card-area{
+    display: flex;
+    justify-content: space-around;
+
+}
+
+.card-item {
+    width: 700px;
+    height: 110px;
+    background-color: white;
+    margin-right: 20px;
+    margin-left: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid white;
+    box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.233);
+}
+
+.card-body{
+    display: flex;
+    justify-content: space-between;
+}
+.card-right{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card-right img{
+    width: 30px;
+}
+.resultado{
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.formulario{
+    margin: 30px 20px 0 20px;
+}
+
+.formulario-area{
+    display: flex;
+    justify-content: space-between;
+}
+.texto{
+    font-weight: bold;
+    color: white;
+}
+
+.Finalizar-button{
+    background-color: #ece9e9;
+    color: #D93539;
+    border: 1px solid #ece9e9;
+   width: 700px;
+   margin-left: 30px;
+   border-radius: 8px;
+   cursor: pointer;
+}
+
+ .tabela{
+    margin: 30px 20px 0px 20px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.227);
+}
+
+table{
+    width: 100%;
+    background-color: white;
+
+    border-radius: 8px;
+    box-sizing: 5px 5px 5px  rgba(0, 0, 0, 0.312);
+}
+
+th{
+    padding: 20px;
+}
+td{
+    padding: 10px;
+}
+
+.dividi{
+    display: flex;
+    justify-content: space-between;
+}
+
+.tabela-topo{
+    padding: 20px;
+}
+.tabela-conteudo{
+    background-color: #dcdbdb8d;
+  
+}
+
+.input-nunber{
+    width: 70px;
+    padding: 2px;
+    border: 1px solid #DCDBDB;
+    border-radius: 85x;
+    outline: 0;
+}
+
+
+.icone{
+    width: 35px;
+    margin-left: 4px;
+}
+
+
+
+/* Responsividade para telas menores que 520px */
+@media (max-width: 597px) {
+
+    main{
+        height: auto;
+        padding-bottom:40px ;
+    }
+  .card-area{
+    flex-wrap: wrap;
+  }
+
+  .card-item{
+    margin: 20px;
+  }
+
+ 
+  table{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+  }
+    
+  .tabela-topo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+
+  .tabela-conteudo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  th{
+    padding: 10px;
+  }
+
+  .input-nunber{
+    width: 46px;
+  }
+
+ 
+ 
+}
+
+/* Ajuste adicional para 320px */
+@media (max-width: 320px) {
+  
+
+    main{
+        height: auto;
+        padding-bottom:40px ;
+    }
+
+    table{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+      }
+        
+      .tabela-topo{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+      }
+    
+      .tabela-conteudo{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+    
+      th{
+        padding: 10px;
+      }
+
+      .input-nunber{
+        width: 36px;
+      }
+}
+
