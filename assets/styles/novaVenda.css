@@ -1,0 +1,271 @@
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  
+}
+
+/* css gerais */
+nav{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+main{
+    margin-top: 20px;
+}
+
+table{
+    width: 100%;
+    background-color: white;
+
+    border-radius: 8px;
+    box-sizing: 5px 5px 5px  rgba(0, 0, 0, 0.312);
+}
+
+thead{
+    background-color: #D93539;
+    color: white;
+}
+th{
+    padding: 20px;
+}
+td{
+    padding: 10px;
+}
+
+
+/* css especificos */
+.h2{
+ 
+    margin-left: 20px;
+}
+
+
+
+/*  cabeçalho */
+.pdv,
+.nav-item a{
+    color: #D93539;
+    
+}
+.area-nav{
+   box-shadow: 5px 2px 10px rgba(0, 0, 0, 0.085);
+
+}
+.nav-item a:hover{
+    color: #f1272a;
+}
+
+
+.sair{
+    background-color: #ece9e9;
+    color: #f1272a;
+    text-decoration: none;
+    padding: 5px 30px;
+    border: 1px solid  #ece9e9;
+    border-radius: 10px;
+}
+
+.sair:hover{
+    background-color: #DCDBDB;
+    border: 1px solid #DCDBDB;
+}
+
+
+/* card de items */
+.card-area{
+    display: flex;
+    justify-content: space-around;
+
+}
+
+.card-item{
+    width: 700px;
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    margin-left: 20px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.137);
+}
+
+.card-top{
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #D93539;
+    border-radius: 6px 6px 0px 0px;
+}
+
+.card-bottom{
+    flex: 1;
+    background-color: #ece9e9;
+}
+.card-titulo{
+    color: white;
+    margin-left: 20px;
+    
+    
+}
+.resultado{
+    font-weight: bold;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.card-body{
+    display: flex;
+    justify-content: space-between;
+}
+.card-right{
+    margin-right: 20px;
+}
+.card-right img{
+    width: 30px;
+}
+
+/* formulario de cliente */
+.formulario{
+    margin: 30px 20px 0px 20px;
+}
+
+.formulario-area{
+    display: flex;
+    justify-content: space-between;
+}
+.texto{
+    font-weight: bold;
+    color: white;
+}
+
+.Finalizar-button{
+    background-color: #D93539;
+    color: white;
+    border: 1px solid #ece9e9;
+   width: 700px;
+   margin-left: 30px;
+   border-radius: 8px;
+   cursor: pointer;
+}
+
+/* tabela */
+.tabela{
+    margin: 30px 20px 0px 20px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.227);
+}
+
+
+.dividi{
+    display: flex;
+    justify-content: space-between;
+}
+
+.tabela-topo{
+    padding: 20px;
+}
+.tabela-conteudo{
+    background-color: #dcdbdb8d;
+  
+}
+
+.input-nunber{
+    width: 70px;
+    padding: 2px;
+    border: 1px solid #DCDBDB;
+    border-radius: 85x;
+    outline: 0;
+}
+
+
+.icone{
+    width: 35px;
+    margin-left: 4px;
+}
+
+
+
+/* Responsividade para telas menores que 520px */
+@media (max-width: 597px) {
+
+    main{
+        height: auto;
+        padding-bottom:40px ;
+    }
+    .card-area{
+        flex-wrap: wrap;
+    }
+
+    .card-item{
+        margin: 20px;
+    }
+    table{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+    }
+    
+    .tabela-topo{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+    }
+
+    .tabela-conteudo{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    th{
+        padding: 10px;
+    }
+
+    .input-nunber{
+        width: 46px;
+    }
+}
+/* Ajuste adicional para 320px */
+@media (max-width: 320px) {
+  
+
+    main{
+        height: auto;
+        padding-bottom:40px ;
+    }
+
+    table{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+    }
+        
+    .tabela-topo{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+    }
+    
+    .tabela-conteudo{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    th{
+        padding: 10px;
+    }
+
+    .input-nunber{
+        width: 36px;
+    }
+}
+
