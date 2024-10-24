@@ -36,7 +36,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Carrinho>
      */
-    #[ORM\ManyToMany(targetEntity: Carrinho::class, mappedBy: 'usuario_id')]
+    #[ORM\OneToMany(targetEntity: Carrinho::class, mappedBy: 'usuario')]
     private Collection $carrinhos;
 
     public function __construct()
@@ -131,7 +131,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->carrinhos->contains($carrinho)) {
             $this->carrinhos->add($carrinho);
-            $carrinho->addUsuarioId($this);
+            $carrinho->setUsuario($this);
         }
 
         return $this;
@@ -140,7 +140,10 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCarrinho(Carrinho $carrinho): static
     {
         if ($this->carrinhos->removeElement($carrinho)) {
-            $carrinho->removeUsuarioId($this);
+            // set the owning side to null (unless already changed)
+            if ($carrinho->getUsuario() === $this) {
+                $carrinho->setUsuario(null);
+            }
         }
 
         return $this;

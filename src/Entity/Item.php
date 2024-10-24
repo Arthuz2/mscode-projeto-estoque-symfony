@@ -14,32 +14,22 @@ class Item
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $quantidade = null;
-
-    #[ORM\Column]
     private ?int $valor = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Produto $produto_id = null;
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Produto $produto = null;
 
     #[ORM\ManyToOne(inversedBy: 'items')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Carrinho $carrinho_id = null;
+    private ?Carrinho $carrinho = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getQuantidade(): ?int
+    public function setId(int $id): static
     {
-        return $this->quantidade;
-    }
-
-    public function setQuantidade(int $quantidade): static
-    {
-        $this->quantidade = $quantidade;
+        $this->id = $id;
 
         return $this;
     }
@@ -56,26 +46,26 @@ class Item
         return $this;
     }
 
-    public function getProdutoId(): ?Produto
+    public function getProduto(): ?Produto
     {
-        return $this->produto_id;
+        return $this->produto;
     }
 
-    public function setProdutoId(?Produto $produto_id): static
+    public function setProduto(?Produto $produto): static
     {
-        $this->produto_id = $produto_id;
+        $this->produto = $produto;
 
         return $this;
     }
 
-    public function getCarrinhoId(): ?Carrinho
+    public function getCarrinho(): ?Carrinho
     {
-        return $this->carrinho_id;
+        return $this->carrinho;
     }
 
-    public function setCarrinhoId(?Carrinho $carrinho_id): static
+    public function setCarrinho(?Carrinho $carrinho): static
     {
-        $this->carrinho_id = $carrinho_id;
+        $this->carrinho = $carrinho;
 
         return $this;
     }
