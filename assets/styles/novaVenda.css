@@ -6,25 +6,54 @@
   
 }
 
+/* css gerais */
 nav{
     display: flex;
     justify-content: space-around;
-    align-items: center;}
+    align-items: center;
+}
+
+main{
+    margin-top: 20px;
+}
+
+table{
+    width: 100%;
+    background-color: white;
+
+    border-radius: 8px;
+    box-sizing: 5px 5px 5px  rgba(0, 0, 0, 0.312);
+}
+
+thead{
+    background-color: #D93539;
+    color: white;
+}
+th{
+    padding: 20px;
+}
+td{
+    padding: 10px;
+}
+
+
+/* css especificos */
 .h2{
  
     margin-left: 20px;
 }
-main{
-    background-color: #D93539;
-    height: 100vh;
-}
 
+
+
+/*  cabeçalho */
+.pdv,
 .nav-item a{
     color: #D93539;
     
 }
-.teste{
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.144);
+.area-nav{
+   box-shadow: 5px 2px 10px rgba(0, 0, 0, 0.085);
+
 }
 .nav-item a:hover{
     color: #f1272a;
@@ -46,43 +75,62 @@ main{
 }
 
 
+/* card de items */
 .card-area{
     display: flex;
     justify-content: space-around;
 
 }
 
-.card-item {
+.card-item{
     width: 700px;
     height: 110px;
-    background-color: white;
+    display: flex;
+    flex-direction: column;
     margin-right: 20px;
     margin-left: 20px;
-    padding: 20px;
     border-radius: 10px;
-    border: 1px solid white;
-    box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.233);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.137);
 }
 
+.card-top{
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #D93539;
+    border-radius: 6px 6px 0px 0px;
+}
+
+.card-bottom{
+    flex: 1;
+    background-color: #ece9e9;
+}
+.card-titulo{
+    color: white;
+    margin-left: 20px;
+    
+    
+}
+.resultado{
+    font-weight: bold;
+    margin-top: 20px;
+    margin-left: 20px;
+}
 .card-body{
     display: flex;
     justify-content: space-between;
 }
 .card-right{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-right: 20px;
 }
 .card-right img{
     width: 30px;
 }
-.resultado{
-    font-weight: bold;
-    margin-top: 20px;
-}
 
+/* formulario de cliente */
 .formulario{
-    margin: 30px 20px 0 20px;
+    margin: 30px 20px 0px 20px;
 }
 
 .formulario-area{
@@ -95,8 +143,8 @@ main{
 }
 
 .Finalizar-button{
-    background-color: #ece9e9;
-    color: #D93539;
+    background-color: #D93539;
+    color: white;
     border: 1px solid #ece9e9;
    width: 700px;
    margin-left: 30px;
@@ -104,26 +152,13 @@ main{
    cursor: pointer;
 }
 
- .tabela{
+/* tabela */
+.tabela{
     margin: 30px 20px 0px 20px;
     border-radius: 10px;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.227);
 }
 
-table{
-    width: 100%;
-    background-color: white;
-
-    border-radius: 8px;
-    box-sizing: 5px 5px 5px  rgba(0, 0, 0, 0.312);
-}
-
-th{
-    padding: 20px;
-}
-td{
-    padding: 10px;
-}
 
 .dividi{
     display: flex;
@@ -161,47 +196,41 @@ td{
         height: auto;
         padding-bottom:40px ;
     }
-  .card-area{
-    flex-wrap: wrap;
-  }
+    .card-area{
+        flex-wrap: wrap;
+    }
 
-  .card-item{
-    margin: 20px;
-  }
-
- 
-  table{
-    display: grid;
-    grid-template-columns: repeat(2,1fr);
-  }
+    .card-item{
+        margin: 20px;
+    }
+    table{
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+    }
     
-  .tabela-topo{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-  }
+    .tabela-topo{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+    }
 
-  .tabela-conteudo{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+    .tabela-conteudo{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 
-  th{
-    padding: 10px;
-  }
+    th{
+        padding: 10px;
+    }
 
-  .input-nunber{
-    width: 46px;
-  }
-
- 
- 
+    .input-nunber{
+        width: 46px;
+    }
 }
-
 /* Ajuste adicional para 320px */
 @media (max-width: 320px) {
   
@@ -214,29 +243,29 @@ td{
     table{
         display: grid;
         grid-template-columns: repeat(2,1fr);
-      }
+    }
         
-      .tabela-topo{
+    .tabela-topo{
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         padding: 0;
-      }
+    }
     
-      .tabela-conteudo{
+    .tabela-conteudo{
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-      }
+    }
     
-      th{
+    th{
         padding: 10px;
-      }
+    }
 
-      .input-nunber{
+    .input-nunber{
         width: 36px;
-      }
+    }
 }
 
