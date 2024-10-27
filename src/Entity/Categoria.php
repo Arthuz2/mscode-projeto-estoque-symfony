@@ -25,10 +25,10 @@ class Categoria
     #[ORM\OneToMany(targetEntity: Produto::class, mappedBy: 'categoria_id')]
     private Collection $produtos;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE,  nullable: true)]
     private ?\DateTimeInterface $atualizado_em = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE,  nullable: true)]
     private ?\DateTimeInterface $criado_em = null;
 
     public function __construct()

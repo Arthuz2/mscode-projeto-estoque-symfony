@@ -35,10 +35,10 @@ class Produto
     #[ORM\ManyToOne(inversedBy: 'produtos')]
     private ?Categoria $categoria_id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $valor_unitario = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE,  nullable: true)]
     private ?\DateTimeInterface $atualizado_em = null;
 
     public function getId(): ?int

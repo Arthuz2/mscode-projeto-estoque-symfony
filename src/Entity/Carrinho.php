@@ -16,20 +16,14 @@ class Carrinho
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @var Collection<int, Cliente>
-     */
-    #[ORM\ManyToMany(targetEntity: Cliente::class)]
-    private Collection $cliente_id;
+    #[ORM\ManyToOne(inversedBy: 'carrinhos')]
+    private ?Cliente $cliente = null;
 
-    /**
-     * @var Collection<int, Usuario>
-     */
-    #[ORM\ManyToMany(targetEntity: Usuario::class, inversedBy: 'carrinhos')]
-    private Collection $usuario_id;
+    #[ORM\ManyToOne(inversedBy: 'carrinhos')]
+    private ?Usuario $usuario = null;
 
-    #[ORM\Column(length: 25)]
-    private ?string $status = null;
+    #[ORM\Column(type: 'string', enumType: StatusEnum::class)]
+    private StatusEnum $status = StatusEnum::aberto;
 
     #[ORM\Column]
     private ?int $valor_total = null;
@@ -37,23 +31,33 @@ class Carrinho
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $criado_em = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $atualizado_em = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $finalizado_em = null;
 
     /**
      * @var Collection<int, Item>
      */
-    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'carrinho_id')]
+    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'carrinho')]
     private Collection $items;
 
     public function __construct()
     {
-        $this->cliente_id = new ArrayCollection();
-        $this->usuario_id = new ArrayCollection();
         $this->items = new ArrayCollection();
+    }
+
+    public function getStatus(): StatusEnum
+    {
+        return $this->status;
+    }
+
+    public function setStatus(StatusEnum $status): self
+    {
+        $this->status = $status;
+
+        return $this;
     }
 
     public function getId(): ?int
@@ -61,62 +65,26 @@ class Carrinho
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Cliente>
-     */
-    public function getClienteId(): Collection
+    public function getCliente(): ?Cliente
     {
-        return $this->cliente_id;
+        return $this->cliente;
     }
 
-    public function addClienteId(Cliente $clienteId): static
+    public function setCliente(?Cliente $cliente): static
     {
-        if (!$this->cliente_id->contains($clienteId)) {
-            $this->cliente_id->add($clienteId);
-        }
+        $this->cliente = $cliente;
 
         return $this;
     }
 
-    public function removeClienteId(Cliente $clienteId): static
+    public function getUsuario(): ?Usuario
     {
-        $this->cliente_id->removeElement($clienteId);
-
-        return $this;
+        return $this->usuario;
     }
 
-    /**
-     * @return Collection<int, Usuario>
-     */
-    public function getUsuarioId(): Collection
+    public function setUsuario(?Usuario $usuario): static
     {
-        return $this->usuario_id;
-    }
-
-    public function addUsuarioId(Usuario $usuarioId): static
-    {
-        if (!$this->usuario_id->contains($usuarioId)) {
-            $this->usuario_id->add($usuarioId);
-        }
-
-        return $this;
-    }
-
-    public function removeUsuarioId(Usuario $usuarioId): static
-    {
-        $this->usuario_id->removeElement($usuarioId);
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
+        $this->usuario = $usuario;
 
         return $this;
     }
@@ -150,7 +118,7 @@ class Carrinho
         return $this->atualizado_em;
     }
 
-    public function setAtualizadoEm(\DateTimeInterface $atualizado_em): static
+    public function setAtualizadoEm(?\DateTimeInterface $atualizado_em): static
     {
         $this->atualizado_em = $atualizado_em;
 
@@ -162,7 +130,7 @@ class Carrinho
         return $this->finalizado_em;
     }
 
-    public function setFinalizadoEm(\DateTimeInterface $finalizado_em): static
+    public function setFinalizadoEm(?\DateTimeInterface $finalizado_em): static
     {
         $this->finalizado_em = $finalizado_em;
 
@@ -181,7 +149,7 @@ class Carrinho
     {
         if (!$this->items->contains($item)) {
             $this->items->add($item);
-            $item->setCarrinhoId($this);
+            $item->setCarrinho($this);
         }
 
         return $this;
@@ -191,8 +159,8 @@ class Carrinho
     {
         if ($this->items->removeElement($item)) {
             // set the owning side to null (unless already changed)
-            if ($item->getCarrinhoId() === $this) {
-                $item->setCarrinhoId(null);
+            if ($item->getCarrinho() === $this) {
+                $item->setCarrinho(null);
             }
         }
 
