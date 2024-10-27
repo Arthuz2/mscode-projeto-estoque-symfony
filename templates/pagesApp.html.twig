@@ -1,23 +1,25 @@
 {% extends "base.html.twig" %}
 
 {% block title %}MS Code - Projeto 2024 {% endblock %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/header.css') }}">
+{% endblock %}
 {% block body %}
 	<main>
-		<div class="border-bottom mb-2">
+		<div class="mb-2">
 			<div class="container">
 				<header class="d-flex flex-wrap justify-content-center align-items-center py-3">
 					<a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-						<img class="me-2" src="{{ asset('images/logotipo.svg') }}" width="53">
-						<span class="fs-4">MS Code
-							{{ headTitle }}</span>
+						<img class="me-2" src="{{ asset('images/logo-light-mscode.png') }}" width="103">
+						<span class="fs-4">pdv
+							</span>
 					</a>
 					<ul class="nav nav-pills d-flex align-items-center">
 						<li class="nav-item">
-							<a href="/" class="nav-link {{ active == 'inicio' ? 'active' : '' }}" aria-current="page">Início</a>
+							<a href="/" class="nav-link " aria-current="page">Início</a>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle {{ active == 'vendas' ? 'active' : ''}}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 								Vendas
 							</a>
 							<ul class="dropdown-menu">
@@ -25,12 +27,12 @@
 									<a class="dropdown-item" href="/error">Vendas realizadas</a>
 								</li>
 								<li>
-									<a class="dropdown-item" href="/error">Nova venda</a>
+									<a class="dropdown-item" href="/novaVenda">Nova venda</a>
 								</li>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle {{ active == 'produtos' ? 'active' : '' }}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 								Produtos
 							</a>
 							<ul class="dropdown-menu">
