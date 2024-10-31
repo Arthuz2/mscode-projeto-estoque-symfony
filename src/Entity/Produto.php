@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProdutoRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ProdutoRepository::class)]
 class Produto
@@ -12,33 +13,43 @@ class Produto
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('produto')]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups('produto')]
     private ?string $nome = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups('produto')]
     private ?string $descricao = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups('produto')]
     private ?\DateTimeInterface $data_cadastro = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups('produto')]
     private ?int $quantidade_inicial = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups('produto')]
     private ?int $quantidade_disponivel = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups('produto')]
     private ?int $valor = null;
 
     #[ORM\ManyToOne(inversedBy: 'produtos')]
+    #[Groups('produto')]
     private ?Categoria $categoria_id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups('produto')]
     private ?int $valor_unitario = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE,  nullable: true)]
+    #[Groups('produto')]
     private ?\DateTimeInterface $atualizado_em = null;
 
     public function getId(): ?int
