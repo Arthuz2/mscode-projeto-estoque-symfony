@@ -6,7 +6,7 @@ use App\Repository\ProdutoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class ConsultarController extends AbstractController
 {
