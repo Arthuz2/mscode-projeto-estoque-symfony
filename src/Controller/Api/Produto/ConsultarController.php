@@ -16,9 +16,7 @@ class ConsultarController extends AbstractController
         try {
             $produtos = $produtoRepository->findAll();
             $json =  $serializer->serialize($produtos, 'json', ['groups' => 'produto']);
-if(!$produtos){
-    return $this->json(['message' => 'Nenhum produto encontrado'], 404);
-}
+            
             if(!$produtos){
                 return $this->json(['error' => 'Nenhum produto encontrado'], 404);
             }
