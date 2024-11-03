@@ -22,7 +22,7 @@ class finalizarVendaController extends AbstractController
         $this->carrinhoRepository = $carrinhoRepository;
     }
 
-    #[Route("/venda/{id}/finalizar", name: "finalizarVenda", methods: ["POST"])]
+    #[Route("/venda/finalizarVenda/{carrinho_id}", name: "finalizarVenda", methods: ["POST"])]
     function finalizarVenda(int $id): Response
     {
 
