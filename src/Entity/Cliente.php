@@ -8,18 +8,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClienteRepository::class)]
-class Cliente
+class Cliente implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
-    #[ORM\Column(length: 100)]
-    private ?string $nome = null;
-
-    #[ORM\Column(length: 11)]
-    private ?string $cpf = null;
+    #[ORM\Column]
+    private bool $ativo = true;
 
     /**
      * @var Collection<int, Carrinho>
@@ -27,8 +24,14 @@ class Cliente
     #[ORM\OneToMany(targetEntity: Carrinho::class, mappedBy: 'cliente')]
     private Collection $carrinhos;
 
-    public function __construct()
-    {
+    public function __construct(
+        #[ORM\Column(length: 255)]
+        private string $nome,
+        #[ORM\Column(length: 11)]
+        private string $cpf,
+    ) {
+        $this->cpf = preg_replace("/[^0-9]/", "", $cpf);
+
         $this->carrinhos = new ArrayCollection();
     }
 
@@ -96,5 +99,14 @@ class Cliente
         }
 
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'nome' => $this->nome,
+            'cpf' => $this->cpf,
+        ];
     }
 }
