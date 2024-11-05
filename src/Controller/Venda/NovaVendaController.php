@@ -27,17 +27,10 @@ class NovaVendaController extends AbstractController
     public function novaVenda( CarrinhoRepository $carrinhoRepository): Response
     {
       
-        $carrinho = $carrinhoRepository->find(2);
-
-        // Verifica se o carrinho existe
-        if (!$carrinho) {
-            throw $this->createNotFoundException('Carrinho não encontrado.');
-        }
+      
 
         // Passa o carrinho para o template
-        return $this->render('venda/novaVenda.html.twig', [
-            'carrinho' => $carrinho,
-        ]);
+        return $this->render('venda/novaVenda.html.twig');
     }
 } 
 

@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api\Cliente;
 
-use App\Service\ConsultarCliente\BuscarClientesAtivosService;
+use App\Service\BuscarClientesAtivosService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ClienteController extends AbstractController
 {
     public function __invoke(
-        BuscarClientesAtivosService $service,
+       BuscarClientesAtivosService $service,
     ): JsonResponse {
         try {
             return new JsonResponse($service->execute());
