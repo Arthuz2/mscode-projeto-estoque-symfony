@@ -27,6 +27,7 @@ class NovaVendaController extends AbstractController
     public function novaVenda( CarrinhoRepository $carrinhoRepository): Response
     {
       
+<<<<<<< HEAD
         
 
        
@@ -35,6 +36,12 @@ class NovaVendaController extends AbstractController
         return $this->render('venda/novaVenda.html.twig', [
             
         ]);
+=======
+      
+
+        // Passa o carrinho para o template
+        return $this->render('venda/novaVenda.html.twig');
+>>>>>>> consultaClientes
     }
 } 
 

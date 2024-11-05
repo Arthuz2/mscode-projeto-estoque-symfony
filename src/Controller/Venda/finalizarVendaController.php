@@ -22,7 +22,7 @@ class finalizarVendaController extends AbstractController
         $this->carrinhoRepository = $carrinhoRepository;
     }
 
-    #[Route("/venda/finalizarVenda/{carrinho_id}", name: "finalizarVenda", methods: ["POST"])]
+  /*   #[Route("/venda/finalizarVenda/{carrinho_id}", name: "finalizarVenda", methods: ["POST"])]
     function finalizarVenda(int $id): Response
     {
 
@@ -51,7 +51,7 @@ class finalizarVendaController extends AbstractController
     
  
         return new Response('Carrinho alterado para aguardando pagamento.', Response::HTTP_OK);
-    }
+    } */
 }
 
 ?>
