@@ -26,22 +26,9 @@ class NovaVendaController extends AbstractController
     #[Route('/novaVenda', name: 'nova_venda')]
     public function novaVenda( CarrinhoRepository $carrinhoRepository): Response
     {
-      
-<<<<<<< HEAD
-        
-
-       
-
-        // Passa o carrinho para o template
-        return $this->render('venda/novaVenda.html.twig', [
-            
-        ]);
-=======
-      
-
         // Passa o carrinho para o template
         return $this->render('venda/novaVenda.html.twig');
->>>>>>> consultaClientes
+
     }
 } 
 
