@@ -84,7 +84,7 @@
 		</section>
 
 		<!-- Formulário de finalização -->
-		<section class="formulario">
+		<section class="formulario" action="/carrinho">
 			<form id="finalizarVendaForm"  method="POST">
 				<p class="texto">Cliente*</p>
 				<div class="formulario-area">
@@ -108,7 +108,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for produto in carrinho.produtos %}
+					{% for produto in carrinho %}
 						<tr class="tabela-conteudo">
 							<td>{{ produto.nome }}</td>
 							<td>{{ produto.categoria.nome }}</td>

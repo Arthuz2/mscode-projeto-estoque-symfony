@@ -2,14 +2,18 @@
 
 
 namespace App\Controller\Venda;
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', 1);
+
+use App\Entity\StatusEnum;
 use App\Repository\CarrinhoRepository;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Repository\ProdutoRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 class finalizarVendaController extends AbstractController
 {
@@ -22,36 +26,41 @@ class finalizarVendaController extends AbstractController
         $this->carrinhoRepository = $carrinhoRepository;
     }
 
-  /*   #[Route("/venda/finalizarVenda/{carrinho_id}", name: "finalizarVenda", methods: ["POST"])]
-    function finalizarVenda(int $id): Response
-    {
+    #[Route("/carrinho/{id}", name: "finalizarVenda")]
+public function finalizarVenda(int $id, EntityManagerInterface $em): Response
+{
+    try {
+        // Valida se o carrinho existe
+        $carrinho = $this->carrinhoRepository->find($id);
 
-         // Valida se o carrinho existe
-         $carrinho = $this->carrinhoRepository->find($id);
+        if (!$carrinho) {
+            throw $this->createNotFoundException('Carrinho não encontrado.');
+        }
 
-      
-         if (!$carrinho) {
-             throw  $this->createNotFoundException('Carrinho não encontrado.');
-         }
- 
-         // Valida se o carrinho contém produtos
-         if (count($carrinho->getProdutos()) === 0) {
-             throw new BadRequestHttpException('O carrinho não contém produtos.');
-         }
- 
-         // Valida se o carrinho já foi finalizado
-         if ($carrinho->getStatus() !== 'pendente') {
-             throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está pendente.');
-         }
- 
-         // Altera o status para "aguardando pagamento"
-         $carrinho->setStatus('aguardando pagamento');
-         $this->carrinhoRepository->save($carrinho);
+        // Valida se o carrinho contém produtos
+        if ($carrinho->getItems()->isEmpty()) { // Verifica se a coleção de itens está vazia
+            throw new BadRequestHttpException('O carrinho não contém produtos.');
+        }
 
-    
- 
+        // Valida se o carrinho já foi finalizado
+        if ($carrinho->getStatus() !== StatusEnum::aberto) { // Certifique-se de comparar com o tipo correto
+            throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está pendente.');
+        }
+
+        // Altera o status para "aguardando pagamento"
+        $carrinho->setStatus(StatusEnum::aguardandoPagamento); // Certifique-se de que o StatusEnum tem esse valor
+        $em->persist($carrinho);
+        $em->flush();
+
         return new Response('Carrinho alterado para aguardando pagamento.', Response::HTTP_OK);
-    } */
+    } catch (\Exception $e) {
+        // Retorna uma resposta JSON em caso de erro
+        return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+    }
+}
+
+        
+    
 }
 
 ?>
