@@ -85,7 +85,8 @@
 
 		<!-- Formulário de finalização -->
 		<section class="formulario">
-			<form id="finalizarVendaForm"  method="POST">
+			
+			<form id="finalizarVendaForm" action="{{ path('finalizarCarrinho', { 'carrinho': carrinho.id }) }}"  method="POST">
 				<p class="texto">Cliente*</p>
 				<div class="formulario-area">
 					<input class="form-select" type="text" id="nome" name="cliente" aria-label="Buscar cliente por nome ou CPF" placeholder="Buscar cliente por nome, ou CPF" required>
@@ -108,7 +109,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for produto in carrinho.produtos %}
+					{% for produto in carrinho %}
 						<tr class="tabela-conteudo">
 							<td>{{ produto.nome }}</td>
 							<td>{{ produto.categoria.nome }}</td>
