@@ -12,19 +12,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class NovaVendaController extends AbstractController
 {
     #[Route('/novaVenda', name: 'nova_venda')]
-    public function novaVenda( ProdutoRepository $produtoRepository, CarrinhoRepository $carrinhoRepository): Response
+    public function novaVenda(): Response
     {
-      
-        $produto = $produtoRepository->findAll();
-        //conserta amanha
-        //erro na tela quando nao tem nenhum carrinho em aberto,so aparece na tela se tiver carrinho aberto
-        $carrinho = $carrinhoRepository->findOneBy(['status' => "em aberto"]);
-
         // Passa o carrinho para o template
-        return $this->render('venda/novaVenda.html.twig', [
-            'produto' => $produto,
-            'carrinho' => $carrinho,
-        ]);
+        return $this->render('venda/novaVenda.html.twig');
     }
 } 
 
