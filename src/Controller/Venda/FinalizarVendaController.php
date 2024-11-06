@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class finalizarVendaController extends AbstractController
+class FinalizarVendaController extends AbstractController
 {
     #[Route("novaVenda/finalizarCarrinho/{carrinho}", name: "finalizarCarrinho", methods:"POST")]
     public function finalizarVenda(
