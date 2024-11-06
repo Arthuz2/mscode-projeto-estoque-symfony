@@ -84,8 +84,9 @@
 		</section>
 
 		<!-- Formulário de finalização -->
-		<section class="formulario" action="/carrinho">
-			<form id="finalizarVendaForm"  method="POST">
+		<section class="formulario">
+			
+			<form id="finalizarVendaForm" action="{{ path('finalizarCarrinho', { 'carrinho': carrinho.id }) }}"  method="POST">
 				<p class="texto">Cliente*</p>
 				<div class="formulario-area">
 					<input class="form-select" type="text" id="nome" name="cliente" aria-label="Buscar cliente por nome ou CPF" placeholder="Buscar cliente por nome, ou CPF" required>
