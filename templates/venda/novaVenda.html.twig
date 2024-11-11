@@ -76,7 +76,7 @@
 				</thead>
 				<tbody>
 					{% for carrinho in carrinhos %}
-						{% if carrinho %}
+						{% if carrinho.getItems != null %}
 							{% for item in carrinho.getItems %}
 								<tr class="tabela-conteudo">
 									<td>{{ item.getProduto.getNome }}</td>
