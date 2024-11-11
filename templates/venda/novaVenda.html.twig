@@ -1,7 +1,9 @@
 {% extends "base.html.twig" %}
-{% block title %} Nova venda {% endblock %}
+{% block title %}
+	Nova venda
+{% endblock %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
+	<link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
 {% endblock %}
 {% block body %}
 	<div class="container">
@@ -12,12 +14,10 @@
 			</a>
 			<ul class="nav nav-pills d-flex align-items-center">
 				<li class="nav-item">
-					<a href="/" class="nav-link " aria-current="page">Início</a>
+					<a href="/" class="nav-link" aria-current="page">Início</a>
 				</li>
 				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-						Vendas
-					</a>
+					<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Vendas</a>
 					<ul class="dropdown-menu">
 						<li>
 							<a class="dropdown-item" href="/vendas-realizadas">Vendas realizadas</a>
@@ -28,9 +28,7 @@
 					</ul>
 				</li>
 				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-						Produtos
-					</a>
+					<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Produtos</a>
 					<ul class="dropdown-menu">
 						<li>
 							<a class="dropdown-item" href="/produtos">Estoque</a>
@@ -41,73 +39,33 @@
 					</ul>
 				</li>
 				<li class="nav-item">
-					<a href="{{ path('app_logout') }}" class="sair m-0 ms-4" aria-current="page">Sair</a>
+					<a href="{{ path('app_logout') }}" class="sair m-0 ms-4">Sair</a>
 				</li>
 			</ul>
 		</header>
 	</div>
-
 	<main>
 		<h2 class="text-white h2 p-2 mb-3">Nova Venda</h2>
-		
-		<!-- card -->
 		<section>
-			<div class="card-area">
-				<div class="card-item">
-					<div class="card-top">
-						<span class="card-titulo">Total</span>
-						<div class="card-right">
-							<img src="{{ asset('images/simbolo-do-dolar.png') }}" alt="simbolo-do-dolar.png">
-						</div>
-					</div>
-					<div class="card-bottom"><p class="resultado">R$1000,00</p></div>
-				</div>
-				<div class="card-item">
-					<div class="card-top">
-						<span class="card-titulo">Status</span>
-						<div class="card-right">
-							<img src="{{ asset('images/status.png') }}" alt="status.png">
-						</div>
-					</div>
-					<div class="card-bottom"> <p class="resultado">Pendente</p></div>
-				</div>
-				<div class="card-item">
-					<div class="card-top">
-						<span class="card-titulo">Data</span>
-						<div class="card-right">
-							<img src="{{ asset('images/calendario-de-parede-mensal.png') }}" alt="calendario-de-parede-mensal.png">
-						</div>
-					</div>
-					<div class="card-bottom"> <p class="resultado">22/01/2006</p></div>
-				</div>
-			</div>
+			<div class="card-area"></div>
 		</section>
-
-		<!-- Formulário de finalização -->
 		<section class="formulario">
-			
-			<form id="finalizarVendaForm" action="{{ path('finalizarCarrinho', { 'carrinho': carrinho.id }) }}"  method="POST">
+			<form id="finalizarVendaForm" action="{{ path('finalizarCarrinho', { 'carrinho': carrinho.id }) }}" method="POST">
 				<p class="texto">Cliente*</p>
 				<div class="formulario-area">
-					<input class="form-select" type="text" id="nome" name="cliente" aria-label="Buscar cliente por nome ou CPF" placeholder="Buscar cliente por nome, ou CPF" required>
-					<button type="submit" class="Finalizar-button"><strong>Finalizar venda</strong></button>
+
+					<select class="form-select" id="clienteSelect" name="cliente" required>
+						<option value="">Selecione um cliente</option>
+					</select>
+					<button type="submit" class="Finalizar-button">
+						<strong>Finalizar venda</strong>
+					</button>
 				</div>
 			</form>
 		</section>
-
-		<!-- Tabela de produtos no carrinho -->
 		<section class="tabela">
 			<table>
-				<thead>
-					<tr class="tabela-topo">
-						<th scope="col">Nome</th>
-						<th scope="col">Categoria</th>
-						<th scope="col">Estoque</th>
-						<th scope="col">Quantidade</th>
-						<th scope="col">Total</th>
-						<th></th>
-					</tr>
-				</thead>
+				<thead></thead>
 				<tbody>
 					{% for produto in carrinho %}
 						<tr class="tabela-conteudo">
@@ -115,13 +73,10 @@
 							<td>{{ produto.categoria.nome }}</td>
 							<td>{{ produto.estoque }}</td>
 							<td class="quantidade">
-								<input class="input-number" type="number" name="quantidade_{{ produto.id }}" id="quantidade_{{ produto.id }}" value="{{ produto.quantidade }}" min="1">
-								<img class="icone" src="{{ asset('images/adicionar-ao-carrinho.png') }}" alt="adicionar-ao-carrinho.png">
+								<input class="input-number" type="number" name="quantidade_{{ produto.id }}" value="{{ produto.quantidade }}" min="1">
 							</td>
 							<td>R${{ produto.total }}</td>
-							<td>
-								<img class="icone" src="{{ asset('images/lixo.png') }}" alt="icone de lixo">
-							</td> 
+							<td><img class="icone" src="{{ asset('images/lixo.png') }}" alt="Remover"></td>
 						</tr>
 					{% else %}
 						<tr>
@@ -134,5 +89,36 @@
 	</main>
 
 	{% block content %}{% endblock %}
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+	<script>
+		async function carregarClientes() {
+try {
+const response = await fetch('/clientes', { // Substitua '/clientes' pelo endpoint correto
+method: 'GET',
+headers: {
+'Content-Type': 'application/json'
+}
+});
+
+if (! response.ok) 
+throw new Error('Erro ao carregar clientes');
+
+const clientes = await response.json();
+
+const clienteSelect = document.getElementById('clienteSelect');
+clientes.forEach(cliente => {
+const option = document.createElement('option');
+option.value = cliente.id;
+option.textContent = cliente.nome;
+clienteSelect.appendChild(option);
+});
+} catch (error) {
+console.error('Erro ao carregar clientes:', error);
+}
+}
+
+window.onload = carregarClientes;
+	</script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 {% endblock %}
