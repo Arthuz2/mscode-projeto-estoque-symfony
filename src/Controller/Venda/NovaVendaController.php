@@ -1,23 +1,26 @@
-<?php 
+<?php
 
 namespace App\Controller\Venda;
 
 
 use App\Repository\CarrinhoRepository;
-use App\Repository\ProdutoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class NovaVendaController extends AbstractController
 {
+    public function __construct(
+        private CarrinhoRepository $carrinhoRepository,
+    ){}
+
     #[Route('/novaVenda', name: 'nova_venda')]
     public function novaVenda(CarrinhoRepository $carrinhoRepository): Response
     {
-        $car = $carrinhoRepository->findOneBy(['status' => "em aberto"]);
-        // Passa o carrinho para o template
-        return $this->render('venda/novaVenda.html.twig',["carrinho"=> $car]);
-    }
-} 
 
-?>
+        $carrinhos = $this->carrinhoRepository->findAll();
+        
+        return $this->render('venda/novaVenda.html.twig', ["carrinhos" => $carrinhos]);
+
+    }
+}
