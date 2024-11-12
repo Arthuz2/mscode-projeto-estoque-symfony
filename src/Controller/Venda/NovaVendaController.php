@@ -12,10 +12,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class NovaVendaController extends AbstractController
 {
     #[Route('/novaVenda', name: 'nova_venda')]
-    public function novaVenda(): Response
+    public function novaVenda(CarrinhoRepository $carrinhoRepository): Response
     {
+        $car = $carrinhoRepository->findOneBy(['status' => "em aberto"]);
         // Passa o carrinho para o template
-        return $this->render('venda/novaVenda.html.twig');
+        return $this->render('venda/novaVenda.html.twig',["carrinho"=> $car]);
     }
 } 
 
