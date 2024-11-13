@@ -69,4 +69,14 @@ class Item implements \JsonSerializable
             "quantidade" => $this->quantidade,
         ];
     }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'valor' => $this->valor,
+            'produto' => $this->produto
+           
+        ];
+    }
 }

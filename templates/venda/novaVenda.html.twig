@@ -95,12 +95,19 @@
         </section> 
     </main>
 {% endblock %}
+<<<<<<< HEAD
 {% block javascripts %}
     {{ parent() }}
     <script>
         let carrinhoId; 
         let produtosCarrinho = [];
 
+=======
+
+{% block javascripts %}
+        {{ parent() }}
+        <script>
+>>>>>>> c6d86bf (fazendo logica do js)
         async function carregarClientes() {
             try {
                 const response = await fetch('/api/clientes', {
@@ -123,6 +130,7 @@
 
         }
 
+<<<<<<< HEAD
         function habilitarBotaoFinalizarVenda() {
             const tabela = document.getElementById('tabela');
             const produtosAdicionados = tabela.getElementsByTagName('tr').length > 0;
@@ -361,3 +369,61 @@
     </script>
 {% endblock %}
 
+=======
+        // Carregar clientes ao inicializar a página
+        
+
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarClientes();
+
+            const clienteSelect = document.getElementById('cliente-Select');
+            clienteSelect.addEventListener('change', function() {
+                const clienteId = this.value;
+
+                if (clienteId) {
+                    // Fazendo a requisição para buscar ou criar o carrinho
+                    fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Erro ao buscar o carrinho');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data.carrinho);
+                            if (data.error) {
+                                alert(data.error);
+                            } else {
+                                // Exibe as informações do carrinho
+                                displayCarrinhoInfo(data.carrinho);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro:', error);
+                            alert('Ocorreu um erro ao buscar o carrinho.');
+                        });
+                }
+            });
+
+            function displayCarrinhoInfo(carrinho) {
+                //fazer um for ech em items aqui dentro
+                const carrinhoInfoDiv = document.getElementById('tabela');
+                carrinhoInfoDiv.innerHTML = `
+                    <tr>
+                    <td>${carrinho.items[0].produto.nome}<td>
+                      <td>${carrinho.items[0].produto.categoria_id.id}<td>
+                      <td class="quantidade">
+						<input class="input-number" type="number" value=" ${carrinho.items[0].produto.qt_disponivel} " min="1">
+					</td>
+                    <td>${carrinho.items[0].produto.qt_disponivel}<td>
+                    
+                    <td>${carrinho.valor_total}<td>
+                    </tr>
+                   
+                    
+                `;
+            }
+        });
+    </script>
+{% endblock %}
+>>>>>>> c6d86bf (fazendo logica do js)
