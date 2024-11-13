@@ -22,7 +22,8 @@ class BuscarCarrinhoController extends AbstractController
             return new JsonResponse(['carrinho' => $service->execute(id: $clienteId)]); 
         } catch (\Throwable $e) {
             return new JsonResponse(
-                ['error' => $e->getMessage()]
+                ['error' => $e->getMessage()],
+                500,
             );
         }
     }

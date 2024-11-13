@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ProdutoRepository::class)]
-class Produto
+class Produto implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -163,5 +163,16 @@ class Produto
         $this->atualizado_em = $atualizado_em;
 
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'nome' => $this->nome,
+            "categoria_id" => $this->categoria_id,
+            "qt_disponivel" => $this->quantidade_disponivel
+
+        ];
     }
 }

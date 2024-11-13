@@ -16,7 +16,7 @@ class BuscarOuCriarCarrinhoService
     {
     }
 
-    public function execute(int $id): object
+    public function execute(int $id): Carrinho
     {
         $cliente = $this->clienteRepository->find($id);
         if(null === $cliente){
@@ -29,8 +29,7 @@ class BuscarOuCriarCarrinhoService
             $carrinho = new Carrinho($cliente);
             $this->carrinhoRepository->salvar($carrinho);
         }
-
-        
+     
         return $carrinho;
     }
 }

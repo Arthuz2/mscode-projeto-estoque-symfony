@@ -27,6 +27,7 @@ class Carrinho implements \JsonSerializable
     private StatusEnum $status = StatusEnum::aberto;
 
     #[ORM\Column]
+    /* botar nullabe true aqui */
     private ?int $valor_total = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -181,7 +182,8 @@ class Carrinho implements \JsonSerializable
             'status' => $this->status,
             'valor_total'  => $this->valor_total,
             'criado_em' => $this->criado_em,
-            'finalizado_em' => $this->finalizado_em   
+            'finalizado_em' => $this->finalizado_em,   
+            'items' => $this->items->toArray(),
         ];
     }
 
