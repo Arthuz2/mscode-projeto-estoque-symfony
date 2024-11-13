@@ -1,8 +1,17 @@
-.nav-item a{
+.nav-item a {
     color: #D93539;
-    
 }
 
-.nav-item a:hover{
+.nav-item a:hover {
     color: #f1272a;
+}
+
+.nav-item .exit-button:hover {
+    color: #fff;
+    background-color: #f1272a;
+}
+
+.dropdown-menu .dropdown-item:focus{
+    background-color: #f1272a !important;
+    color: #fff !important; 
 }

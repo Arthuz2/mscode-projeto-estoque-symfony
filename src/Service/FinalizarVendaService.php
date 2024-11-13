@@ -17,18 +17,15 @@ class FinalizarVendaService
 
     public function execute(Carrinho $carrinho): void
     {
-        // Valida se o carrinho contém produtos
-        if ($carrinho->getItems()->isEmpty()) { // Verifica se existem produtos
-            throw new BadRequestHttpException('O carrinho não contém produtos.');
+        if ($carrinho->getItems()->isEmpty()) {
+            throw new BadRequestHttpException('O carrinho nao contem produtos.');
         }
 
-        // Valida se o carrinho já foi finalizado
-        if ($carrinho->getStatus() !== StatusEnum::aberto) { // Certifique-se de comparar com o tipo correto
-            throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está pendente.');
+        if ($carrinho->getStatus() !== StatusEnum::aberto) { 
+            throw new BadRequestHttpException('Nao e possivel finalizar um carrinho que nao esta pendente');
         }
 
-        // Altera o status para "aguardando pagamento"
-        $carrinho->setStatus(StatusEnum::aguardandoPagamento); // Certifique-se 
+        $carrinho->setStatus(StatusEnum::aguardandoPagamento);
         $this->carrinhoRepository->salvar($carrinho);
         
     }
