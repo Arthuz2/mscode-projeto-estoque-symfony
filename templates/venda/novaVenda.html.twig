@@ -9,7 +9,6 @@
 	<main>
 		<h2 class="text-white h2 p-2 mb-3">Nova Venda</h2>
 
-		<!-- card -->
 		<section>
 			<div class="card-area">
 				<div class="card-item">
@@ -106,13 +105,13 @@
 	<script>
 		async function carregarClientes() {
 			try {
-				const response = await fetch('/api/clientes', { // Substitua '/clientes' pelo endpoint correto
+				const response = await fetch('/api/clientes', {
 					method: 'GET',
 					headers: { 'Content-Type': 'application/json' }
 				});
+				console.log(response);
 				if (!response.ok) throw new Error('Erro ao carregar clientes');
 				const clientes = await response.json();
-
 				const clienteSelect = document.getElementById('clienteSelect');
 				clientes.forEach(cliente => {
 					const option = document.createElement('option');
