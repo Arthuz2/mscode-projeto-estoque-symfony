@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\CarrinhoRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarrinhoRepository::class)]
-class Carrinho
+class Carrinho implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -43,9 +44,13 @@ class Carrinho
     #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'carrinho')]
     private Collection $items;
 
-    public function __construct()
+    public function __construct(
+        Cliente $cliente
+    )
     {
+        $this->criado_em = new DateTimeImmutable();
         $this->items = new ArrayCollection();
+        $this->cliente = $cliente;
     }
 
     public function getStatus(): StatusEnum
@@ -166,4 +171,18 @@ class Carrinho
 
         return $this;
     }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'cliente'  => $this->cliente,
+            'usuario' => $this->usuario,
+            'status' => $this->status,
+            'valor_total'  => $this->valor_total,
+            'criado_em' => $this->criado_em,
+            'finalizado_em' => $this->finalizado_em   
+        ];
+    }
+
 }

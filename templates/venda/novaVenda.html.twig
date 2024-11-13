@@ -1,133 +1,174 @@
 {% extends "pagesApp.html.twig" %}
 {% block title %}
-	Nova venda
+    Nova venda
 {% endblock %}
 {% block stylesheets %}
-	<link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
 {% endblock %}
 {% block content %}
-	<main>
-		<h2 class="text-white h2 p-2 mb-3">Nova Venda</h2>
+    <main>
+        <h2 class="text-white h2 p-2 mb-3">Nova Venda</h2>
 
-		<!-- card -->
-		<section>
-			<div class="card-area">
-				<div class="card-item">
-					<div class="card-top">
-						<span class="card-titulo">Total</span>
-						<div class="card-right">
-							<img src="{{ asset('images/simbolo-do-dolar.png') }}" alt="simbolo-do-dolar.png">
-						</div>
-					</div>
-					<div class="card-bottom">
-						<p class="resultado">R$1000,00</p>
-					</div>
-				</div>
-				<div class="card-item">
-					<div class="card-top">
-						<span class="card-titulo">Status</span>
-						<div class="card-right">
-							<img src="{{ asset('images/status.png') }}" alt="status.png">
-						</div>
-					</div>
-					<div class="card-bottom">
-						<p class="resultado">Pendente</p>
-					</div>
-				</div>
-				<div class="card-item">
-					<div class="card-top">
-						<span class="card-titulo">Data</span>
-						<div class="card-right">
-							<img src="{{ asset('images/calendario-de-parede-mensal.png') }}" alt="calendario-de-parede-mensal.png">
-						</div>
-					</div>
-					<div class="card-bottom">
-						<p class="resultado">22/01/2006</p>
-					</div>
-				</div>
-			</div>
-		</section>
-		<section class="formulario">
-			<form id="finalizarVendaForm" action="{{ path('finalizarCarrinho') }}" method="POST">
-				<p class="texto">Cliente*</p>
-				<div class="formulario-area">
+        <!-- card -->
+        <section>
+            <div class="card-area">
+                <div class="card-item">
+                    <div class="card-top">
+                        <span class="card-titulo">Total</span>
+                        <div class="card-right">
+                            <img src="{{ asset('images/simbolo-do-dolar.png') }}" alt="simbolo-do-dolar.png">
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <p class="resultado">R$1000,00</p>
+                    </div>
+                </div>
+                <div class="card-item">
+                    <div class="card-top">
+                        <span class="card-titulo">Status</span>
+                        <div class="card-right">
+                            <img src="{{ asset('images/status.png') }}" alt="status.png">
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <p class="resultado">Pendente</p>
+                    </div>
+                </div>
+                <div class="card-item">
+                    <div class="card-top">
+                        <span class="card-titulo">Data</span>
+                        <div class="card-right">
+                            <img src="{{ asset('images/calendario-de-parede-mensal.png') }}" alt="calendario-de-parede-mensal.png">
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <p class="resultado">22/01/2006</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <section class="formulario">
+            <form id="finalizarVendaForm" action="{{ path('finalizarCarrinho') }}" method="POST">
+                <p class="texto">Cliente*</p>
+                <div class="formulario-area">
+                    <select class="form-select" id="cliente-Select" name="cliente" required>
+                        <option value="">Selecione um cliente</option>
+                    </select>
+                    <button type="submit" class="Finalizar-button">
+                        <strong>Finalizar venda</strong>
+                    </button>
+                </div>
+            </form>
+        </section>
 
-					<select class="form-select" id="clienteSelect" name="cliente" required>
-						<option value="">Selecione um cliente</option>
-					</select>
-					<button type="submit" class="Finalizar-button">
-						<strong>Finalizar venda</strong>
-					</button>
-				</div>
-			</form>
-		</section>
+        <section class="tabela">
+            <table>
+                <thead>
+                    <tr class="tabela-topo">
+                        <th scope="col">Nome</th>
+                        <th scope="col">Categoria</th>
+                        <th scope="col">Estoque</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col">Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tabela">
+                {#     <td> produto.nome </td>
+							<td> produto.categoria.nome </td>
+							<td> produto.estoque </td>
+							<td class="quantidade">
+								<input class="input-number" type="number" name="" value=" produto.quantidade " min="1">
+							</td>
+							<td>R$ produto.total </td>
+							<td><img class="icone" src="{{ asset('images/lixo.png') }}" alt="Remover"></td> #}
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script>
+        // Função para carregar os clientes
+        async function carregarClientes() {
+            try {
+                const response = await fetch('/api/clientes', { 
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) throw new Error('Erro ao carregar clientes');
+                const clientes = await response.json();
 
-		<section class="tabela">
-			<table>
-				<thead>
-					<tr class="tabela-topo">
-						<th scope="col">Nome</th>
-						<th scope="col">Categoria</th>
-						<th scope="col">Estoque</th>
-						<th scope="col">Quantidade</th>
-						<th scope="col">Total</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for carrinho in carrinhos %}
-						{% if carrinho.getItems != null %}
-							{% for item in carrinho.getItems %}
-								<tr class="tabela-conteudo">
-									<td>{{ item.getProduto.getNome }}</td>
-									<td>{{ item.getProduto.getCategoriaId.getNome }}</td>
-									<td>{{ item.getProduto.getQuantidadeDisponivel }}</td>
-									<td class="quantidade">
-										<input class="input-number" type="number" name="quantidade_{{ item.getProduto.id }}" id="quantidade_{{ item.getProduto.id }}" value="0" min="1">
-										<img class="icone" src="{{ asset('images/adicionar-ao-carrinho.png') }}" alt="adicionar-ao-carrinho.png">
-									</td>
-									<td>R${{ item.getValor }}</td>
-									<td>
-										<img class="icone" src="{{ asset('images/lixo.png') }}" alt="icone de lixo">
-									</td>
-								</tr>
-						{% endfor %}
-							{% else %}
-								<tr>
-									<td colspan="6">Nenhum produto adicionado ao carrinho.</td>
-								</tr>
-							{% endif %}
-					{% endfor %}
-				</tbody>
-			</table>
-		</section>
-	</main>
-	<script>
-		async function carregarClientes() {
-			try {
-				const response = await fetch('/api/clientes', { // Substitua '/clientes' pelo endpoint correto
-					method: 'GET',
-					headers: { 'Content-Type': 'application/json' }
-				});
-				if (!response.ok) throw new Error('Erro ao carregar clientes');
-				const clientes = await response.json();
+                const clienteSelect = document.getElementById('cliente-Select');
+                clientes.forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.id;
+                    option.textContent = cliente.nome;
+                    clienteSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar clientes:', error);
+            }
+        }
 
-				const clienteSelect = document.getElementById('clienteSelect');
-				clientes.forEach(cliente => {
-					const option = document.createElement('option');
-					option.value = cliente.id;
-					option.textContent = cliente.nome;
-					clienteSelect.appendChild(option);
-				});
-			} catch (error) {
-				console.error('Erro ao carregar clientes:', error);
-			}
-		}
+        // Carregar clientes ao inicializar a página
+        window.onload = carregarClientes;
 
-		
+       document.addEventListener('DOMContentLoaded', function() {
+    const clienteSelect = document.getElementById('cliente-Select');
+    clienteSelect.addEventListener('change', function() {
+        const clienteId = this.value;
 
-		window.onload = carregarClientes;
-	</script>
+        if (clienteId) {
+            // Fazendo a requisição para buscar ou criar o carrinho
+            fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar o carrinho');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        // Exibe as informações do carrinho
+                        displayCarrinhoInfo(data.carrinho);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Ocorreu um erro ao buscar o carrinho.');
+                });
+        }
+    });
+
+    function displayCarrinhoInfo(carrinho) {
+        const carrinhoInfoDiv = document.getElementById('tabela');
+        carrinhoInfoDiv.innerHTML = '';
+
+        // Supondo que carrinho.items seja uma lista de itens do carrinho
+        carrinho.items.forEach(item => {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td>${item.produto.nome}</td>
+                <td>${item.produto.categoria.nome}</td>
+                <td>${item.produto.estoque}</td>
+                <td>
+                    <input class="input-number" type="number" name="quantidade[${item.produto.id}]" value="${item.quantidade}" min="1">
+                </td>
+                <td>R$ ${item.total}</td>
+                <td>
+                    <button class="remover-item" data-item-id="${item.produto.id}">
+                        <img class="icone" src="{{ asset('images/lixo.png') }}" alt="Remover">
+                    </button>
+                </td>
+            `;
+
+            carrinhoInfoDiv.appendChild(row);
+        });
+    }
+});
+
+    </script>
 {% endblock %}
-
