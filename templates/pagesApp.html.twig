@@ -3,6 +3,7 @@
 {% block title %}MS Code - Projeto 2024 {% endblock %}
 {% block stylesheets %}
   <link rel="stylesheet" href="{{ asset('styles/header.css') }}">
+	{% block addStylesheet %}{% endblock %}
 {% endblock %}
 {% block body %}
 	<main>
@@ -45,7 +46,7 @@
 							</ul>
 						</li>
 						<li class="nav-item">
-							<a href="{{ path('app_logout') }}" class="btn btn-outline-danger m-0 ms-4" aria-current="page">Sair</a>
+							<a href="{{ path('app_logout') }}" class="btn btn-outline-danger m-0 ms-4 exit-button" aria-current="page">Sair</a>
 						</li>
 					</ul>
 				</header>
