@@ -8,6 +8,7 @@
 {% block content %}
     <main>
         <h2 class="text-white h2 p-2 mb-3">Nova Venda</h2>
+
         <section>
             <div class="card-area">
                 <div class="card-item">
@@ -60,6 +61,7 @@
             </form>
         </section>
 
+
         <section class="tabela">
             <table>
                 <thead>
@@ -69,15 +71,13 @@
                         <th scope="col">Estoque</th>
                         <th scope="col">Quantidade</th>
                         <th scope="col">Total</th>
+
                         <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody id="tabela">
                 <td>nenhum carrinho selecionado</td>
-                </tbody>
-            </table>
-        </section>
-    </main>
+
 {% endblock %}
 
 {% block javascripts %}
@@ -178,3 +178,5 @@
         });
     </script>
 {% endblock %}
+
+
