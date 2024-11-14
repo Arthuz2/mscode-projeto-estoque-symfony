@@ -12,11 +12,23 @@
 
         <section>
             <div class="card-area">
+<<<<<<< HEAD
                <div class="card-item">
                 <div class="card-top">
                     <span class="card-titulo">Total</span>
                     <div class="card-right">
                         <img src="{{ asset('images/simbolo-do-dolar.png') }}" alt="simbolo-do-dolar.png">
+=======
+                <div class="card-item">
+                    <div class="card-top">
+                        <span class="card-titulo">Total</span>
+                        <div class="card-right">
+                            <img src="{{ asset('images/simbolo-do-dolar.png') }}" alt="simbolo-do-dolar.png">
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <p class="resultado">R$0</p>
+>>>>>>> 6b95a33 (testets)
                     </div>
                 </div>
                 <div class="card-bottom">
@@ -31,7 +43,11 @@
                         </div>
                     </div>
                     <div class="card-bottom">
+<<<<<<< HEAD
                         <p class="resultado">-</p>
+=======
+                        <p class="resultado"></p>
+>>>>>>> 6b95a33 (testets)
                     </div>
                 </div>
                 <div class="card-item">
@@ -42,7 +58,11 @@
                         </div>
                     </div>
                     <div class="card-bottom">
+<<<<<<< HEAD
                         <p class="resultado">-</p>
+=======
+                        <p class="resultado"></p>
+>>>>>>> 6b95a33 (testets)
                     </div>
                 </div>
             </div>
@@ -73,6 +93,7 @@
         </section>
 
         <section class="tabela">
+<<<<<<< HEAD
             <div class="table-responsive">
                 <table class=" table-striped ">
                     <thead class="tabela-topo">
@@ -93,6 +114,24 @@
                 </table>
             </div>
         </section> 
+=======
+            <table>
+                <thead>
+                    <tr class="tabela-topo">
+                        <th scope="col">Nome</th>
+                        <th scope="col">Categoria</th>
+                        <th scope="col">Estoque</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col">Total</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="tabela">
+                <td>nenhum carrinho selecionado</td>
+                </tbody>
+            </table>
+        </section>
+>>>>>>> 6b95a33 (testets)
     </main>
 {% endblock %}
 <<<<<<< HEAD
@@ -105,9 +144,14 @@
 =======
 
 {% block javascripts %}
+<<<<<<< HEAD
         {{ parent() }}
         <script>
 >>>>>>> c6d86bf (fazendo logica do js)
+=======
+    {{ parent() }}
+    <script>
+>>>>>>> 6b95a33 (testets)
         async function carregarClientes() {
             try {
                 const response = await fetch('/api/clientes', {
@@ -127,6 +171,7 @@
             } catch (error) {
                 console.error('Erro ao carregar clientes:', error);
             }
+<<<<<<< HEAD
 
         }
 
@@ -372,58 +417,88 @@
 =======
         // Carregar clientes ao inicializar a página
         
+=======
+        }  
+>>>>>>> 6b95a33 (testets)
 
         document.addEventListener('DOMContentLoaded', function() {
-            carregarClientes();
+    carregarClientes();
 
-            const clienteSelect = document.getElementById('cliente-Select');
-            clienteSelect.addEventListener('change', function() {
-                const clienteId = this.value;
+    const clienteSelect = document.getElementById('cliente-Select');
+    clienteSelect.addEventListener('change', function() {
+        const clienteId = this.value;
 
-                if (clienteId) {
-                    // Fazendo a requisição para buscar ou criar o carrinho
-                    fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Erro ao buscar o carrinho');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log(data.carrinho);
-                            if (data.error) {
-                                alert(data.error);
-                            } else {
-                                // Exibe as informações do carrinho
-                                displayCarrinhoInfo(data.carrinho);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Erro:', error);
-                            alert('Ocorreu um erro ao buscar o carrinho.');
-                        });
-                }
-            });
+        if (clienteId) {
+            // Fazendo a requisição para buscar ou criar o carrinho
+            fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar o carrinho');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        // Exibe as informações do carrinho
+                        displayCarrinhoInfo(data.carrinho);
+                        preencherCards(data.carrinho);  // Chama para preencher os cards
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Ocorreu um erro ao buscar o carrinho.');
+                });
+        }
+    });
 
-            function displayCarrinhoInfo(carrinho) {
-                //fazer um for ech em items aqui dentro
-                const carrinhoInfoDiv = document.getElementById('tabela');
-                carrinhoInfoDiv.innerHTML = `
-                    <tr>
-                    <td>${carrinho.items[0].produto.nome}<td>
-                      <td>${carrinho.items[0].produto.categoria_id.id}<td>
-                      <td class="quantidade">
-						<input class="input-number" type="number" value=" ${carrinho.items[0].produto.qt_disponivel} " min="1">
-					</td>
-                    <td>${carrinho.items[0].produto.qt_disponivel}<td>
-                    
-                    <td>${carrinho.valor_total}<td>
-                    </tr>
-                   
-                    
-                `;
-            }
+    function displayCarrinhoInfo(carrinho) {
+        const carrinhoInfoDiv = document.getElementById('tabela');
+        carrinhoInfoDiv.innerHTML = ''; // Limpar o conteúdo existente antes de adicionar novos itens
+
+        carrinho.items.forEach(item => {
+            carrinhoInfoDiv.innerHTML += `
+                <tr>
+                    <td>${item.produto.nome}</td>
+                    <td>${item.produto.categoria_id.id}</td>
+                    <td class="quantidade">
+                        <input class="input-number" type="number" value="${item.produto.qt_disponivel}" min="1">
+                    </td>
+                    <td>${item.produto.qt_disponivel}</td>
+                    <td>${item.valor.toFixed(2)}</td>
+                </tr>
+            `;
         });
+    }
+
+    function preencherCards(carrinho) {
+        // Preencher o card de "Total"
+        const totalCard = document.querySelector('.card-area .card-item:nth-child(1) .resultado');
+        if (totalCard) {
+            totalCard.textContent = `R$${carrinho.valor_total.toFixed(2)}`;
+        }
+
+        // Preencher o card de "Status"
+        const statusCard = document.querySelector('.card-area .card-item:nth-child(2) .resultado');
+        if (statusCard) {
+            statusCard.textContent = carrinho.status;
+        }
+
+        // Preencher o card de "Data" (criado_em)
+        const dataCard = document.querySelector('.card-area .card-item:nth-child(3) .resultado');
+        if (dataCard) {
+            const dataFormatada = new Date(carrinho.criado_em.date).toLocaleDateString('pt-BR');
+            dataCard.textContent = dataFormatada;
+        }
+    }
+});
+
+     
+
+     
+
+        
     </script>
 {% endblock %}
 >>>>>>> c6d86bf (fazendo logica do js)
