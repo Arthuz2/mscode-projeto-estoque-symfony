@@ -16,10 +16,10 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Jso
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 180)]
-    private ?string $email = null;
+    private ?string $email;
 
     /**
      * @var list<string> The user roles
@@ -31,7 +31,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Jso
      * @var string The hashed password
      */
     #[ORM\Column]
-    private ?string $password = null;
+    private ?string $password;
 
     /**
      * @var Collection<int, Carrinho>

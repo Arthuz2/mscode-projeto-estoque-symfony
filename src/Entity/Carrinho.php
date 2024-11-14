@@ -15,23 +15,23 @@ class Carrinho implements \JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
-    private ?Cliente $cliente = null;
+    private ?Cliente $cliente;
 
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
-    private ?Usuario $usuario = null;
+    private ?Usuario $usuario;
 
     #[ORM\Column(type: 'string', enumType: StatusEnum::class)]
     private StatusEnum $status = StatusEnum::aberto;
 
-    #[ORM\Column]
-    /* botar nullabe true aqui */
+    
+    #[ORM\Column(nullable: true)]
     private ?int $valor_total = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $criado_em = null;
+    private ?\DateTimeInterface $criado_em;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $atualizado_em = null;

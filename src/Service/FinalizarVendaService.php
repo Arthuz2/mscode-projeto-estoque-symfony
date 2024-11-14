@@ -19,6 +19,7 @@ class FinalizarVendaService
     {
         // Valida se o carrinho contém produtos
         if ($carrinho->getItems()->isEmpty()) { // Verifica se existem produtos
+            dd($carrinho);
             throw new BadRequestHttpException('O carrinho não contém produtos.');
         }
 

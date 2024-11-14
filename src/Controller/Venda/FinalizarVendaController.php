@@ -18,6 +18,7 @@ class FinalizarVendaController extends AbstractController
     ): JsonResponse
     {
         $id = $request->request->get('cliente');
+       
         try {
             $carrinho = $carrinhoRepository->findBy(['id' => $id])[0];
             $finalizarVendaService->execute(carrinho: $carrinho);

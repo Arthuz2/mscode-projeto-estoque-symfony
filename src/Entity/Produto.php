@@ -14,11 +14,11 @@ class Produto implements \JsonSerializable
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups('produto')]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 100)]
     #[Groups('produto')]
-    private ?string $nome = null;
+    private ?string $nome;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups('produto')]
@@ -42,7 +42,7 @@ class Produto implements \JsonSerializable
 
     #[ORM\ManyToOne(inversedBy: 'produtos')]
     #[Groups('produto')]
-    private ?Categoria $categoria_id = null;
+    private ?Categoria $categoria_id;
 
     #[ORM\Column(nullable: true)]
     #[Groups('produto')]

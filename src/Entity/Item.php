@@ -12,16 +12,16 @@ class Item implements \JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column]
-    private ?int $valor = null;
+    private ?int $valor;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Produto $produto = null;
+    private ?Produto $produto;
 
     #[ORM\ManyToOne(inversedBy: 'items')]
-    private ?Carrinho $carrinho = null;
+    private ?Carrinho $carrinho;
 
     public function getId(): ?int
     {

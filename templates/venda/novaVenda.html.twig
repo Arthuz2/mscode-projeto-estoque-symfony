@@ -8,8 +8,6 @@
 {% block content %}
     <main>
         <h2 class="text-white h2 p-2 mb-3">Nova Venda</h2>
-
-        <!-- card -->
         <section>
             <div class="card-area">
                 <div class="card-item">
@@ -20,7 +18,7 @@
                         </div>
                     </div>
                     <div class="card-bottom">
-                        <p class="resultado">R$0</p>
+                        <p class="resultado">R$ - </p>
                     </div>
                 </div>
                 <div class="card-item">
@@ -31,7 +29,7 @@
                         </div>
                     </div>
                     <div class="card-bottom">
-                        <p class="resultado"></p>
+                        <p class="resultado">-</p>
                     </div>
                 </div>
                 <div class="card-item">
@@ -42,7 +40,7 @@
                         </div>
                     </div>
                     <div class="card-bottom">
-                        <p class="resultado"></p>
+                        <p class="resultado">-</p>
                     </div>
                 </div>
             </div>
@@ -86,103 +84,97 @@
     {{ parent() }}
     <script>
         async function carregarClientes() {
-            try {
-                const response = await fetch('/api/clientes', { 
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                if (!response.ok) throw new Error('Erro ao carregar clientes');
-                const clientes = await response.json();
+              try {
+                  const response = await fetch('/api/clientes', {
+                     method: 'GET',
+                      headers: { 'Content-Type': 'application/json' }
+                  });
+                  if (!response.ok) throw new Error('Erro ao carregar clientes');
+                  const clientes = await response.json();
 
-                const clienteSelect = document.getElementById('cliente-Select');
-                clientes.forEach(cliente => {
-                    const option = document.createElement('option');
-                    option.value = cliente.id;
-                    option.textContent = cliente.nome;
-                    clienteSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Erro ao carregar clientes:', error);
-            }
-        }  
+                  const clienteSelect = document.getElementById('cliente-Select');
+                  clientes.forEach(cliente => {
+                        const option = document.createElement('option');
+                      option.value = cliente.id;
+                      option.textContent = cliente.nome;
+                      clienteSelect.appendChild(option);
+                  });
+              } catch (error) {
+                  console.error('Erro ao carregar clientes:', error);
+              }
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
-    carregarClientes();
+        carregarClientes();
 
-    const clienteSelect = document.getElementById('cliente-Select');
-    clienteSelect.addEventListener('change', function() {
-        const clienteId = this.value;
+        const clienteSelect = document.getElementById('cliente-Select');
+        clienteSelect.addEventListener('change', function() {
+            const clienteId = this.value;
 
-        if (clienteId) {
-            // Fazendo a requisição para buscar ou criar o carrinho
-            fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao buscar o carrinho');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.error) {
-                        alert(data.error);
-                    } else {
-                        // Exibe as informações do carrinho
-                        displayCarrinhoInfo(data.carrinho);
-                        preencherCards(data.carrinho);  // Chama para preencher os cards
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Ocorreu um erro ao buscar o carrinho.');
-                });
-        }
-    });
-
-    function displayCarrinhoInfo(carrinho) {
-        const carrinhoInfoDiv = document.getElementById('tabela');
-        carrinhoInfoDiv.innerHTML = ''; // Limpar o conteúdo existente antes de adicionar novos itens
-
-        carrinho.items.forEach(item => {
-            carrinhoInfoDiv.innerHTML += `
-                <tr>
-                    <td>${item.produto.nome}</td>
-                    <td>${item.produto.categoria_id.id}</td>
-                    <td class="quantidade">
-                        <input class="input-number" type="number" value="${item.produto.qt_disponivel}" min="1">
-                    </td>
-                    <td>${item.produto.qt_disponivel}</td>
-                    <td>${item.valor.toFixed(2)}</td>
-                </tr>
-            `;
+            if (clienteId) {
+              
+                fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro ao buscar o carrinho');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                         
+                            displayCarrinhoInfo(data.carrinho);
+                            preencherCards(data.carrinho);  
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Ocorreu um erro ao buscar o carrinho.');
+                    });
+            }
         });
-    }
 
-    function preencherCards(carrinho) {
-        // Preencher o card de "Total"
-        const totalCard = document.querySelector('.card-area .card-item:nth-child(1) .resultado');
-        if (totalCard) {
-            totalCard.textContent = `R$${carrinho.valor_total.toFixed(2)}`;
+        function displayCarrinhoInfo(carrinho) {
+            const carrinhoInfoDiv = document.getElementById('tabela');
+            carrinhoInfoDiv.innerHTML = ''; 
+
+            carrinho.items.forEach(item => {
+                carrinhoInfoDiv.innerHTML += `
+                    <tr>
+                        <td>${item.produto.nome}</td>
+                        <td>${item.produto.categoria_id.id}</td>
+                        <td class="quantidade">
+                            <input class="input-number" type="number" value="${item.produto.qt_disponivel}" min="1">
+                        </td>
+                        <td>${item.produto.qt_disponivel}</td>
+                        <td>${item.valor.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
         }
 
-        // Preencher o card de "Status"
-        const statusCard = document.querySelector('.card-area .card-item:nth-child(2) .resultado');
-        if (statusCard) {
-            statusCard.textContent = carrinho.status;
+        function preencherCards(carrinho) {
+           
+            const totalCard = document.querySelector('.card-area .card-item:nth-child(1) .resultado');
+            if (totalCard) {
+                totalCard.textContent = `R$${carrinho.valor_total.toFixed(2)}`;
+            }
+
+           
+            const statusCard = document.querySelector('.card-area .card-item:nth-child(2) .resultado');
+            if (statusCard) {
+                statusCard.textContent = carrinho.status;
+            }
+
+           
+            const dataCard = document.querySelector('.card-area .card-item:nth-child(3) .resultado');
+            if (dataCard) {
+                const dataFormatada = new Date(carrinho.criado_em.date).toLocaleDateString('pt-BR');
+                dataCard.textContent = dataFormatada;
+            }
         }
-
-        // Preencher o card de "Data" (criado_em)
-        const dataCard = document.querySelector('.card-area .card-item:nth-child(3) .resultado');
-        if (dataCard) {
-            const dataFormatada = new Date(carrinho.criado_em.date).toLocaleDateString('pt-BR');
-            dataCard.textContent = dataFormatada;
-        }
-    }
-});
-
-     
-
-     
-
-        
+        });
     </script>
 {% endblock %}
