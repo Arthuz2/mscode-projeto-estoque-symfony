@@ -71,6 +71,12 @@ class Item implements \JsonSerializable
         return $this;
     }
 
+   
+    public function getEstoque(): int
+    {
+        return $this->produto->getQuantidadeDisponivel();
+    }
+
     public function jsonSerialize(): array
     {
         return [

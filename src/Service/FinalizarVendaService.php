@@ -2,6 +2,7 @@
 namespace App\Service;
 
 use App\Entity\Carrinho;
+use App\Entity\Item;
 use App\Repository\CarrinhoRepository;
 use App\Entity\StatusEnum;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,7 +12,9 @@ class FinalizarVendaService
 {
     public function __construct(
         private CarrinhoRepository $carrinhoRepository,
-        private EntityManagerInterface $em
+        private EntityManagerInterface $em,
+        private Item $item,
+       
     ) {
     }
 
@@ -28,9 +31,19 @@ class FinalizarVendaService
             throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está pendente.');
         }
 
+        //lugar do codigo
+        if($this->item->getEstoque() === 0 ){
+            throw new BadRequestHttpException('nao temos estoque.');
+        } 
+
+        $this->item->getEstoque() - 1;
+        $this->em->flush();
+        $this->em->persist($this->item);
+       
         // Altera o status para "aguardando pagamento"
         $carrinho->setStatus(StatusEnum::aguardandoPagamento); // Certifique-se 
         $this->carrinhoRepository->salvar($carrinho);
         
     }
 }
+
