@@ -15,14 +15,13 @@ class FinalizarVendaService
         private EntityManagerInterface $em,
        
     ) {
-        
     }
 
-    public function execute(Carrinho $carrinho): bool
+    public function execute(Carrinho $carrinho): Carrinho
     {
         // Valida se o carrinho contém produtos
         if ($carrinho->getItems()->isEmpty()) { // Verifica se existem produtos
-            dd($carrinho);
+         
             throw new BadRequestHttpException('O carrinho não contém produtos.');
         }
 
@@ -45,9 +44,7 @@ class FinalizarVendaService
         $carrinho->setStatus(StatusEnum::aguardandoPagamento); // Certifique-se 
         $this->carrinhoRepository->salvar($carrinho);
 
-        return true;
-
-        
+        return $carrinho;
         
     }
 }
