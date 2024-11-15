@@ -20,7 +20,7 @@ class FinalizarVendaController extends AbstractController
         $id = $request->request->get('cliente');
        
         try {
-            $carrinho = $carrinhoRepository->findBy(['id' => $id])[0];
+            $carrinho = $carrinhoRepository->findBy(['id' => $id]);
             $finalizarVendaService->execute(carrinho: $carrinho);
             return new JsonResponse([
                 "message" => 'Carrinho alterado para aguardando pagamento.'

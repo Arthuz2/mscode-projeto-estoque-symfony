@@ -13,12 +13,12 @@ class FinalizarVendaService
     public function __construct(
         private CarrinhoRepository $carrinhoRepository,
         private EntityManagerInterface $em,
-        private Item $item,
        
     ) {
+        
     }
 
-    public function execute(Carrinho $carrinho): void
+    public function execute(Carrinho $carrinho): bool
     {
         // Valida se o carrinho contém produtos
         if ($carrinho->getItems()->isEmpty()) { // Verifica se existem produtos
@@ -31,18 +31,23 @@ class FinalizarVendaService
             throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está pendente.');
         }
 
-        //lugar do codigo
-        if($this->item->getEstoque() === 0 ){
-            throw new BadRequestHttpException('nao temos estoque.');
+        
+        $item = new Item();
+        if($item->getEstoque() === 0 ){
+            throw new BadRequestHttpException('nao temos em estoque.');
         } 
 
-        $this->item->getEstoque() - 1;
+        $item->getEstoque() - 1;
         $this->em->flush();
-        $this->em->persist($this->item);
+        $this->em->persist($item);
        
         // Altera o status para "aguardando pagamento"
         $carrinho->setStatus(StatusEnum::aguardandoPagamento); // Certifique-se 
         $this->carrinhoRepository->salvar($carrinho);
+
+        return true;
+
+        
         
     }
 }

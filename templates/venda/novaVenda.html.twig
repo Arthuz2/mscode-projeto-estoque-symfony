@@ -48,7 +48,7 @@
         </section>
 
         <section class="formulario">
-            <form id="finalizarVendaForm" action="{{ path('finalizarCarrinho') }}" method="POST">
+            <form id="finalizarVendaForm" action="{{ path('finalizarCarrinho') }}" method="POST" data-turbo="false">
                 <p class="texto">Cliente*</p>
                 <div class="formulario-area">
                     <select class="form-select" id="cliente-Select" name="cliente" required>
