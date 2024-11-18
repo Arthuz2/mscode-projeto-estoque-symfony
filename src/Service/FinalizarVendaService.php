@@ -17,8 +17,13 @@ class FinalizarVendaService
 
     public function execute(Carrinho $carrinho): void
     {
-        if ($carrinho->getItems()->isEmpty()) {
-            throw new BadRequestHttpException('O carrinho nao contem produtos.');
+        // Valida se o carrinho contém produtos
+        if ($carrinho->getItems()->isEmpty()) { // Verifica se existem produtos
+            dd($carrinho);
+            throw new BadRequestHttpException('O carrinho não contém produtos.');
+
+          
+         
         }
 
         if ($carrinho->getStatus() !== StatusEnum::aberto) { 

@@ -8,17 +8,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ProdutoRepository::class)]
-class Produto
+class Produto implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups('produto')]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\Column(length: 100)]
     #[Groups('produto')]
-    private ?string $nome = null;
+    private ?string $nome;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups('produto')]
@@ -42,7 +42,7 @@ class Produto
 
     #[ORM\ManyToOne(inversedBy: 'produtos')]
     #[Groups('produto')]
-    private ?Categoria $categoria_id = null;
+    private ?Categoria $categoria_id;
 
     #[ORM\Column(nullable: true)]
     #[Groups('produto')]
@@ -163,5 +163,16 @@ class Produto
         $this->atualizado_em = $atualizado_em;
 
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'nome' => $this->nome,
+            "categoria_id" => $this->categoria_id,
+            "qt_disponivel" => $this->quantidade_disponivel
+
+        ];
     }
 }

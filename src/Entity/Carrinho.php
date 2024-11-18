@@ -3,33 +3,35 @@
 namespace App\Entity;
 
 use App\Repository\CarrinhoRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarrinhoRepository::class)]
-class Carrinho
+class Carrinho implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id;
 
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
-    private ?Cliente $cliente = null;
+    private ?Cliente $cliente;
 
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
-    private ?Usuario $usuario = null;
+    private ?Usuario $usuario;
 
     #[ORM\Column(type: 'string', enumType: StatusEnum::class)]
     private StatusEnum $status = StatusEnum::aberto;
 
-    #[ORM\Column]
+    
+    #[ORM\Column(nullable: true)]
     private ?int $valor_total = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $criado_em = null;
+    private ?\DateTimeInterface $criado_em;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $atualizado_em = null;
@@ -43,9 +45,13 @@ class Carrinho
     #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'carrinho')]
     private Collection $items;
 
-    public function __construct()
+    public function __construct(
+        Cliente $cliente
+    )
     {
+        $this->criado_em = new DateTimeImmutable();
         $this->items = new ArrayCollection();
+        $this->cliente = $cliente;
     }
 
     public function getStatus(): StatusEnum
@@ -166,4 +172,20 @@ class Carrinho
 
         return $this;
     }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'cliente'  => $this->cliente,
+            'usuario' => $this->usuario,
+            'status' => $this->status,
+            'valor_total'  => $this->valor_total,
+            'criado_em' => $this->criado_em,
+            'finalizado_em' => $this->finalizado_em,   
+            'items' => $this->items->toArray(),
+
+        ];
+    }
+
 }

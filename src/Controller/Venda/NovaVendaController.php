@@ -15,10 +15,12 @@ class NovaVendaController extends AbstractController
     ){}
 
     #[Route('/novaVenda', name: 'nova_venda')]
-    public function novaVenda(): Response
+    public function novaVenda(CarrinhoRepository $carrinhoRepository): Response
     {
+
         $carrinhos = $this->carrinhoRepository->findAll();
         
         return $this->render('venda/novaVenda.html.twig', ["carrinhos" => $carrinhos]);
+
     }
 }
