@@ -28,7 +28,7 @@
 									<a class="dropdown-item" href="/error">Vendas realizadas</a>
 								</li>
 								<li>
-									<a class="dropdown-item" href="/novaVenda">Nova venda</a>
+									<a class="dropdown-item" href="/novaVenda" onclick="reloadPage()">Nova venda</a>
 								</li>
 							</ul>
 						</li>
@@ -55,4 +55,13 @@
 	</main>
 	{% block content %}{% endblock %}
 	
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		function reloadPage() {
+			window.location.href = '/novaVenda';
+		}
+	</script>
 {% endblock %}
