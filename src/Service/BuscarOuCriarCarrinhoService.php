@@ -23,13 +23,19 @@ class BuscarOuCriarCarrinhoService
         if(null === $cliente){
             throw new \Exception("cliente nao encontrado!!!");
         }
+        
+        if($this->carrinhoRepository->findOneBy(['cliente' => $cliente, "status" => StatusEnum::aguardandoPagamento])){
+            throw new \Exception("nao pode acessar esse carrinho pois o estatus dele é aguardando pagamentoo!!!");
+        }
 
         $carrinho = $this->carrinhoRepository->findOneBy(['cliente' => $cliente, 'status' => StatusEnum::aberto]);
-       
         if (null === $carrinho) {
             $carrinho = new Carrinho($cliente);
             $this->carrinhoRepository->salvar($carrinho);
         }
+
+       
+     
         return $carrinho;
     }
 }
