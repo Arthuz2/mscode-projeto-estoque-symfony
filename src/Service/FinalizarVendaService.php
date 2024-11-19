@@ -2,9 +2,9 @@
 namespace App\Service;
 
 use App\Entity\Carrinho;
-use App\Entity\Item;
 use App\Repository\CarrinhoRepository;
 use App\Entity\StatusEnum;
+use App\Repository\ClienteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -13,39 +13,44 @@ class FinalizarVendaService
     public function __construct(
         private CarrinhoRepository $carrinhoRepository,
         private EntityManagerInterface $em,
-       
+        private ClienteRepository $clienteRepository,
     ) {
     }
 
-    public function execute(Carrinho $carrinho): Carrinho
+    public function execute(int $id): Carrinho
     {
-        // Valida se o carrinho contém produtos
-        if ($carrinho->getItems()->isEmpty()) { // Verifica se existem produtos
-         
-            throw new BadRequestHttpException('O carrinho não contém produtos.');
+    
+        $cliente = $this->clienteRepository->find($id);
+        $carrinho = $this->carrinhoRepository->findOneBy(["cliente" => $cliente]);
+    
+    
+        if ($carrinho->getItems()->isEmpty()) {
+         throw new BadRequestHttpException('O carrinho não contém produtos.');
         }
 
-        // Valida se o carrinho já foi finalizado
-        if ($carrinho->getStatus() !== StatusEnum::aberto) { // Certifique-se de comparar com o tipo correto
+    
+        if ($carrinho->getStatus() !== StatusEnum::aberto) {
             throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está pendente.');
         }
-
-        
-        $item = new Item();
-        if($item->getEstoque() === 0 ){
-            throw new BadRequestHttpException('nao temos em estoque.');
-        } 
-
-        $item->getEstoque() - 1;
-        $this->em->flush();
-        $this->em->persist($item);
+   
+        foreach ($carrinho->getItems() as $item) {
        
-        // Altera o status para "aguardando pagamento"
-        $carrinho->setStatus(StatusEnum::aguardandoPagamento); // Certifique-se 
-        $this->carrinhoRepository->salvar($carrinho);
+           $produto = $item->getProduto();
 
+           if ($produto->getQuantidadeDisponivel() === 0) {
+               throw new BadRequestHttpException('O produto ' . $produto->getNome() . ' está fora de estoque.');
+            }
+
+            $produtoAlterado = $produto->getQuantidadeDisponivel() - 1;
+            $produto->setQuantidadeDisponivel($produtoAlterado);
+            $this->em->persist($produto);
+        }
+
+        $carrinho->setStatus(StatusEnum::aguardandoPagamento);
+
+        $this->carrinhoRepository->salvar($carrinho);
         return $carrinho;
-        
     }
+
 }
 
