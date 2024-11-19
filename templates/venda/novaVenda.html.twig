@@ -116,7 +116,6 @@
             const clienteId = this.value;
 
             if (clienteId) {
-              
                 fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
                     .then(response => {
                         if (!response.ok) {
@@ -128,13 +127,11 @@
                         if (data.error) {
                             alert(data.error);
                         } else {
-                         console.log(data)
                             displayCarrinhoInfo(data.carrinho);
                             preencherCards(data.carrinho);  
                         }
                     })
                     .catch(error => {
-                        console.error('Erro:', error);
                         alert('Ocorreu um erro ao buscar o carrinho.');
                     });
             }
@@ -160,19 +157,16 @@
         }
 
         function preencherCards(carrinho) {
-           
             const totalCard = document.querySelector('.card-area .card-item:nth-child(1) .resultado');
             if (totalCard) {
                 totalCard.textContent = `R$${carrinho.valor_total.toFixed(2)}`;
             }
-
            
             const statusCard = document.querySelector('.card-area .card-item:nth-child(2) .resultado');
             if (statusCard) {
                 statusCard.textContent = carrinho.status;
             }
 
-           
             const dataCard = document.querySelector('.card-area .card-item:nth-child(3) .resultado');
             if (dataCard) {
                 const dataFormatada = new Date(carrinho.criado_em.date).toLocaleDateString('pt-BR');

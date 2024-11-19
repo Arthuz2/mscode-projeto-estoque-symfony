@@ -5,6 +5,7 @@ use App\Entity\Carrinho;
 use App\Repository\CarrinhoRepository;
 use App\Entity\StatusEnum;
 use App\Repository\ClienteRepository;
+use App\Repository\ProdutoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -14,27 +15,24 @@ class FinalizarVendaService
         private CarrinhoRepository $carrinhoRepository,
         private EntityManagerInterface $em,
         private ClienteRepository $clienteRepository,
+        private ProdutoRepository $produtoRepository,
     ) {
     }
 
     public function execute(int $id): Carrinho
     {
-    
         $cliente = $this->clienteRepository->find($id);
         $carrinho = $this->carrinhoRepository->findOneBy(["cliente" => $cliente]);
-    
     
         if ($carrinho->getItems()->isEmpty()) {
          throw new BadRequestHttpException('O carrinho não contém produtos.');
         }
-
     
         if ($carrinho->getStatus() !== StatusEnum::aberto) {
             throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está pendente.');
         }
    
         foreach ($carrinho->getItems() as $item) {
-       
            $produto = $item->getProduto();
 
            if ($produto->getQuantidadeDisponivel() === 0) {
@@ -43,14 +41,10 @@ class FinalizarVendaService
 
             $produtoAlterado = $produto->getQuantidadeDisponivel() - 1;
             $produto->setQuantidadeDisponivel($produtoAlterado);
-            $this->em->persist($produto);
+            $this->produtoRepository->salvar($produto);
         }
-
         $carrinho->setStatus(StatusEnum::aguardandoPagamento);
-
-        $this->carrinhoRepository->salvar($carrinho);
-        return $carrinho;
+        return $this->carrinhoRepository->salvar($carrinho);
     }
-
 }
 
