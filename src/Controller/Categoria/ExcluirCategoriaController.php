@@ -20,15 +20,15 @@ class ExcluirCategoriaController extends AbstractController
     public function index(int|string $id): Response
     {
         $categoria = $this->categoriaRepository->find($id);
-        
-        $produtoExiste = $this->produtoRepository->findOneBy(['categoria_id' => $categoria]);
-
-        if ($produtoExiste){
-            $this->addFlash('danger','Existem produtos vinculados a esta categoria');
-        }else {
-            $this->categoriaRepository->excluir($categoria);
+        if($categoria){
+            $this->addFlash('danger','nao pode excluir uma categoria, apenas editar');
         }
 
+        $produtoExiste = $this->produtoRepository->findOneBy(['categoria_id' => $categoria]);
+        if ($produtoExiste){
+            $this->addFlash('danger','Existem produtos vinculados a esta categoria');
+        }
+        
         return $this->redirectToRoute('listar_categorias');
     }
 }
