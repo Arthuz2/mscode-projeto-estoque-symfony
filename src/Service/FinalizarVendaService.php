@@ -19,6 +19,7 @@ class FinalizarVendaService
 
     public function execute(int $id): Carrinho
     {
+
     
         $cliente = $this->clienteRepository->find($id);
         $carrinho = $this->carrinhoRepository->findOneBy(["cliente" => $cliente]);
@@ -31,6 +32,7 @@ class FinalizarVendaService
     
         if ($carrinho->getStatus() !== StatusEnum::aberto) {
             throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está pendente.');
+
         }
    
         foreach ($carrinho->getItems() as $item) {
@@ -47,6 +49,8 @@ class FinalizarVendaService
         }
 
         $carrinho->setStatus(StatusEnum::aguardandoPagamento);
+
+
 
         $this->carrinhoRepository->salvar($carrinho);
         return $carrinho;
