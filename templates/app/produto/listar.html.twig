@@ -20,7 +20,7 @@
 						<th scope="col">Categoria Id</th>
 						<th scope="col">Qtd. Disponível</th>
 						<th scope="col">Valor</th>
-						<th scope="col-2">Actions</th>
+						<th scope="col-2 text-align-right">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -37,6 +37,8 @@
 								<a href="/produto/editar/{{ produto.id }}" class="btn btn-secondary btn-sm">
 									<i class="bi bi-pencil"></i>
 								</a>
+								<a href="/produto/excluir/{{ produto.id }}" class="btn btn-danger btn-sm">
+									<i class="bi bi-x"></i>
 								</a>
 							</td>
 						</tr>
