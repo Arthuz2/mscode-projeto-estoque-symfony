@@ -15,15 +15,18 @@ class Carrinho implements \JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private int $id;
 
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
-    private ?Cliente $cliente;
+    private Cliente $cliente;
+
 
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
     #[ORM\JoinColumn(nullable: false)]  
     private Usuario $usuario;
     
+
+
 
     #[ORM\Column(type: 'string', enumType: StatusEnum::class)]
     private StatusEnum $status = StatusEnum::aberto;
@@ -57,6 +60,11 @@ class Carrinho implements \JsonSerializable
         $this->cliente = $cliente;
         $this->usuario = $usuario;
     }
+    
+    public function isPaid(): bool
+    {
+        return $this->status === StatusEnum::finalizado;
+    }
 
     public function getStatus(): StatusEnum
     {
@@ -66,7 +74,6 @@ class Carrinho implements \JsonSerializable
     public function setStatus(StatusEnum $status): self
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -80,10 +87,9 @@ class Carrinho implements \JsonSerializable
         return $this->cliente;
     }
 
-    public function setCliente(?Cliente $cliente): static
+    public function setCliente(?Cliente $cliente): self
     {
         $this->cliente = $cliente;
-
         return $this;
     }
 
@@ -92,10 +98,9 @@ class Carrinho implements \JsonSerializable
         return $this->usuario;
     }
 
-    public function setUsuario(?Usuario $usuario): static
+    public function setUsuario(?Usuario $usuario): self
     {
         $this->usuario = $usuario;
-
         return $this;
     }
 
@@ -104,10 +109,9 @@ class Carrinho implements \JsonSerializable
         return $this->valor_total;
     }
 
-    public function setValorTotal(int $valor_total): static
+    public function setValorTotal(int $valor_total): self
     {
         $this->valor_total = $valor_total;
-
         return $this;
     }
 
@@ -116,10 +120,9 @@ class Carrinho implements \JsonSerializable
         return $this->criado_em;
     }
 
-    public function setCriadoEm(\DateTimeInterface $criado_em): static
+    public function setCriadoEm(\DateTimeInterface $criado_em): self
     {
         $this->criado_em = $criado_em;
-
         return $this;
     }
 
@@ -128,10 +131,9 @@ class Carrinho implements \JsonSerializable
         return $this->atualizado_em;
     }
 
-    public function setAtualizadoEm(?\DateTimeInterface $atualizado_em): static
+    public function setAtualizadoEm(?\DateTimeInterface $atualizado_em): self
     {
         $this->atualizado_em = $atualizado_em;
-
         return $this;
     }
 
@@ -140,10 +142,21 @@ class Carrinho implements \JsonSerializable
         return $this->finalizado_em;
     }
 
-    public function setFinalizadoEm(?\DateTimeInterface $finalizado_em): static
+    public function setFinalizadoEm(?\DateTimeInterface $finalizado_em): self
     {
         $this->finalizado_em = $finalizado_em;
+        return $this;
+    }
 
+    public function updateAtualizadoEm(): self
+    {
+        $this->atualizado_em = new \DateTime();
+        return $this;
+    }
+
+    public function updateFinalizadoEm(): self
+    {
+        $this->finalizado_em = new \DateTime();
         return $this;
     }
 
@@ -155,25 +168,22 @@ class Carrinho implements \JsonSerializable
         return $this->items;
     }
 
-    public function addItem(Item $item): static
+    public function addItem(Item $item): self
     {
         if (!$this->items->contains($item)) {
             $this->items->add($item);
             $item->setCarrinho($this);
         }
-
         return $this;
     }
 
-    public function removeItem(Item $item): static
+    public function removeItem(Item $item): self
     {
         if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
             if ($item->getCarrinho() === $this) {
                 $item->setCarrinho(null);
             }
         }
-
         return $this;
     }
 
@@ -191,5 +201,4 @@ class Carrinho implements \JsonSerializable
 
         ];
     }
-
 }

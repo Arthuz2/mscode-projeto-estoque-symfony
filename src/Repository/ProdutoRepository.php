@@ -32,10 +32,4 @@ class ProdutoRepository extends ServiceEntityRepository
         $this->getEntityManager()->remove($produto);
         $this->getEntityManager()->flush();
     }
-
-    public function getEstoque(): int
-    {
-        $produto = new Produto();
-       return $produto->getQuantidadeDisponivel();
-    }
 }

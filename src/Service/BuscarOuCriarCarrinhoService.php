@@ -9,6 +9,7 @@ use App\Entity\Carrinho;
 use App\Repository\UsuarioRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
+
 class BuscarOuCriarCarrinhoService
 {
     public function __construct(
@@ -32,7 +33,8 @@ class BuscarOuCriarCarrinhoService
         }
 
         $carrinho = $this->carrinhoRepository->findOneBy(['cliente' => $cliente, 'status' => StatusEnum::aberto]);
-       
+        $usuario = $this->usuarioRepository->findAll();
+      
         if (null === $carrinho) {
             $usuario = $this->security->getUser();
             $carrinho = new Carrinho($cliente,$usuario);
