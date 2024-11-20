@@ -19,6 +19,7 @@ class FinalizarVendaService
 
     public function execute(int $id): Carrinho
     {
+
         $cliente = $this->clienteRepository->find($id);
         $carrinho = $this->carrinhoRepository->findOneBy(["cliente" => $cliente]);
     
@@ -37,12 +38,14 @@ class FinalizarVendaService
                throw new BadRequestHttpException('O produto ' . $produto->getNome() . ' está fora de estoque.');
             }
 
+
             $produtoAlterado = $produto->getQuantidadeDisponivel() - 1;
             $produto->setQuantidadeDisponivel($produtoAlterado);
             $this->produtoRepository->salvar($produto);
         }
         $carrinho->setStatus(StatusEnum::aguardandoPagamento);
         return $this->carrinhoRepository->salvar($carrinho);
+
     }
 }
 

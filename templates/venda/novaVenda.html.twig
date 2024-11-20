@@ -1,8 +1,9 @@
 {% extends "pagesApp.html.twig" %}
+
 {% block title %}
     Nova venda
 {% endblock %}
-{% block stylesheets %}
+{% block addStylesheet %}
     <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
 {% endblock %}
 {% block content %}
@@ -62,7 +63,7 @@
         </section>
 
 
-        <section class="tabela">
+    <section class="tabela">
             <table>
                 <thead>
                     <tr class="tabela-topo">
@@ -80,7 +81,9 @@
                 </tbody>
             </table>
         </section>
+
     </main>
+
 
 {% endblock %}
 
@@ -176,5 +179,6 @@
         });
     </script>
 {% endblock %}
+
 
 
