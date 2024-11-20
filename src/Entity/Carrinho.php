@@ -20,18 +20,13 @@ class Carrinho implements \JsonSerializable
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
     private Cliente $cliente;
 
-
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
     #[ORM\JoinColumn(nullable: false)]  
     private Usuario $usuario;
     
-
-
-
     #[ORM\Column(type: 'string', enumType: StatusEnum::class)]
     private StatusEnum $status = StatusEnum::aberto;
 
-    
     #[ORM\Column(nullable: true)]
     private ?int $valor_total = null;
 

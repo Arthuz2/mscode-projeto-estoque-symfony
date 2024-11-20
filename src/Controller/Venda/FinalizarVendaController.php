@@ -18,7 +18,6 @@ class FinalizarVendaController extends AbstractController
     {
         $id = $request->request->get('cliente');
         try {
-
             $finalizarVendaService->execute( id: $id);
             return new JsonResponse([
                 "message" => 'Carrinho alterado para aguardando pagamento.'
@@ -27,8 +26,7 @@ class FinalizarVendaController extends AbstractController
             return  new JsonResponse(['error' => $e->getMessage()]);
         }
     }
-
 }
 
-}
+
 
