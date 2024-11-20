@@ -20,16 +20,9 @@ class ExcluirProdutoController extends AbstractController
     public function index(int|string $id): Response
     {
         $produto = $this->produtoRepository->find($id);
-        $item = $this->itemRepository->findBy(['produto' => $id]);
-        
-        if($item){
-            $this->addFlash('danger', 'Você não pode excluir um produto vinculado a um item, exclua-o item primeiro!');
+        if($produto){
+            $this->addFlash('danger','não pode excluir um produto, apenas editar');
             return $this->redirectToRoute('listar_produtos');
         }
-    
-        $this->produtoRepository->excluir($produto);
-
-        $this->addFlash('success', 'Produto excluido com sucesso!');
-        return $this->redirectToRoute('listar_produtos');
     }
 }
