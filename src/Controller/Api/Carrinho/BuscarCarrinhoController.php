@@ -1,14 +1,10 @@
 <?php
-
 namespace App\Controller\Api\Carrinho;
-
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\BuscarOuCriarCarrinhoService;
-
-
 
 class BuscarCarrinhoController extends AbstractController
 {
@@ -22,10 +18,8 @@ class BuscarCarrinhoController extends AbstractController
             return new JsonResponse(['carrinho' => $service->execute(id: $clienteId)]); 
         } catch (\Throwable $e) {
             return new JsonResponse(
-
                 ['error' => $e->getMessage()],
                 500,
-
             );
         }
     }

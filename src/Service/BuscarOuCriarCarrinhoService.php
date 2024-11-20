@@ -6,18 +6,21 @@ use App\Repository\CarrinhoRepository;
 use App\Repository\ClienteRepository;
 use App\Entity\StatusEnum;
 use App\Entity\Carrinho;
+use App\Repository\UsuarioRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class BuscarOuCriarCarrinhoService
 {
     public function __construct(
         private CarrinhoRepository $carrinhoRepository,
-        private ClienteRepository $clienteRepository
+        private ClienteRepository $clienteRepository,
+        private UsuarioRepository $usuarioRepository,
+        private Security $security
     )
     {
     }
 
     public function execute(int $id): Carrinho
-
     {
         $cliente = $this->clienteRepository->find($id);
         if(null === $cliente){
@@ -29,13 +32,12 @@ class BuscarOuCriarCarrinhoService
         }
 
         $carrinho = $this->carrinhoRepository->findOneBy(['cliente' => $cliente, 'status' => StatusEnum::aberto]);
+       
         if (null === $carrinho) {
-            $carrinho = new Carrinho($cliente);
+            $usuario = $this->security->getUser();
+            $carrinho = new Carrinho($cliente,$usuario);
             $this->carrinhoRepository->salvar($carrinho);
         }
-
-       
-     
         return $carrinho;
     }
 }

@@ -21,7 +21,9 @@ class Carrinho implements \JsonSerializable
     private ?Cliente $cliente;
 
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
-    private ?Usuario $usuario = null;
+    #[ORM\JoinColumn(nullable: false)]  
+    private Usuario $usuario;
+    
 
     #[ORM\Column(type: 'string', enumType: StatusEnum::class)]
     private StatusEnum $status = StatusEnum::aberto;
@@ -46,12 +48,14 @@ class Carrinho implements \JsonSerializable
     private Collection $items;
 
     public function __construct(
-        Cliente $cliente
+        Cliente $cliente,
+        Usuario $usuario
     )
     {
         $this->criado_em = new DateTimeImmutable();
         $this->items = new ArrayCollection();
         $this->cliente = $cliente;
+        $this->usuario = $usuario;
     }
 
     public function getStatus(): StatusEnum
