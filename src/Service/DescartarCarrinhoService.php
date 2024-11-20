@@ -6,7 +6,6 @@ use App\Controller\Exception\CarrinhoJaDescartadoException;
 use App\Entity\Carrinho;
 use App\Entity\StatusEnum;
 use App\Repository\CarrinhoRepository;
-use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Response;
 
 class DescartarCarrinhoService
@@ -20,11 +19,12 @@ class DescartarCarrinhoService
     $carrinho = $this->carrinhoRepository->find($carrinho);
 
     if ($carrinho->getStatus() === StatusEnum::descartado) {
-      throw new CarrinhoJaDescartadoException;
+      throw new CarrinhoJaDescartadoException('carrinho ja foi descartado', 500);
     }
 
     $carrinho->setStatus(StatusEnum::descartado);
-    $carrinho->setFinalizadoEm(new DateTimeImmutable());
+    $carrinho->updateAtualizadoEm();
+    $carrinho->updateFinalizadoEm();
     $this->carrinhoRepository->salvar($carrinho);
   }
 }
