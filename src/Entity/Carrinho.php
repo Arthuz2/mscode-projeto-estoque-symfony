@@ -20,8 +20,12 @@ class Carrinho implements \JsonSerializable
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
     private Cliente $cliente;
 
-    #[ORM\ManyToOne(inversedBy: "carrinhos")]
-    private ?Usuario $usuario;
+
+    #[ORM\ManyToOne(inversedBy: 'carrinhos')]
+    #[ORM\JoinColumn(nullable: false)]  
+    private Usuario $usuario;
+    
+
 
 
     #[ORM\Column(type: 'string', enumType: StatusEnum::class)]
@@ -48,11 +52,13 @@ class Carrinho implements \JsonSerializable
 
     public function __construct(
         Cliente $cliente,
+        Usuario $usuario
     )
     {
         $this->criado_em = new DateTimeImmutable();
         $this->items = new ArrayCollection();
         $this->cliente = $cliente;
+        $this->usuario = $usuario;
     }
     
     public function isPaid(): bool

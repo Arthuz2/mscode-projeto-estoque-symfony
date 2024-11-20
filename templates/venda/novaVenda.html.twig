@@ -114,68 +114,81 @@
         document.addEventListener('DOMContentLoaded', function() {
         carregarClientes();
 
-        const clienteSelect = document.getElementById('cliente-Select');
-        clienteSelect.addEventListener('change', function() {
-            const clienteId = this.value;
 
-            if (clienteId) {
-                fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
-                    .then(response => { 
-                        if (!response.ok) { 
-                            throw new Error('Erro ao buscar o carrinho');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.error) {
-                            alert(data.error);
-                        } else {
-                            displayCarrinhoInfo(data.carrinho);
-                            preencherCards(data.carrinho);  
-                        }
-                    })
-                    .catch(error => {
-                        alert('Ocorreu um erro ao buscar o carrinho.');
-                    });
-            }
-        });
+            const clienteSelect = document.getElementById('cliente-Select');
+            clienteSelect.addEventListener('change', function() {
+                const clienteId = this.value;
 
-        function displayCarrinhoInfo(carrinho) {
-            const carrinhoInfoDiv = document.getElementById('tabela');
-            carrinhoInfoDiv.innerHTML = ''; 
-
-            carrinho.items.forEach(item => {
-                carrinhoInfoDiv.innerHTML += `
-                    <tr>
-                        <td>${item.produto.nome}</td>
-                        <td>${item.produto.categoria_id.id}</td>
-                        <td class="quantidade">
-                            <input class="input-number" type="number" value="${item.produto.qt_disponivel}" min="1">
-                        </td>
-                        <td>${item.produto.qt_disponivel}</td>
-                        <td>${item.valor.toFixed(2)}</td>
-                    </tr>
-                `;
+                if (clienteId) {
+                
+                    fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
+                        .then(response => {
+                            
+                            if (!response.ok) {
+                                throw new Error('Erro ao buscar o carrinho');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data)
+                            if (data.error) {
+                                alert(data.error);
+                            } else {
+                                displayCarrinhoInfo(data.carrinho);
+                                preencherCards(data.carrinho);  
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro:', error);
+                            alert('Ocorreu um erro ao buscar o carrinho.');
+                        });
+                }
             });
-        }
 
-        function preencherCards(carrinho) {
-            const totalCard = document.querySelector('.card-area .card-item:nth-child(1) .resultado');
-            if (totalCard) {
-                totalCard.textContent = `R$${carrinho.valor_total.toFixed(2)}`;
-            }
-           
-            const statusCard = document.querySelector('.card-area .card-item:nth-child(2) .resultado');
-            if (statusCard) {
-                statusCard.textContent = carrinho.status;
+            function displayCarrinhoInfo(carrinho) {
+                const carrinhoInfoDiv = document.getElementById('tabela');
+                carrinhoInfoDiv.innerHTML = ''; 
+
+                carrinho.items.forEach(item => {
+                    carrinhoInfoDiv.innerHTML += `
+                        <tr>
+                            <td>${item.produto.nome}</td>
+                            <td>${item.produto.categoria_id.id}</td>
+                            <td class="quantidade">
+                                <input class="input-number" type="number" value="${item.produto.qt_disponivel}" min="1">
+                            </td>
+                            <td>${item.produto.qt_disponivel}</td>
+                            <td>${item.valor.toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
             }
 
-            const dataCard = document.querySelector('.card-area .card-item:nth-child(3) .resultado');
-            if (dataCard) {
-                const dataFormatada = new Date(carrinho.criado_em.date).toLocaleDateString('pt-BR');
-                dataCard.textContent = dataFormatada;
+            function preencherCards(carrinho) {
+            
+                const valorTotal = carrinho.valor_total !== null && carrinho.valor_total !== undefined ? carrinho.valor_total : 0;
+                const status = carrinho.status !== null && carrinho.status !== undefined ? carrinho.status : '-';
+                const dataCriacao = carrinho.criado_em !== null && carrinho.criado_em.date ? carrinho.criado_em.date : null;
+
+                const totalCard = document.querySelector('.card-area .card-item:nth-child(1) .resultado');
+                if (totalCard) {
+                    totalCard.textContent = `R$${valorTotal.toFixed(2)}`;
+                }
+
+                const statusCard = document.querySelector('.card-area .card-item:nth-child(2) .resultado');
+                if (statusCard) {
+                    statusCard.textContent = status;
+                }
+
+                const dataCard = document.querySelector('.card-area .card-item:nth-child(3) .resultado');
+                if (dataCard && dataCriacao) {
+                    const dataFormatada = new Date(dataCriacao).toLocaleDateString('pt-BR');
+                    dataCard.textContent = dataFormatada;
+                } else if (dataCard) {
+                    dataCard.textContent = '-';
+                }
+
             }
-        }
         });
     </script>
 {% endblock %}

@@ -7,6 +7,8 @@ use App\Repository\ClienteRepository;
 use App\Entity\StatusEnum;
 use App\Entity\Carrinho;
 use App\Repository\UsuarioRepository;
+use Symfony\Bundle\SecurityBundle\Security;
+
 
 class BuscarOuCriarCarrinhoService
 {
@@ -14,25 +16,28 @@ class BuscarOuCriarCarrinhoService
         private CarrinhoRepository $carrinhoRepository,
         private ClienteRepository $clienteRepository,
         private UsuarioRepository $usuarioRepository,
+        private Security $security
     )
     {
     }
 
     public function execute(int $id): Carrinho
-
     {
         $cliente = $this->clienteRepository->find($id);
         if(null === $cliente){
             throw new \Exception("cliente nao encontrado!!!");
         }
+        
+        if($this->carrinhoRepository->findOneBy(['cliente' => $cliente, "status" => StatusEnum::aguardandoPagamento])){
+            throw new \Exception("nao pode acessar esse carrinho pois o estatus dele é aguardando pagamentoo!!!");
+        }
 
         $carrinho = $this->carrinhoRepository->findOneBy(['cliente' => $cliente, 'status' => StatusEnum::aberto]);
         $usuario = $this->usuarioRepository->findAll();
-       
-       
-     
+      
         if (null === $carrinho) {
-            $carrinho = new Carrinho($cliente);
+            $usuario = $this->security->getUser();
+            $carrinho = new Carrinho($cliente,$usuario);
             $this->carrinhoRepository->salvar($carrinho);
         }
         return $carrinho;
