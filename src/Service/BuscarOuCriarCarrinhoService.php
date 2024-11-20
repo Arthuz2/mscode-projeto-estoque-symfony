@@ -6,12 +6,14 @@ use App\Repository\CarrinhoRepository;
 use App\Repository\ClienteRepository;
 use App\Entity\StatusEnum;
 use App\Entity\Carrinho;
+use App\Repository\UsuarioRepository;
 
 class BuscarOuCriarCarrinhoService
 {
     public function __construct(
         private CarrinhoRepository $carrinhoRepository,
-        private ClienteRepository $clienteRepository
+        private ClienteRepository $clienteRepository,
+        private UsuarioRepository $usuarioRepository,
     )
     {
     }
@@ -25,7 +27,10 @@ class BuscarOuCriarCarrinhoService
         }
 
         $carrinho = $this->carrinhoRepository->findOneBy(['cliente' => $cliente, 'status' => StatusEnum::aberto]);
+        $usuario = $this->usuarioRepository->findAll();
        
+       
+     
         if (null === $carrinho) {
             $carrinho = new Carrinho($cliente);
             $this->carrinhoRepository->salvar($carrinho);

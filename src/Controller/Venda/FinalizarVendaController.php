@@ -1,7 +1,7 @@
 <?php 
 
 namespace App\Controller\Venda;
-use App\Repository\CarrinhoRepository;
+
 use App\Service\FinalizarVendaService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,20 +14,21 @@ class FinalizarVendaController extends AbstractController
     public function finalizarVenda(
         Request $request,
         FinalizarVendaService $finalizarVendaService,
-        CarrinhoRepository $carrinhoRepository
     ): JsonResponse
     {
         $id = $request->request->get('cliente');
-       
         try {
-            $carrinho = $carrinhoRepository->find($id);
-            $finalizarVendaService->execute(carrinho: $carrinho);
+
+            $finalizarVendaService->execute( id: $id);
             return new JsonResponse([
                 "message" => 'Carrinho alterado para aguardando pagamento.'
             ]);
-
         }catch (\Throwable $e) {
             return  new JsonResponse(['error' => $e->getMessage()]);
         }
     }
+
 }
+
+}
+
