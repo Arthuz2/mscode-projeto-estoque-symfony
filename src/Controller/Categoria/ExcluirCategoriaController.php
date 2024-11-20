@@ -14,7 +14,8 @@ class ExcluirCategoriaController extends AbstractController
     public function __construct(
         private CategoriaRepository $categoriaRepository,
         private ProdutoRepository $produtoRepository,
-    ){}
+    ){
+    }
 
     #[Route('/categoria/excluir/{id}', name: 'excluir_categoria')]
     public function index(int|string $id): Response
