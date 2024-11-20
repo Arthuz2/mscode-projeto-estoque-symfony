@@ -3,33 +3,35 @@
 namespace App\Entity;
 
 use App\Repository\CarrinhoRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarrinhoRepository::class)]
-class Carrinho
+class Carrinho implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
-    private ?Cliente $cliente = null;
+    private Cliente $cliente;
 
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
-    private ?Usuario $usuario = null;
-
+    #[ORM\JoinColumn(nullable: false)]  
+    private Usuario $usuario;
+    
     #[ORM\Column(type: 'string', enumType: StatusEnum::class)]
     private StatusEnum $status = StatusEnum::aberto;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $valor_total = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $criado_em = null;
+    private ?\DateTimeInterface $criado_em;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $atualizado_em = null;
@@ -43,9 +45,20 @@ class Carrinho
     #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'carrinho')]
     private Collection $items;
 
-    public function __construct()
+    public function __construct(
+        Cliente $cliente,
+        Usuario $usuario
+    )
     {
+        $this->criado_em = new DateTimeImmutable();
         $this->items = new ArrayCollection();
+        $this->cliente = $cliente;
+        $this->usuario = $usuario;
+    }
+    
+    public function isPaid(): bool
+    {
+        return $this->status === StatusEnum::finalizado;
     }
 
     public function getStatus(): StatusEnum
@@ -56,7 +69,6 @@ class Carrinho
     public function setStatus(StatusEnum $status): self
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -70,10 +82,9 @@ class Carrinho
         return $this->cliente;
     }
 
-    public function setCliente(?Cliente $cliente): static
+    public function setCliente(?Cliente $cliente): self
     {
         $this->cliente = $cliente;
-
         return $this;
     }
 
@@ -82,10 +93,9 @@ class Carrinho
         return $this->usuario;
     }
 
-    public function setUsuario(?Usuario $usuario): static
+    public function setUsuario(?Usuario $usuario): self
     {
         $this->usuario = $usuario;
-
         return $this;
     }
 
@@ -94,10 +104,9 @@ class Carrinho
         return $this->valor_total;
     }
 
-    public function setValorTotal(int $valor_total): static
+    public function setValorTotal(int $valor_total): self
     {
         $this->valor_total = $valor_total;
-
         return $this;
     }
 
@@ -106,10 +115,9 @@ class Carrinho
         return $this->criado_em;
     }
 
-    public function setCriadoEm(\DateTimeInterface $criado_em): static
+    public function setCriadoEm(\DateTimeInterface $criado_em): self
     {
         $this->criado_em = $criado_em;
-
         return $this;
     }
 
@@ -118,10 +126,9 @@ class Carrinho
         return $this->atualizado_em;
     }
 
-    public function setAtualizadoEm(?\DateTimeInterface $atualizado_em): static
+    public function setAtualizadoEm(?\DateTimeInterface $atualizado_em): self
     {
         $this->atualizado_em = $atualizado_em;
-
         return $this;
     }
 
@@ -130,10 +137,21 @@ class Carrinho
         return $this->finalizado_em;
     }
 
-    public function setFinalizadoEm(?\DateTimeInterface $finalizado_em): static
+    public function setFinalizadoEm(?\DateTimeInterface $finalizado_em): self
     {
         $this->finalizado_em = $finalizado_em;
+        return $this;
+    }
 
+    public function updateAtualizadoEm(): self
+    {
+        $this->atualizado_em = new \DateTime();
+        return $this;
+    }
+
+    public function updateFinalizadoEm(): self
+    {
+        $this->finalizado_em = new \DateTime();
         return $this;
     }
 
@@ -145,25 +163,37 @@ class Carrinho
         return $this->items;
     }
 
-    public function addItem(Item $item): static
+    public function addItem(Item $item): self
     {
         if (!$this->items->contains($item)) {
             $this->items->add($item);
             $item->setCarrinho($this);
         }
-
         return $this;
     }
 
-    public function removeItem(Item $item): static
+    public function removeItem(Item $item): self
     {
         if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
             if ($item->getCarrinho() === $this) {
                 $item->setCarrinho(null);
             }
         }
-
         return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'cliente'  => $this->cliente,
+            'usuario' => $this->usuario,
+            'status' => $this->status,
+            'valor_total'  => $this->valor_total,
+            'criado_em' => $this->criado_em,
+            'finalizado_em' => $this->finalizado_em,   
+            'items' => $this->items->toArray(),
+
+        ];
     }
 }

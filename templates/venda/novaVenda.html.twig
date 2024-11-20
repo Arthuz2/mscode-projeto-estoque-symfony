@@ -1,126 +1,197 @@
 {% extends "pagesApp.html.twig" %}
+
+{% block title %}
+    Nova venda
+{% endblock %}
 {% block addStylesheet %}
-	<link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
 {% endblock %}
 {% block content %}
-	<main>
-		<h2 class="text-white h2 p-2 mb-3">Nova Venda</h2>
+    <main>
+        <h2 class="text-white h2 p-2 mb-3">Nova Venda</h2>
 
-		<section>
-			<div class="card-area">
-				<div class="card-item">
-					<div class="card-top">
-						<span class="card-titulo">Total</span>
-						<div class="card-right">
-							<img src="{{ asset('images/simbolo-do-dolar.png') }}" alt="simbolo-do-dolar.png">
-						</div>
-					</div>
-					<div class="card-bottom">
-						<p class="resultado">R$1000,00</p>
-					</div>
-				</div>
-				<div class="card-item">
-					<div class="card-top">
-						<span class="card-titulo">Status</span>
-						<div class="card-right">
-							<img src="{{ asset('images/status.png') }}" alt="status.png">
-						</div>
-					</div>
-					<div class="card-bottom">
-						<p class="resultado">Pendente</p>
-					</div>
-				</div>
-				<div class="card-item">
-					<div class="card-top">
-						<span class="card-titulo">Data</span>
-						<div class="card-right">
-							<img src="{{ asset('images/calendario-de-parede-mensal.png') }}" alt="calendario-de-parede-mensal.png">
-						</div>
-					</div>
-					<div class="card-bottom">
-						<p class="resultado">22/01/2006</p>
-					</div>
-				</div>
-			</div>
-		</section>
-		<section class="formulario">
-			<form id="finalizarVendaForm" action="{{ path('finalizarCarrinho') }}" method="POST">
-				<p class="texto">Cliente*</p>
-				<div class="formulario-area">
+        <section>
+            <div class="card-area">
+                <div class="card-item">
+                    <div class="card-top">
+                        <span class="card-titulo">Total</span>
+                        <div class="card-right">
+                            <img src="{{ asset('images/simbolo-do-dolar.png') }}" alt="simbolo-do-dolar.png">
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <p class="resultado">R$ - </p>
+                    </div>
+                </div>
+                <div class="card-item">
+                    <div class="card-top">
+                        <span class="card-titulo">Status</span>
+                        <div class="card-right">
+                            <img src="{{ asset('images/status.png') }}" alt="status.png">
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <p class="resultado">-</p>
+                    </div>
+                </div>
+                <div class="card-item">
+                    <div class="card-top">
+                        <span class="card-titulo">Data</span>
+                        <div class="card-right">
+                            <img src="{{ asset('images/calendario-de-parede-mensal.png') }}" alt="calendario-de-parede-mensal.png">
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <p class="resultado">-</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-					<select class="form-select" id="clienteSelect" name="cliente" required>
-						<option value="">Selecione um cliente</option>
-					</select>
-					<button type="submit" class="Finalizar-button">
-						<strong>Finalizar venda</strong>
-					</button>
-				</div>
-			</form>
-		</section>
+        <section class="formulario">
+            <form id="finalizarVendaForm" action="{{ path('finalizarCarrinho') }}" method="POST" data-turbo="false">
+                <p class="texto">Cliente*</p>
+                <div class="formulario-area">
+                    <select class="form-select" id="cliente-Select" name="cliente" required>
+                        <option value="">Selecione um cliente</option>
+                    </select>
+                    <button type="submit" class="Finalizar-button">
+                        <strong>Finalizar venda</strong>
+                    </button>
+                </div>
+            </form>
+        </section>
 
-		<section class="tabela">
-			<table>
-				<thead>
-					<tr class="tabela-topo">
-						<th scope="col">Nome</th>
-						<th scope="col">Categoria</th>
-						<th scope="col">Estoque</th>
-						<th scope="col">Quantidade</th>
-						<th scope="col">Total</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for carrinho in carrinhos %}
-						{% if carrinho.getItems != null %}
-							{% for item in carrinho.getItems %}
-								<tr class="tabela-conteudo">
-									<td>{{ item.getProduto.getNome }}</td>
-									<td>{{ item.getProduto.getCategoriaId.getNome }}</td>
-									<td>{{ item.getProduto.getQuantidadeDisponivel }}</td>
-									<td class="quantidade">
-										<input class="input-number" type="number" name="quantidade_{{ item.getProduto.id }}" id="quantidade_{{ item.getProduto.id }}" value="0" min="1">
-										<img class="icone" src="{{ asset('images/adicionar-ao-carrinho.png') }}" alt="adicionar-ao-carrinho.png">
-									</td>
-									<td>R${{ item.getValor }}</td>
-									<td>
-										<img class="icone" src="{{ asset('images/lixo.png') }}" alt="icone de lixo">
-									</td>
-								</tr>
-						{% endfor %}
-							{% else %}
-								<tr>
-									<td colspan="6">Nenhum produto adicionado ao carrinho.</td>
-								</tr>
-							{% endif %}
-					{% endfor %}
-				</tbody>
-			</table>
-		</section>
-	</main>
 
-	<script>
-		async function carregarClientes() {
-			try {
-				const response = await fetch('/api/clientes', {
-					method: 'GET',
-					headers: { 'Content-Type': 'application/json' }
-				});
-				console.log(response);
-				if (!response.ok) throw new Error('Erro ao carregar clientes');
-				const clientes = await response.json();
-				const clienteSelect = document.getElementById('clienteSelect');
-				clientes.forEach(cliente => {
-					const option = document.createElement('option');
-					option.value = cliente.id;
-					option.textContent = cliente.nome;
-					clienteSelect.appendChild(option);
-				});
-			} catch (error) {
-				console.error('Erro ao carregar clientes:', error);
-			}
-		}
+    <section class="tabela">
+            <table>
+                <thead>
+                    <tr class="tabela-topo">
+                        <th scope="col">Nome</th>
+                        <th scope="col">Categoria</th>
+                        <th scope="col">Estoque</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col">Total</th>
 
-		window.onload = carregarClientes;
-	</script>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="tabela">
+                     <td>nenhum carrinho selecionado</td>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        async function carregarClientes() {
+              try {
+                  const response = await fetch('/api/clientes', {
+                     method: 'GET',
+                      headers: { 'Content-Type': 'application/json' }
+                  });
+                  if (!response.ok) throw new Error('Erro ao carregar clientes');
+                  const clientes = await response.json();
+
+                  const clienteSelect = document.getElementById('cliente-Select');
+                  clientes.forEach(cliente => {
+                        const option = document.createElement('option');
+                      option.value = cliente.id;
+                      option.textContent = cliente.nome;
+                      clienteSelect.appendChild(option);
+                  });
+              } catch (error) {
+                  console.error('Erro ao carregar clientes:', error);
+              }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+        carregarClientes();
+
+
+            const clienteSelect = document.getElementById('cliente-Select');
+            clienteSelect.addEventListener('change', function() {
+                const clienteId = this.value;
+
+                if (clienteId) {
+                
+                    fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
+                        .then(response => {
+                            
+                            if (!response.ok) {
+                                throw new Error('Erro ao buscar o carrinho');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data)
+                            if (data.error) {
+                                alert(data.error);
+                            } else {
+                                displayCarrinhoInfo(data.carrinho);
+                                preencherCards(data.carrinho);  
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro:', error);
+                            alert('Ocorreu um erro ao buscar o carrinho.');
+                        });
+                }
+            });
+
+            function displayCarrinhoInfo(carrinho) {
+                const carrinhoInfoDiv = document.getElementById('tabela');
+                carrinhoInfoDiv.innerHTML = ''; 
+
+                carrinho.items.forEach(item => {
+                    carrinhoInfoDiv.innerHTML += `
+                        <tr>
+                            <td>${item.produto.nome}</td>
+                            <td>${item.produto.categoria_id.id}</td>
+                            <td class="quantidade">
+                                <input class="input-number" type="number" value="${item.produto.qt_disponivel}" min="1">
+                            </td>
+                            <td>${item.produto.qt_disponivel}</td>
+                            <td>${item.valor.toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            function preencherCards(carrinho) {
+            
+                const valorTotal = carrinho.valor_total !== null && carrinho.valor_total !== undefined ? carrinho.valor_total : 0;
+                const status = carrinho.status !== null && carrinho.status !== undefined ? carrinho.status : '-';
+                const dataCriacao = carrinho.criado_em !== null && carrinho.criado_em.date ? carrinho.criado_em.date : null;
+
+                const totalCard = document.querySelector('.card-area .card-item:nth-child(1) .resultado');
+                if (totalCard) {
+                    totalCard.textContent = `R$${valorTotal.toFixed(2)}`;
+                }
+
+                const statusCard = document.querySelector('.card-area .card-item:nth-child(2) .resultado');
+                if (statusCard) {
+                    statusCard.textContent = status;
+                }
+
+                const dataCard = document.querySelector('.card-area .card-item:nth-child(3) .resultado');
+                if (dataCard && dataCriacao) {
+                    const dataFormatada = new Date(dataCriacao).toLocaleDateString('pt-BR');
+                    dataCard.textContent = dataFormatada;
+                } else if (dataCard) {
+                    dataCard.textContent = '-';
+                }
+
+            }
+        });
+    </script>
+{% endblock %}
+
+
+

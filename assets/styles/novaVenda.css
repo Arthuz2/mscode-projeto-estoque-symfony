@@ -46,33 +46,6 @@ td{
 
 
 /*  cabeçalho */
-.pdv,
-.nav-item a{
-    color: #D93539;
-    
-}
-.area-nav{
-   box-shadow: 5px 2px 10px rgba(0, 0, 0, 0.085);
-
-}
-.nav-item a:hover{
-    color: #f1272a;
-}
-
-
-.sair{
-    background-color: #ece9e9;
-    color: #f1272a;
-    text-decoration: none;
-    padding: 5px 30px;
-    border: 1px solid  #ece9e9;
-    border-radius: 10px;
-}
-
-.sair:hover{
-    background-color: #DCDBDB;
-    border: 1px solid #DCDBDB;
-}
 
 
 /* card de items */
