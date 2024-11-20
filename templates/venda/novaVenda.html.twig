@@ -117,8 +117,8 @@
 
             if (clienteId) {
                 fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
-                    .then(response => {
-                        if (!response.ok) {
+                    .then(response => { 
+                        if (!response.ok) { 
                             throw new Error('Erro ao buscar o carrinho');
                         }
                         return response.json();

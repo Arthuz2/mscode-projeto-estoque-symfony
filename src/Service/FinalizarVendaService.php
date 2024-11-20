@@ -6,14 +6,12 @@ use App\Repository\CarrinhoRepository;
 use App\Entity\StatusEnum;
 use App\Repository\ClienteRepository;
 use App\Repository\ProdutoRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class FinalizarVendaService 
 {
     public function __construct(
         private CarrinhoRepository $carrinhoRepository,
-        private EntityManagerInterface $em,
         private ClienteRepository $clienteRepository,
         private ProdutoRepository $produtoRepository,
     ) {
