@@ -20,7 +20,7 @@
 						<th scope="col">Categoria Id</th>
 						<th scope="col">Qtd. Disponível</th>
 						<th scope="col">Valor</th>
-						<th scope="col-2 text-align-right">Actions</th>
+						<th scope="col-2">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -32,15 +32,12 @@
 							<td scope='row'>{{ produto.getCategoriaId.getId }}</td>
 							<td scope='row'>{{ produto.getQuantidadeDisponivel }}</td>
 							<td scope='row'>R$ {{ produto.valor }},00</td>
-							<td class="col-2">
+							<td class="col-2 text-nowrap">
 								<a href='/produto/add/{{ produto.id }}' class="btn btn-primary btn-sm"><i class="bi bi-plus"></i></a>
 								<a href="/produto/editar/{{ produto.id }}" class="btn btn-secondary btn-sm">
 									<i class="bi bi-pencil"></i>
 								</a>
-								<a href="/produto/excluir/{{ produto.id }}" class="btn btn-danger btn-sm">
-									<i class="bi bi-x"></i>
 								</a>
-								<a href="/produto/vender/{{ produto.id }}" class="btn btn-primary btn-sm">Vender</a>
 							</td>
 						</tr>
 					{% endfor %}
