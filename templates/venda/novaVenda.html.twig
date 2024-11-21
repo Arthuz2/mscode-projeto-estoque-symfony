@@ -48,20 +48,33 @@
             </div>
         </section>
 
-        <section class="formulario">
+      <section class="formulario">
             <form id="finalizarVendaForm" action="{{ path('finalizarCarrinho') }}" method="POST" data-turbo="false">
                 <p class="texto">Cliente*</p>
                 <div class="formulario-area">
                     <select class="form-select" id="cliente-Select" name="cliente" required>
                         <option value="">Selecione um cliente</option>
                     </select>
-                    <button type="submit" class="Finalizar-button">
+                    <button type="submit" class="Finalizar-button" disabled>
                         <strong>Finalizar venda</strong>
                     </button>
                 </div>
-            </form>
-        </section>
 
+                <!-- Aqui serão inseridos os campos ocultos dos produtos -->
+                <div id="produtosHidden"></div>
+
+                <p class="texto">Produto*</p>
+                <div class="formulario-area">
+                    <select class="form-select" id="produto-Select" name="produto">
+                        <option value="">Selecione um produto</option>
+                    </select>
+                    <button type="button" class="Finalizar-button" onclick="adicionarProdutoCarrinho()">Adicionar produto</button>
+                </div>
+            </form>
+     </section>
+
+
+       
 
     <section class="tabela">
             <table>
@@ -110,11 +123,86 @@
                   console.error('Erro ao carregar clientes:', error);
               }
         }
+         
+        async function carregarProdutos() {
+            try {
+                const response = await fetch('/api/produto/consultar', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) throw new Error('Erro ao carregar produtos');
+                const produtos = await response.json();
 
+                const produtoSelect = document.getElementById('produto-Select');
+                produtos.forEach(produto => {
+                    const option = document.createElement('option');
+                    option.value = produto.id;
+                    option.textContent = produto.nome;
+                    produtoSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+            }
+        }
+
+       let produtosCarrinho = [];
+
+function adicionarProdutoCarrinho() {
+    const produtoSelect = document.getElementById('produto-Select');
+    const produtoId = produtoSelect.value;
+
+    if (produtoId) {
+        const produto = {
+            id: produtoId,
+            nome: produtoSelect.options[produtoSelect.selectedIndex].text,
+            qt_disponivel: 1, // Quantidade padrão ou de outro campo
+            valor: 100.00 // Exemplo de valor, deve ser substituído pelo valor real
+        };
+
+        // Adiciona o produto ao array de produtos do carrinho
+        produtosCarrinho.push(produto);
+
+        // Atualiza a tabela de produtos no frontend
+        const tabela = document.getElementById('tabela');
+        const novaLinha = document.createElement('tr');
+        novaLinha.innerHTML = `
+            <td>${produto.nome}</td>
+            <td>Categoria</td>
+            <td>${produto.qt_disponivel}</td>
+            <td>
+                <input class="input-number" type="number" value="${produto.qt_disponivel}" min="1">
+            </td>
+            <td>${produto.valor.toFixed(2)}</td>
+        `;
+        tabela.appendChild(novaLinha);
+
+        // Atualiza o campo oculto com a string JSON dos produtos
+        const produtosHidden = document.getElementById('produtosHidden');
+        produtosHidden.innerHTML = '';  // Limpa os campos antigos
+        const inputProdutos = document.createElement('input');
+        inputProdutos.type = 'hidden';
+        inputProdutos.name = 'produtos';
+        inputProdutos.value = JSON.stringify(produtosCarrinho); // Serializa o array como JSON
+        produtosHidden.appendChild(inputProdutos);
+
+        // Habilita o botão de finalizar venda
+        habilitarBotaoFinalizarVenda();
+    }
+}
+
+function habilitarBotaoFinalizarVenda() {
+    const tabela = document.getElementById('tabela');
+    const produtosAdicionados = tabela.getElementsByTagName('tr').length > 0;
+
+    const finalizarButton = document.querySelector('.Finalizar-button');
+    finalizarButton.disabled = !produtosAdicionados;
+}
+
+
+         
         document.addEventListener('DOMContentLoaded', function() {
-        carregarClientes();
-
-
+            carregarClientes();
+            carregarProdutos()
             const clienteSelect = document.getElementById('cliente-Select');
             clienteSelect.addEventListener('change', function() {
                 const clienteId = this.value;
@@ -187,7 +275,6 @@
                 } else if (dataCard) {
                     dataCard.textContent = '-';
                 }
-
             }
         });
     </script>

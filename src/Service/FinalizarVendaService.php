@@ -16,36 +16,34 @@ class FinalizarVendaService
         private ProdutoRepository $produtoRepository,
     ) {
     }
-
-    public function execute(int $id): Carrinho
+    //verificar a logica amanha porque eu adicioni um produto mesmo que carrinho nao tem mas eu adicionei, ai fal oque nao tinha produto
+    public function execute(int $clienteId, array $produtos): Carrinho
     {
-
-        $cliente = $this->clienteRepository->find($id);
+        $cliente = $this->clienteRepository->find($clienteId);
         $carrinho = $this->carrinhoRepository->findOneBy(["cliente" => $cliente]);
-    
-        if ($carrinho->getItems()->isEmpty()) {
-         throw new BadRequestHttpException('O carrinho não contém produtos.');
-        }
-    
-        if ($carrinho->getStatus() !== StatusEnum::aberto) {
-            throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está pendente.');
-        }
-   
-        foreach ($carrinho->getItems() as $item) {
-           $produto = $item->getProduto();
 
-           if ($produto->getQuantidadeDisponivel() === 0) {
-               throw new BadRequestHttpException('O produto ' . $produto->getNome() . ' está fora de estoque.');
+        if ($carrinho->getItems()->isEmpty()) {
+            throw new BadRequestHttpException('O carrinho não contém produtos.');
+        }
+
+        if ($carrinho->getStatus() !== StatusEnum::aberto) {
+            throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está em aberto.');
+        }
+
+        foreach ($produtos as $produtoData) {
+            $produto = $this->produtoRepository->find($produtoData['id']);
+            $quantidade = $produtoData['qt_disponivel'];
+
+            if ($produto->getQuantidadeDisponivel() < $quantidade) {
+                throw new BadRequestHttpException('O produto ' . $produto->getNome() . ' está fora de estoque ou não possui quantidade suficiente.');
             }
 
-
-            $produtoAlterado = $produto->getQuantidadeDisponivel() - 1;
-            $produto->setQuantidadeDisponivel($produtoAlterado);
+            $produto->setQuantidadeDisponivel($produto->getQuantidadeDisponivel() - $quantidade);
             $this->produtoRepository->salvar($produto);
         }
+
         $carrinho->setStatus(StatusEnum::aguardandoPagamento);
         return $this->carrinhoRepository->salvar($carrinho);
-
     }
 }
 

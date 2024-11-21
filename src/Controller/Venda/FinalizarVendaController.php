@@ -13,17 +13,20 @@ class FinalizarVendaController extends AbstractController
     #[Route("novaVenda/finalizarCarrinho", name: "finalizarCarrinho", methods:"POST")]
     public function finalizarVenda(
         Request $request,
-        FinalizarVendaService $finalizarVendaService,
-    ): JsonResponse
+        FinalizarVendaService $finalizarVendaService
+    ): JsonResponse 
     {
-        $id = $request->request->get('cliente');
-        try {
-            $finalizarVendaService->execute( id: $id);
+        $clienteId = $request->request->get('cliente');
+        $produtosJson = $request->request->get('produtos');
+        try
+        {
+            $produtos = json_decode($produtosJson, true);
+            $finalizarVendaService->execute($clienteId, $produtos);
             return new JsonResponse([
-                "message" => 'Carrinho alterado para aguardando pagamento.'
+                "message" => 'aguardando pagamento'
             ]);
-        }catch (\Throwable $e) {
-            return  new JsonResponse(['error' => $e->getMessage()]);
+        } catch (\Throwable $e) {
+            return new JsonResponse(['error' => $e->getMessage()]);
         }
     }
 }
