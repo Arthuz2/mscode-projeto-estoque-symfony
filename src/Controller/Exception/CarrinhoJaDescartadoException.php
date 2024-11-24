@@ -2,9 +2,9 @@
 
 namespace App\Controller\Exception;
 
-use Exception;
-
-class CarrinhoJaDescartadoException extends Exception
+class CarrinhoJaDescartadoException extends \Exception
 {
-  
+  public function __construct() {
+    parent::__construct("O carrinho já foi descartado.");
+  }
 }

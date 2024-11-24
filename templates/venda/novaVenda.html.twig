@@ -119,17 +119,16 @@
                 const clienteId = this.value;
 
                 if (clienteId) {
-                
+                    verificarDescarteCarrinho(clienteId);
                     fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
                         .then(response => {
-                            
+
                             if (!response.ok) {
                                 throw new Error('Erro ao buscar o carrinho');
                             }
                             return response.json();
                         })
                         .then(data => {
-                            console.log(data)
                             if (data.error) {
                                 alert(data.error);
                             } else {
@@ -187,6 +186,23 @@
                     dataCard.textContent = '-';
                 }
 
+            }
+
+            function verificarDescarteCarrinho(carrinhoId){
+                fetch(`/api/carrinho/descartar/${carrinhoId}`)
+                    .then(response => {
+                        console.log(response);
+                        if (!response.ok) {
+                            throw new Error(response.body.error);
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        console.log(data)
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             }
         });
     </script>

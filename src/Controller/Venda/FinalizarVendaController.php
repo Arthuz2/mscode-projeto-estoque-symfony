@@ -2,6 +2,9 @@
 
 namespace App\Controller\Venda;
 
+use App\Entity\StatusEnum;
+use App\Repository\CarrinhoRepository;
+use App\Repository\ClienteRepository;
 use App\Service\FinalizarVendaService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -10,7 +10,7 @@ use App\Repository\CarrinhoRepository;
 class DescartarCarrinhoService
 {
   public function __construct(
-    private CarrinhoRepository $carrinhoRepository
+    private CarrinhoRepository $carrinhoRepository,
   ) {}
 
   public function execute(int|Carrinho $carrinho): void
@@ -22,15 +22,14 @@ class DescartarCarrinhoService
     }
 
     $dataAtual = new \DateTime();
-    if (!$carrinho->getCriadoEm()->format('d/m/Y') === $dataAtual->format('d/m/Y') && $carrinho->getStatus() === StatusEnum::aberto) {
+    if ($carrinho->getCriadoEm()->format('d/m/Y') !== $dataAtual->format('d/m/Y') && $carrinho->getStatus() === StatusEnum::aberto) {
       $carrinho->setStatus(StatusEnum::descartado);
       $carrinho->updateAtualizadoEm();
+      $carrinho->updateFinalizadoEm();
       $this->carrinhoRepository->salvar($carrinho);
+      return ;
     }
 
-    $carrinho->setStatus(StatusEnum::descartado);
-    $carrinho->updateAtualizadoEm();
-    $carrinho->updateFinalizadoEm();
-    $this->carrinhoRepository->salvar($carrinho);
+    throw new \Exception('o carrinho precisa estar aberto para ser descartado e o dia de criação deve ser diferente do dia atual');
   }
 }

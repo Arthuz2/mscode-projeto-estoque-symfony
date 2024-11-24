@@ -21,12 +21,12 @@ class FinalizarVendaService
     {
 
         $cliente = $this->clienteRepository->find($id);
-        $carrinho = $this->carrinhoRepository->findOneBy(["cliente" => $cliente]);
+        $carrinho = $this->carrinhoRepository->findOneBy(["cliente" => $cliente, "status" => StatusEnum::aberto]);
     
         if ($carrinho->getItems()->isEmpty()) {
-         throw new BadRequestHttpException('O carrinho não contém produtos.');
+            throw new BadRequestHttpException('O carrinho não contém produtos.');
         }
-    
+        
         if ($carrinho->getStatus() !== StatusEnum::aberto) {
             throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está pendente.');
         }
