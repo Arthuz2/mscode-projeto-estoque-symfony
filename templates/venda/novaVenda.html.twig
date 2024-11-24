@@ -191,14 +191,10 @@
             function verificarDescarteCarrinho(carrinhoId){
                 fetch(`/api/carrinho/descartar/${carrinhoId}`)
                     .then(response => {
-                        console.log(response);
                         if (!response.ok) {
-                            throw new Error(response.body.error);
+                            throw new Error(response.error);
                         }
-                        return res.json();
-                    })
-                    .then(data => {
-                        console.log(data)
+                        return response.json();
                     })
                     .catch(error => {
                         console.log(error);

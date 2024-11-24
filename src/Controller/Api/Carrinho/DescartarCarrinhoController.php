@@ -14,26 +14,25 @@ class DescartarCarrinhoController extends AbstractController
 {
   #[Route('/api/carrinho/descartar/{id}', name: 'decartar_carrinho')]
   public function index(
-    ClienteRepository $clienteRepository,
+    CarrinhoRepository $carrinhoRepository,
     DescartarCarrinhoService $descartarCarrinhoService,
     int $id,
   ): JsonResponse {
-    $carrinhos = $clienteRepository->find($id)->getCarrinhos();
-    foreach ($carrinhos as $carrinho) {
-      if($carrinho->getStatus() === StatusEnum::aberto){
-        $id = $carrinho->getId();
-      }
-    }
+    $id = $carrinhoRepository->findOneBy(
+      [
+        'cliente' => [
+          'id' => $id
+        ],
+        'status' => StatusEnum::aberto
+      ]
+    )->getId();
     try {
       $descartarCarrinhoService->execute($id);
       return new JsonResponse(['response' => 'Carrinho descartado com sucesso'], 200, [], false);
     } catch (\Throwable $e) {
-      return new JsonResponse(
-        [
-          'response' => 'Erro ao descartar o carrinho',
-          'erro' => $e->getMessage()
-        ], 500, [], false
-      );
+      return $e instanceof \Exception
+        ? new JsonResponse(['response' => $e->getMessage()], 200)
+        : new JsonResponse(['response' => $e->getMessage()], 500);
     }
   }
 }

@@ -30,6 +30,6 @@ class DescartarCarrinhoService
       return ;
     }
 
-    throw new \Exception('o carrinho precisa estar aberto para ser descartado e o dia de criação deve ser diferente do dia atual');
+    throw new \Exception("o carrinho precisa estar com status 'em aberto' para ser descartado e o dia de criação deve ser diferente do dia atual");
   }
 }
