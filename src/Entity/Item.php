@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ItemRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use PhpParser\ErrorHandler\ThrowingTest;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item implements \JsonSerializable
@@ -17,11 +17,20 @@ class Item implements \JsonSerializable
     #[ORM\Column]
     private ?int $valor;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: Produto::class)]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Produto $produto;
 
     #[ORM\ManyToOne(inversedBy: 'items')]
     private ?Carrinho $carrinho;
+
+    public function __construct(
+        Carrinho    $carrinho,
+        Produto $produto
+    )
+    {
+        $this->produto = $produto;
+    }
 
     public function getId(): ?int
     {

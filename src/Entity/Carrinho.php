@@ -193,7 +193,6 @@ class Carrinho implements \JsonSerializable
             'criado_em' => $this->criado_em,
             'finalizado_em' => $this->finalizado_em,   
             'items' => $this->items->toArray(),
-
         ];
     }
 }

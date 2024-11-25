@@ -172,7 +172,6 @@ class Produto implements \JsonSerializable
             'nome' => $this->nome,
             "categoria_id" => $this->categoria_id,
             "qt_disponivel" => $this->quantidade_disponivel
-
         ];
     }
 }

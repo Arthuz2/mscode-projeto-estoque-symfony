@@ -15,4 +15,11 @@ class ItemRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Item::class);
     }
+
+    public function salvar(Item $item):Item
+    {
+        $this->getEntityManager()->persist($item);
+        $this->getEntityManager()->flush();
+        return $item;
+    }
 }
