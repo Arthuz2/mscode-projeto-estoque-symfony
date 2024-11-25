@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Controller\Exception\CarrinhoJaDescartadoException;
+use App\Controller\Exception\CarrinhoNaoPodeSerDescartadoException;
 use App\Entity\Carrinho;
 use App\Entity\StatusEnum;
 use App\Repository\CarrinhoRepository;
@@ -18,18 +19,16 @@ class DescartarCarrinhoService
     $carrinho = $this->carrinhoRepository->find($carrinho);
 
     if ($carrinho->getStatus() === StatusEnum::descartado) {
-      throw new CarrinhoJaDescartadoException('carrinho ja foi descartado', 500);
+      throw new CarrinhoJaDescartadoException();
     }
 
     $dataAtual = new \DateTime();
-    if ($carrinho->getCriadoEm()->format('d/m/Y') !== $dataAtual->format('d/m/Y') && $carrinho->getStatus() === StatusEnum::aberto) {
-      $carrinho->setStatus(StatusEnum::descartado);
-      $carrinho->updateAtualizadoEm();
-      $carrinho->updateFinalizadoEm();
+    if ($carrinho->getCriadoEm()->format('d/m/Y') !== $dataAtual->format('d/m/Y') && $carrinho->isAberto()) {
+      $carrinho->descartar();
       $this->carrinhoRepository->salvar($carrinho);
       return ;
     }
 
-    throw new \Exception("o carrinho precisa estar com status 'em aberto' para ser descartado e o dia de criação deve ser diferente do dia atual");
+    throw new CarrinhoNaoPodeSerDescartadoException();
   }
 }

@@ -21,9 +21,9 @@ class Carrinho implements \JsonSerializable
     private Cliente $cliente;
 
     #[ORM\ManyToOne(inversedBy: 'carrinhos')]
-    #[ORM\JoinColumn(nullable: false)]  
+    #[ORM\JoinColumn(nullable: false)]
     private Usuario $usuario;
-    
+
     #[ORM\Column(type: 'string', enumType: StatusEnum::class)]
     private StatusEnum $status = StatusEnum::aberto;
 
@@ -48,14 +48,13 @@ class Carrinho implements \JsonSerializable
     public function __construct(
         Cliente $cliente,
         Usuario $usuario
-    )
-    {
+    ) {
         $this->criado_em = new DateTimeImmutable();
         $this->items = new ArrayCollection();
         $this->cliente = $cliente;
         $this->usuario = $usuario;
     }
-    
+
     public function isPaid(): bool
     {
         return $this->status === StatusEnum::finalizado;
@@ -191,9 +190,26 @@ class Carrinho implements \JsonSerializable
             'status' => $this->status,
             'valor_total'  => $this->valor_total,
             'criado_em' => $this->criado_em,
-            'finalizado_em' => $this->finalizado_em,   
+            'finalizado_em' => $this->finalizado_em,
             'items' => $this->items->toArray(),
-
         ];
+    }
+
+    public function isDescartado(): bool
+    {  
+        return $this->status == StatusEnum::descartado;
+    }
+
+    public function isAberto(): bool
+    {
+        return $this->status === StatusEnum::aberto;
+    }
+
+    public function descartar(): self
+    {
+        $this->status = StatusEnum::descartado;
+        $this->updateAtualizadoEm();
+        $this->updateFinalizadoEm();
+        return $this;
     }
 }
