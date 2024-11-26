@@ -16,11 +16,11 @@ class FinalizarVendaController extends AbstractController
         FinalizarVendaService $finalizarVendaService
     ): JsonResponse 
     {
-        $clienteId = $request->request->get('cliente');
-        $produtosJson = $request->request->get('produtos');
         try
         {
-            $produtos = json_decode($produtosJson, true);
+            $data = json_decode($request->getContent(), true);
+            $clienteId = $data["cliente"];
+            $produtos = $data["produtos"];
             $finalizarVendaService->execute($clienteId, $produtos);
             return new JsonResponse([
                 "message" => 'aguardando pagamento'

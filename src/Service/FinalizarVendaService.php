@@ -1,6 +1,7 @@
 <?php 
 namespace App\Service;
 
+use App\Controller\Exceptions\ProdutoJaAdicionadoAoCarrinhoException;
 use App\Entity\Carrinho;
 use App\Entity\Item;
 use App\Repository\CarrinhoRepository;
@@ -19,12 +20,40 @@ class FinalizarVendaService
         private ItemRepository $itemRepository,
     ) {
     }
-    //verificar a logica amanha porque eu adicioni um produto mesmo que carrinho nao tem mas eu adicionei, ai fal oque nao tinha produto
+    
     public function execute(int $clienteId, array $produtos): Carrinho
     {
         $cliente = $this->clienteRepository->find($clienteId);
-        $carrinho = $this->carrinhoRepository->findOneBy(["cliente" => $cliente]);
+        $carrinho = $this->carrinhoRepository->buscarUltimoCarrinhoPendente(["cliente" => $cliente]);
       
+        foreach($produtos as $produto){
+            $produtoId = $produto['id']; 
+            $quantidade = $produto['quantidade'];
+            $produtoEncontrado = $this->produtoRepository->find($produtoId);
+
+            if (!$produtoEncontrado) {
+                throw new \Exception("Produto não encontrado");
+            }
+            $valorTotalProduto = $quantidade * $produtoEncontrado->getValor();
+
+            if ($this->itemRepository->findOneBy(['carrinho' => $carrinho, 'produto' => $produtoEncontrado])) {
+                throw new ProdutoJaAdicionadoAoCarrinhoException();
+            }
+    
+            $item = new Item(
+                $carrinho, 
+                $produtoEncontrado,
+                $valorTotalProduto,
+                $quantidade
+            );
+            $this->itemRepository->salvar($item);
+            $carrinho->addItem($item);
+
+            $produtoEncontrado->setQuantidadeDisponivel($produtoEncontrado->getQuantidadeDisponivel() - $quantidade);
+            $this->produtoRepository->salvar($produtoEncontrado);
+        }
+
+        
         if ($carrinho->getItems()->isEmpty()) {
             throw new BadRequestHttpException('O carrinho não contém produtos.');
         }
@@ -33,19 +62,10 @@ class FinalizarVendaService
             throw new BadRequestHttpException('Não é possível finalizar um carrinho que não está em aberto.');
         }
 
-        foreach($produtos as $produtoData)
-        {
-            $produto = $this->produtoRepository->find($produtoData['id']);
-            $quantidade = $produtoData['qt_disponivel'];
-
-            if ($produto->getQuantidadeDisponivel() < $quantidade) {
-                throw new BadRequestHttpException('O produto ' . $produto->getNome() . ' está fora de estoque ou não possui quantidade suficiente.');
-            }
-
-            $produto->setQuantidadeDisponivel($produto->getQuantidadeDisponivel() - $quantidade);
-            $this->produtoRepository->salvar($produto);
+        if ($produtoEncontrado->getQuantidadeDisponivel() < $quantidade) {
+            throw new BadRequestHttpException('O produto está fora de estoque ou não possui quantidade suficiente.');
         }
-       
+        
         $carrinho->setStatus(StatusEnum::aguardandoPagamento);
         return $this->carrinhoRepository->salvar($carrinho);
     } 

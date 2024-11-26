@@ -24,12 +24,20 @@ class Item implements \JsonSerializable
     #[ORM\ManyToOne(inversedBy: 'items')]
     private ?Carrinho $carrinho;
 
+    #[ORM\Column]
+    private int $quantidade;
+
     public function __construct(
         Carrinho    $carrinho,
-        Produto $produto
+        Produto $produto,
+        int $valor,
+        int $quantidade
     )
     {
         $this->produto = $produto;
+        $this->valor = $valor;
+        $this->carrinho = $carrinho;
+        $this->quantidade = $quantidade;
     }
 
     public function getId(): ?int
@@ -37,23 +45,9 @@ class Item implements \JsonSerializable
         return $this->id;
     }
 
-    public function setId(int $id): static
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
     public function getValor(): ?int
     {
         return $this->valor;
-    }
-
-    public function setValor(int $valor): static
-    {
-        $this->valor = $valor;
-
-        return $this;
     }
 
     public function getProduto(): ?Produto
@@ -61,23 +55,9 @@ class Item implements \JsonSerializable
         return $this->produto;
     }
 
-    public function setProduto(?Produto $produto): static
-    {
-        $this->produto = $produto;
-
-        return $this;
-    }
-
     public function getCarrinho(): ?Carrinho
     {
         return $this->carrinho;
-    }
-
-    public function setCarrinho(?Carrinho $carrinho): static
-    {
-        $this->carrinho = $carrinho;
-
-        return $this;
     }
 
     public function jsonSerialize(): array
@@ -86,7 +66,6 @@ class Item implements \JsonSerializable
             'id' => $this->id,
             'valor' => $this->valor,
             'produto' => $this->produto
-           
         ];
     }
 }

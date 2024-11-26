@@ -55,7 +55,7 @@
                     <select class="form-select" id="cliente-Select" name="cliente" required>
                         <option value="">Selecione um cliente</option>
                     </select>
-                    <button type="submit" class="Finalizar-button" disabled>
+                    <button type="submit" class="Finalizar-button" >
                         <strong>Finalizar venda</strong>
                     </button>
                 </div>
@@ -68,7 +68,6 @@
                     <select class="form-select" id="produto-Select" name="produto">
                         <option value="">Selecione um produto</option>
                     </select>
-                    <button type="button" class="Finalizar-button" onclick="adicionarProdutoCarrinho()">Adicionar produto</button>
                 </div>
             </form>
         </section>
@@ -122,92 +121,61 @@
         }
     }
 
+    
     async function carregarProdutos() {
         try {
             const response = await fetch('/api/produto/consultar', {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
-            if (!response.ok) throw new Error('Erro ao carregar produtos');
-            const produtos = await response.json();
 
+            if (!response.ok) throw new Error('Erro ao carregar produtos');
+            
+            const produtos = await response.json();
             const produtoSelect = document.getElementById('produto-Select');
+
             produtos.forEach(produto => {
                 const option = document.createElement('option');
-                option.value = produto.id;
+                option.value = produto.id; 
                 option.textContent = produto.nome;
                 produtoSelect.appendChild(option);
+            });
+            
+            produtoSelect.addEventListener('change', function() {
+                const produtoIdSelecionado = this.value;
+                const produtoSelecionado = produtos.find(produto => produto.id == produtoIdSelecionado);
+
+                if (produtoSelecionado) {
+                    const tabela = document.getElementById('tabela');
+                    const novaLinha = document.createElement('tr');
+                    // Adicionar produto à lista de produtos do carrinho
+                    produtosCarrinho.push({
+                        id: produtoSelecionado.id,
+                        quantidade: 1 // Quantidade inicial padrão
+                    });
+                    novaLinha.innerHTML = `
+                        <td>${produtoSelecionado.nome}</td>
+                        <td>${produtoSelecionado.categoria || 'Categoria'}</td>
+                        <td>${produtoSelecionado.qt_disponivel}</td>
+                        <td><input class="input-number rounded" type="number" value="1" min="1" max="${produtoSelecionado.qt_disponivel}"></td>
+                        <td>${produtoSelecionado.valor.toFixed(2)}</td>
+                    `;
+                    
+                    tabela.appendChild(novaLinha);
+                }
             });
         } catch (error) {
             console.error('Erro ao carregar produtos:', error);
         }
     }
 
-     async function adicionarProdutoCarrinho() {
-        const produtoSelect = document.getElementById('produto-Select');
-        const idProduto = produtoSelect.value;
-
-        if (!idProduto || !carrinhoId) {
-            alert('Selecione um produto e um cliente para criar o carrinho.');
-            return;
-        }
-        console.log(JSON.stringify({ idProduto: idProduto, idCarrinho: carrinhoId }));
-        fetch(`/api/adicionarProduto/${idProduto}/carrinho/${carrinhoId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ idProduto: idProduto, idCarrinho: carrinhoId })
-        })
-        .then(data => {
-            if(false === data.ok){
-                data.json().then(response => {
-                   alert(response.error)
-                })
-                return;
-            }
-
-            const produtoExistente = produtosCarrinho.find(prod => prod.id === idProduto);
-
-            if (produtoExistente) {
-                produtoExistente.qt_disponivel += 1;
-            } else {
-                const produto = {
-                    id: idProduto,
-                    nome: produtoSelect.options[produtoSelect.selectedIndex].text,
-                    qt_disponivel: 1,
-                    valor: 100.00 // ou o valor correto do produto
-                };
-                produtosCarrinho.push(produto);
-
-                const tabela = document.getElementById('tabela');
-                const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `
-                    <td>${produto.nome}</td>
-                    <td>Categoria</td>
-                    <td>${produto.qt_disponivel}</td>
-                    <td><input class="input-number" type="number" value="${produto.qt_disponivel}" min="1"></td>
-                    <td>${produto.valor.toFixed(2)}</td>
-                `;
-                tabela.appendChild(novaLinha);
-            }
-
-            habilitarBotaoFinalizarVenda();
-        })
-        .catch(error => {console.log(error)
-            console.error('Erro ao adicionar produto ao carrinho:', error);
-            alert('Erro ao adicionar produto ao carrinho.');
-        });
-    } 
-
-
-
     function habilitarBotaoFinalizarVenda() {
         const tabela = document.getElementById('tabela');
         const produtosAdicionados = tabela.getElementsByTagName('tr').length > 0;
-
         const finalizarButton = document.querySelector('.Finalizar-button');
         finalizarButton.disabled = !produtosAdicionados;
     }
-
+    
     document.addEventListener('DOMContentLoaded', function() {
         carregarClientes();
         carregarProdutos();
@@ -218,29 +186,52 @@
 
             if (clienteId) {
                 fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erro ao buscar o carrinho');
+                    .then(response => { 
+                        if (false === response.ok) {
+                            return Promise.reject(response);
                         }
+
                         return response.json();
                     })
                     .then(data => {
-                        if (data.error) {
-                            alert(data.error);
-                        } else {
-                            carrinhoId = data.carrinho.id; // Armazena o carrinhoId
-                            displayCarrinhoInfo(data.carrinho);
-                            preencherCards(data.carrinho);  
-                        }
+                        carrinhoId = data.carrinhoId;
+                        displayCarrinhoInfo(data.carrinho);
+                        preencherCards(data.carrinho); 
                     })
-                    .catch(error => {
-                        console.error('Erro:', error);
-                        alert('Ocorreu um erro ao buscar o carrinho.');
-                    });
+                    .catch(response => response.json().then(data => alert(data.error)))
             }
         });
 
-        function displayCarrinhoInfo(carrinho) {
+        const form = document.getElementById('finalizarVendaForm');
+        form.addEventListener("submit",function(event){
+            event.preventDefault();
+
+            const dados = {
+                cliente: clienteSelect.value,
+                produtos: produtosCarrinho.map(produto => ({
+                    id: produto.id,
+                    quantidade: produto.quantidade
+                }))
+            };
+
+            fetch('{{ path('finalizarCarrinho') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dados)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || data.error);
+            })
+            .catch(error => {
+                console.error('Erro ao finalizar venda:', error);
+            });
+
+        }) 
+
+        function displayCarrinhoInfo(carrinho) { 
             const carrinhoInfoDiv = document.getElementById('tabela');
             carrinhoInfoDiv.innerHTML = '';
 
