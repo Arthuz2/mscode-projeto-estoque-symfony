@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Carrinho;
 use App\Entity\Item;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,5 +22,19 @@ class ItemRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($item);
         $this->getEntityManager()->flush();
         return $item;
+    }
+      
+    public function encontrarProdutosPorCarrinhoId($carrinhoId): ?Carrinho
+    {
+        
+        dd("chego aqui");
+        return
+        $this->createQueryBuilder('i')
+            ->select('p')
+            ->join('i.produto', 'p')
+            ->where('i.carrinho = :carrinho_id_id')
+            ->setParameter('carrinho_id_id', $carrinhoId)
+            ->getQuery()
+            ->getResult();
     }
 }

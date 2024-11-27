@@ -12,17 +12,17 @@
 
         <section>
             <div class="card-area">
-                <div class="card-item">
-                    <div class="card-top">
-                        <span class="card-titulo">Total</span>
-                        <div class="card-right">
-                            <img src="{{ asset('images/simbolo-do-dolar.png') }}" alt="simbolo-do-dolar.png">
-                        </div>
-                    </div>
-                    <div class="card-bottom">
-                        <p class="resultado">R$ - </p>
+               <div class="card-item">
+                <div class="card-top">
+                    <span class="card-titulo">Total</span>
+                    <div class="card-right">
+                        <img src="{{ asset('images/simbolo-do-dolar.png') }}" alt="simbolo-do-dolar.png">
                     </div>
                 </div>
+                <div class="card-bottom">
+                    <p class="resultado">R$ - </p> <!-- Este é o local onde o valor total deve aparecer -->
+                </div>
+            </div>
                 <div class="card-item">
                     <div class="card-top">
                         <span class="card-titulo">Status</span>
@@ -60,7 +60,7 @@
                     </button>
                 </div>
 
-                <!-- Aqui serão inseridos os campos ocultos dos produtos -->
+              
                 <div id="produtosHidden"></div>
 
                 <p class="texto">Produto*</p>
@@ -122,52 +122,7 @@
     }
 
     
-    async function carregarProdutos() {
-        try {
-            const response = await fetch('/api/produto/consultar', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            });
-
-            if (!response.ok) throw new Error('Erro ao carregar produtos');
-            
-            const produtos = await response.json();
-            const produtoSelect = document.getElementById('produto-Select');
-
-            produtos.forEach(produto => {
-                const option = document.createElement('option');
-                option.value = produto.id; 
-                option.textContent = produto.nome;
-                produtoSelect.appendChild(option);
-            });
-            
-            produtoSelect.addEventListener('change', function() {
-                const produtoIdSelecionado = this.value;
-                const produtoSelecionado = produtos.find(produto => produto.id == produtoIdSelecionado);
-
-                if (produtoSelecionado) {
-                    const tabela = document.getElementById('tabela');
-                    const novaLinha = document.createElement('tr');
-                    // Adicionar produto à lista de produtos do carrinho
-                    produtosCarrinho.push({
-                        id: produtoSelecionado.id,
-                        quantidade: 1 // Quantidade inicial padrão
-                    });
-                    novaLinha.innerHTML = `
-                        <td>${produtoSelecionado.nome}</td>
-                        <td>${produtoSelecionado.categoria || 'Categoria'}</td>
-                        <td>${produtoSelecionado.qt_disponivel}</td>
-                        <td><input class="input-number rounded" type="number" value="1" min="1" max="${produtoSelecionado.qt_disponivel}"></td>
-                        <td>${produtoSelecionado.valor.toFixed(2)}</td>
-                    `;
-                    
-                    tabela.appendChild(novaLinha);
-                }
-            });
-        } catch (error) {
-            console.error('Erro ao carregar produtos:', error);
-        }
-    }
+   
 
     function habilitarBotaoFinalizarVenda() {
         const tabela = document.getElementById('tabela');
@@ -178,7 +133,7 @@
     
     document.addEventListener('DOMContentLoaded', function() {
         carregarClientes();
-        carregarProdutos();
+        
 
         const clienteSelect = document.getElementById('cliente-Select');
         clienteSelect.addEventListener('change', function() {
@@ -194,14 +149,80 @@
                         return response.json();
                     })
                     .then(data => {
-                        carrinhoId = data.carrinhoId;
+                        carrinhoId = data.carrinho.id;
                         displayCarrinhoInfo(data.carrinho);
                         preencherCards(data.carrinho); 
+                        carregarProdutos();
                     })
                     .catch(response => response.json().then(data => alert(data.error)))
             }
         });
+         async function carregarProdutos() { 
+        try {  
+            const response = await fetch(`/api/produto/consultar/${carrinhoId}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
 
+            if (!response.ok) throw new Error('Erro ao carregar produtos');
+            console.log(response)
+            const produtos = JSON.parse(await response.json());
+            const produtoSelect = document.getElementById('produto-Select');
+           
+            console.log(Array.isArray(produtos))
+            if(Array.isArray(produtos)){
+                produtos?.forEach(produto => {
+                const option = document.createElement('option');
+                option.value = produto.id; 
+                option.textContent = produto.nome;
+                produtoSelect.appendChild(option);
+                 produtoSelect.addEventListener('change', function() {
+                const produtoIdSelecionado = this.value;
+                const produtoSelecionado = produtos.find(produto => produto.id == produtoIdSelecionado);
+
+                if (produtoSelecionado) {
+                    const produtoJaAdicionado = produtosCarrinho.some(produto => produto.id == produtoSelecionado.id);
+
+                    if(produtoJaAdicionado){
+                        return;
+                    }else{
+                         const tabela = document.getElementById('tabela');
+                        const novaLinha = document.createElement('tr');
+                        // Adicionar produto à lista de produtos do carrinho
+                        produtosCarrinho.push({
+                            id: produtoSelecionado.id,
+                            quantidade: 1 // Quantidade inicial padrão
+                        });
+                        novaLinha.innerHTML = `
+                            <td>${produtoSelecionado.nome}</td>
+                            <td>${produtoSelecionado.categoria || 'Categoria'}</td>
+                            <td>${produtoSelecionado.qt_disponivel}</td>
+                            <td><input class="input-number rounded" type="number" value="1" min="1" max="${produtoSelecionado.qt_disponivel}"></td>
+                            <td>${produtoSelecionado.valor.toFixed(2)}</td>
+                        `;
+                        
+                        tabela.appendChild(novaLinha);
+
+                        let totalAtual = parseFloat(document.querySelector('.card-item .resultado').textContent.replace('R$', '').trim()) || 0;
+                        totalAtual += produtoSelecionado.valor;
+                        document.querySelector('.card-item .resultado').textContent = `R$ ${totalAtual.toFixed(2)}`;
+
+                        const dataAtual = new Date().toLocaleDateString('pt-BR');
+                        document.querySelectorAll('.card-item .resultado')[2].textContent = dataAtual;
+                    }
+                }
+            });
+            });
+            }
+         
+            
+           
+        } catch (error) {
+            console.error('Erro ao carregar produtos:', error);
+        }
+    }
+
+    
         const form = document.getElementById('finalizarVendaForm');
         form.addEventListener("submit",function(event){
             event.preventDefault();
@@ -240,29 +261,28 @@
                     <tr>
                         <td>${item.produto.nome}</td>
                         <td>${item.produto.categoria_id.id}</td>
+                        <td>${item.produto.qt_disponivel}</td>
                         <td class="quantidade">
                             <input class="input-number" type="number" value="${item.produto.qt_disponivel}" min="1">
                         </td>
-                        <td>${item.produto.qt_disponivel}</td>
                         <td>${item.valor.toFixed(2)}</td>
                     </tr>
                 `;
             });
         }
 
-        function preencherCards(carrinho) {
+       function preencherCards(carrinho) { 
             const cards = document.querySelectorAll('.card-item .card-bottom .resultado');
 
-            const total = carrinho.total && !isNaN(carrinho.total) ? carrinho.total : 0;
-            cards[0].textContent = `R$ ${total.toFixed(2)}`;
+            const total = carrinho.valor_total && !isNaN(carrinho.valor_total) ? carrinho.valor_total : 0;
+            cards[0].textContent = `R$ ${total.toFixed(2)}`; 
 
             const status = carrinho.status || '-';
             cards[1].textContent = status;
 
-            const dataCriacao = carrinho.data_criacao || '-';
+            const dataCriacao = carrinho.criado_em || '-';
             cards[2].textContent = dataCriacao;
         }
-
     });
 </script>
 {% endblock %}

@@ -167,7 +167,6 @@ class Carrinho implements \JsonSerializable
     {
         if (!$this->items->contains($item)) {
             $this->items->add($item);
-            $item->setCarrinho($this);
         }
         return $this;
     }
@@ -176,7 +175,6 @@ class Carrinho implements \JsonSerializable
     {
         if ($this->items->removeElement($item)) {
             if ($item->getCarrinho() === $this) {
-                $item->setCarrinho(null);
             }
         }
         return $this;
@@ -190,7 +188,7 @@ class Carrinho implements \JsonSerializable
             'usuario' => $this->usuario,
             'status' => $this->status,
             'valor_total'  => $this->valor_total,
-            'criado_em' => $this->criado_em,
+            'criado_em' => $this->criado_em->format("d/m/Y"),
             'finalizado_em' => $this->finalizado_em,   
             'items' => $this->items->toArray(),
         ];

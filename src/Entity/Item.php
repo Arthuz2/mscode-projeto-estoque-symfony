@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ItemRepository;
 use Doctrine\ORM\Mapping as ORM;
-use PhpParser\ErrorHandler\ThrowingTest;
+
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 class Item implements \JsonSerializable
@@ -65,7 +65,8 @@ class Item implements \JsonSerializable
         return [
             'id' => $this->id,
             'valor' => $this->valor,
-            'produto' => $this->produto
+            'produto' => $this->produto,
+            "quantidade" => $this->quantidade,
         ];
     }
 }
