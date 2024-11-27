@@ -91,46 +91,44 @@
     {{ parent() }}
     <script>
         async function carregarClientes() {
-              try {
-                  const response = await fetch('/api/clientes', {
-                     method: 'GET',
-                      headers: { 'Content-Type': 'application/json' }
-                  });
-                  if (!response.ok) throw new Error('Erro ao carregar clientes');
-                  const clientes = await response.json();
+            try {
+                const response = await fetch('/api/clientes', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) throw new Error('Erro ao carregar clientes');
+                const clientes = await response.json();
 
-                  const clienteSelect = document.getElementById('cliente-Select');
-                  clientes.forEach(cliente => {
-                        const option = document.createElement('option');
-                      option.value = cliente.id;
-                      option.textContent = cliente.nome;
-                      clienteSelect.appendChild(option);
-                  });
-              } catch (error) {
-                  console.error('Erro ao carregar clientes:', error);
-              }
+                const clienteSelect = document.getElementById('cliente-Select');
+                clientes.forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.id;
+                    option.textContent = cliente.nome;
+                    clienteSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar clientes:', error);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-        carregarClientes();
-
+            carregarClientes();
 
             const clienteSelect = document.getElementById('cliente-Select');
             clienteSelect.addEventListener('change', function() {
                 const clienteId = this.value;
 
                 if (clienteId) {
-                
+                    verificarDescarteCarrinho(clienteId);
                     fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
                         .then(response => {
-                            
+
                             if (!response.ok) {
                                 throw new Error('Erro ao buscar o carrinho');
                             }
                             return response.json();
                         })
                         .then(data => {
-                            console.log(data)
                             if (data.error) {
                                 alert(data.error);
                             } else {
@@ -188,6 +186,19 @@
                     dataCard.textContent = '-';
                 }
 
+            }
+
+            function verificarDescarteCarrinho(carrinhoId){
+                fetch(`/api/carrinho/descartar/${carrinhoId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.error);
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             }
         });
     </script>
