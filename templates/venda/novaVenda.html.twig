@@ -182,36 +182,78 @@
                                         return;
                                     } else {
                                         const tabela = document.getElementById('tabela');
-                                        const novaLinha = document.createElement('tr');
                                         
                                         produtosCarrinho.push({
                                             id: produtoSelecionado.id,
-                                            quantidade: 1 
+                                            quantidade: 1,
+                                            valorUnitario: produtoSelecionado.valor  
                                         });
+
+                                        const novaLinha = document.createElement('tr');
+                                        const valorTotalProduto = produtoSelecionado.valor * 1; 
                                         novaLinha.innerHTML = `
                                             <td>${produtoSelecionado.nome}</td>
                                             <td>${produtoSelecionado.categoria || 'Categoria'}</td>
                                             <td>${produtoSelecionado.qt_disponivel}</td>
-                                            <td><input class="input-number rounded" type="number" value="1" min="1" max="${produtoSelecionado.qt_disponivel}"></td>
-                                            <td>${produtoSelecionado.valor.toFixed(2)}</td>
+                                            <td>
+                                                <input class="input-number rounded" type="number" value="1" min="1" max="${produtoSelecionado.qt_disponivel}" data-valor-unitario="${produtoSelecionado.valor}">
+                                            </td>
+                                            <td class="item-total">${valorTotalProduto.toFixed(2)}</td>
                                         `;
 
                                         tabela.appendChild(novaLinha);
+                                        
+                                        const inputQuantidade = novaLinha.querySelector('input[type="number"]');
+                                        inputQuantidade.addEventListener('input', function() {
+                                            const novaQuantidade = parseInt(this.value); 
+                                            const valorUnitario = parseFloat(this.getAttribute('data-valor-unitario'));  
+                                            
+                                            console.log('Nova Quantidade:', novaQuantidade);
+                                            console.log('Valor Unitário:', valorUnitario);
 
-                                        let totalAtual = parseFloat(document.querySelector('.card-item .resultado').textContent.replace('R$', '').trim()) || 0;
-                                        totalAtual += produtoSelecionado.valor;
-                                        document.querySelector('.card-item .resultado').textContent = `R$ ${totalAtual.toFixed(2)}`;
+                                            if (isNaN(novaQuantidade) || isNaN(valorUnitario)) {
+                                                console.error('Erro ao calcular o valor total: quantidade ou valor unitário inválido');
+                                                return;
+                                            }
+
+                                            const itemTotalCell = novaLinha.querySelector('.item-total');
+
+                                            const novoTotalItem = valorUnitario * novaQuantidade;
+                                            itemTotalCell.textContent = novoTotalItem.toFixed(2);
+
+                                            recalcularTotalCarrinho();
+                                        });
 
                                         const dataAtual = new Date().toLocaleDateString('pt-BR');
                                         document.querySelectorAll('.card-item .resultado')[2].textContent = dataAtual;
+
+                                        recalcularTotalCarrinho();
                                     }
                                 }
                             });
                         });
                     }
-
                 } catch (error) {
                     console.error('Erro ao carregar produtos:', error);
+                }
+            }
+
+            function recalcularTotalCarrinho() {
+                let totalCarrinho = 0;
+
+               
+                const totaisItens = document.querySelectorAll('.item-total');
+                totaisItens.forEach(itemTotal => {
+                    const itemTotalValue = parseFloat(itemTotal.textContent);
+                    if (!isNaN(itemTotalValue)) {
+                        totalCarrinho += itemTotalValue;
+                    }
+                });
+
+               
+                const totalCard = document.querySelector('.card-item .resultado');
+                if (totalCard) {
+                    totalCard.textContent = `R$ ${totalCarrinho.toFixed(2)}`;
                 }
             }
 
@@ -268,6 +310,7 @@
                         </tr>
                     `;
                 });
+                recalcularTotalCarrinho();
             }
 
             function preencherCards(carrinho) { 

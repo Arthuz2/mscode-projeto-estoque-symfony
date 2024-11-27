@@ -23,7 +23,6 @@ class FinalizarVendaService
     
     public function execute(int $clienteId, array $produtos): Carrinho
     {
-        dd($clienteId,$produtos);
         $cliente = $this->clienteRepository->find($clienteId);
         $carrinho = $this->carrinhoRepository->buscarUltimoCarrinhoPendente(["cliente" => $cliente]);
 
@@ -32,7 +31,6 @@ class FinalizarVendaService
         }
        
         foreach($produtos as $produto){
-            dd($produto);
             $produtoId = $produto['id']; 
             $quantidade = $produto['quantidade']; 
             
@@ -48,7 +46,7 @@ class FinalizarVendaService
                 throw new BadRequestHttpException('O produto está fora de estoque ou não possui quantidade suficiente.');
             }
 
-            if ($this->itemRepository->findOneBy(['carrinho' => $carrinho, 'produto' > $produtoEncontrado])) {
+            if ($this->itemRepository->findOneBy(['carrinho' => $carrinho, 'produto' => $produtoEncontrado])) {
                 throw new ProdutoJaAdicionadoAoCarrinhoException();
             }
     
