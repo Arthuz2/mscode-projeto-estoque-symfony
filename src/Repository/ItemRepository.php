@@ -23,18 +23,4 @@ class ItemRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
         return $item;
     }
-      
-    public function encontrarProdutosPorCarrinhoId($carrinhoId): ?Carrinho
-    {
-        
-        dd("chego aqui");
-        return
-        $this->createQueryBuilder('i')
-            ->select('p')
-            ->join('i.produto', 'p')
-            ->where('i.carrinho = :carrinho_id_id')
-            ->setParameter('carrinho_id_id', $carrinhoId)
-            ->getQuery()
-            ->getResult();
-    }
 }

@@ -21,7 +21,8 @@ class Item implements \JsonSerializable
     #[ORM\JoinColumn(nullable: false)]
     private ?Produto $produto;
 
-    #[ORM\ManyToOne(inversedBy: 'items')]
+    #[ORM\ManyToOne(targetEntity: Carrinho::class , inversedBy: 'items')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Carrinho $carrinho;
 
     #[ORM\Column]

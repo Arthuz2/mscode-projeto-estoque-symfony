@@ -93,196 +93,196 @@
 
     </main>
 {% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
-   <script>
-    let carrinhoId; 
-    let produtosCarrinho = [];
+    <script>
+        let carrinhoId; 
+        let produtosCarrinho = [];
 
-    async function carregarClientes() {
-        try {
-            const response = await fetch('/api/clientes', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            });
-            if (!response.ok) throw new Error('Erro ao carregar clientes');
-            const clientes = await response.json();
+        async function carregarClientes() {
+            try {
+                const response = await fetch('/api/clientes', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) throw new Error('Erro ao carregar clientes');
+                const clientes = await response.json();
+
+                const clienteSelect = document.getElementById('cliente-Select');
+                clientes.forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.id;
+                    option.textContent = cliente.nome;
+                    clienteSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar clientes:', error);
+            }
+        }
+
+        function habilitarBotaoFinalizarVenda() {
+            const tabela = document.getElementById('tabela');
+            const produtosAdicionados = tabela.getElementsByTagName('tr').length > 0;
+            const finalizarButton = document.querySelector('.Finalizar-button');
+            finalizarButton.disabled = !produtosAdicionados;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            carregarClientes();
 
             const clienteSelect = document.getElementById('cliente-Select');
-            clientes.forEach(cliente => {
-                const option = document.createElement('option');
-                option.value = cliente.id;
-                option.textContent = cliente.nome;
-                clienteSelect.appendChild(option);
-            });
-        } catch (error) {
-            console.error('Erro ao carregar clientes:', error);
-        }
-    }
+            clienteSelect.addEventListener('change', function() {
+                const clienteId = this.value;
 
-    
-   
-
-    function habilitarBotaoFinalizarVenda() {
-        const tabela = document.getElementById('tabela');
-        const produtosAdicionados = tabela.getElementsByTagName('tr').length > 0;
-        const finalizarButton = document.querySelector('.Finalizar-button');
-        finalizarButton.disabled = !produtosAdicionados;
-    }
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        carregarClientes();
-        
-
-        const clienteSelect = document.getElementById('cliente-Select');
-        clienteSelect.addEventListener('change', function() {
-            const clienteId = this.value;
-
-            if (clienteId) {
-                fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
-                    .then(response => { 
-                        if (false === response.ok) {
-                            return Promise.reject(response);
-                        }
-
-                        return response.json();
-                    })
-                    .then(data => {
-                        carrinhoId = data.carrinho.id;
-                        displayCarrinhoInfo(data.carrinho);
-                        preencherCards(data.carrinho); 
-                        carregarProdutos();
-                    })
-                    .catch(response => response.json().then(data => alert(data.error)))
-            }
-        });
-         async function carregarProdutos() { 
-        try {  
-            const response = await fetch(`/api/produto/consultar/${carrinhoId}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            });
-
-            if (!response.ok) throw new Error('Erro ao carregar produtos');
-            console.log(response)
-            const produtos = JSON.parse(await response.json());
-            const produtoSelect = document.getElementById('produto-Select');
-           
-            console.log(Array.isArray(produtos))
-            if(Array.isArray(produtos)){
-                produtos?.forEach(produto => {
-                const option = document.createElement('option');
-                option.value = produto.id; 
-                option.textContent = produto.nome;
-                produtoSelect.appendChild(option);
-                 produtoSelect.addEventListener('change', function() {
-                const produtoIdSelecionado = this.value;
-                const produtoSelecionado = produtos.find(produto => produto.id == produtoIdSelecionado);
-
-                if (produtoSelecionado) {
-                    const produtoJaAdicionado = produtosCarrinho.some(produto => produto.id == produtoSelecionado.id);
-
-                    if(produtoJaAdicionado){
-                        return;
-                    }else{
-                         const tabela = document.getElementById('tabela');
-                        const novaLinha = document.createElement('tr');
-                        // Adicionar produto à lista de produtos do carrinho
-                        produtosCarrinho.push({
-                            id: produtoSelecionado.id,
-                            quantidade: 1 // Quantidade inicial padrão
-                        });
-                        novaLinha.innerHTML = `
-                            <td>${produtoSelecionado.nome}</td>
-                            <td>${produtoSelecionado.categoria || 'Categoria'}</td>
-                            <td>${produtoSelecionado.qt_disponivel}</td>
-                            <td><input class="input-number rounded" type="number" value="1" min="1" max="${produtoSelecionado.qt_disponivel}"></td>
-                            <td>${produtoSelecionado.valor.toFixed(2)}</td>
-                        `;
-                        
-                        tabela.appendChild(novaLinha);
-
-                        let totalAtual = parseFloat(document.querySelector('.card-item .resultado').textContent.replace('R$', '').trim()) || 0;
-                        totalAtual += produtoSelecionado.valor;
-                        document.querySelector('.card-item .resultado').textContent = `R$ ${totalAtual.toFixed(2)}`;
-
-                        const dataAtual = new Date().toLocaleDateString('pt-BR');
-                        document.querySelectorAll('.card-item .resultado')[2].textContent = dataAtual;
-                    }
+                if (clienteId) {
+                    fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
+                        .then(response => { 
+                            if (false === response.ok) {
+                                return Promise.reject(response);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            carrinhoId = data.carrinho.id;
+                            displayCarrinhoInfo(data.carrinho);
+                            preencherCards(data.carrinho); 
+                            carregarProdutos();
+                        })
+                        .catch(response => response.json().then(data => alert(data.error)))
                 }
             });
-            });
+
+            async function carregarProdutos() { 
+                try {  
+                    const response = await fetch(`/api/produto/consultar/${carrinhoId}`, {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+
+                    if (!response.ok) throw new Error('Erro ao carregar produtos');
+                    
+                    const produtos = JSON.parse(await response.json());
+                    const produtoSelect = document.getElementById('produto-Select');
+
+                    if (Array.isArray(produtos)) {
+                        produtos?.forEach(produto => {
+                            const option = document.createElement('option');
+                            option.value = produto.id; 
+                            option.textContent = produto.nome;
+                            produtoSelect.appendChild(option);
+
+                            produtoSelect.addEventListener('change', function() {
+                                const produtoIdSelecionado = this.value;
+                                const produtoSelecionado = produtos.find(produto => produto.id == produtoIdSelecionado);
+
+                                if (produtoSelecionado) {
+                                    const produtoJaAdicionado = produtosCarrinho.some(produto => produto.id == produtoSelecionado.id);
+
+                                    if (produtoJaAdicionado) {
+                                        return;
+                                    } else {
+                                        const tabela = document.getElementById('tabela');
+                                        const novaLinha = document.createElement('tr');
+                                        
+                                        produtosCarrinho.push({
+                                            id: produtoSelecionado.id,
+                                            quantidade: 1 
+                                        });
+                                        novaLinha.innerHTML = `
+                                            <td>${produtoSelecionado.nome}</td>
+                                            <td>${produtoSelecionado.categoria || 'Categoria'}</td>
+                                            <td>${produtoSelecionado.qt_disponivel}</td>
+                                            <td><input class="input-number rounded" type="number" value="1" min="1" max="${produtoSelecionado.qt_disponivel}"></td>
+                                            <td>${produtoSelecionado.valor.toFixed(2)}</td>
+                                        `;
+
+                                        tabela.appendChild(novaLinha);
+
+                                        let totalAtual = parseFloat(document.querySelector('.card-item .resultado').textContent.replace('R$', '').trim()) || 0;
+                                        totalAtual += produtoSelecionado.valor;
+                                        document.querySelector('.card-item .resultado').textContent = `R$ ${totalAtual.toFixed(2)}`;
+
+                                        const dataAtual = new Date().toLocaleDateString('pt-BR');
+                                        document.querySelectorAll('.card-item .resultado')[2].textContent = dataAtual;
+                                    }
+                                }
+                            });
+                        });
+                    }
+
+                } catch (error) {
+                    console.error('Erro ao carregar produtos:', error);
+                }
             }
-         
-            
-           
-        } catch (error) {
-            console.error('Erro ao carregar produtos:', error);
-        }
-    }
 
-    
-        const form = document.getElementById('finalizarVendaForm');
-        form.addEventListener("submit",function(event){
-            event.preventDefault();
+            const form = document.getElementById('finalizarVendaForm');
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                const tabela = document.getElementById('tabela');
+                const linhas = tabela.getElementsByTagName('tr');
 
-            const dados = {
-                cliente: clienteSelect.value,
-                produtos: produtosCarrinho.map(produto => ({
-                    id: produto.id,
-                    quantidade: produto.quantidade
-                }))
-            };
+                produtosCarrinho.forEach((produto,index) =>{
+                    const inputQuantidade = linhas[index].querySelector('input[type="number"]')
+                    produto.quantidade = inputQuantidade.value;
+                })
 
-            fetch('{{ path('finalizarCarrinho') }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(dados)
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message || data.error);
-            })
-            .catch(error => {
-                console.error('Erro ao finalizar venda:', error);
+                const dados = {
+                    cliente: clienteSelect.value,
+                    produtos: produtosCarrinho.map(produto => ({
+                        id: produto.id,
+                        quantidade: produto.quantidade
+                    }))
+                };
+
+                fetch('{{ path('finalizarCarrinho') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dados)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message || data.error);
+                })
+                .catch(error => {
+                    console.error('Erro ao finalizar venda:', error);
+                });
             });
 
-        }) 
+            function displayCarrinhoInfo(carrinho) { 
+                const carrinhoInfoDiv = document.getElementById('tabela');
+                carrinhoInfoDiv.innerHTML = '';
 
-        function displayCarrinhoInfo(carrinho) { 
-            const carrinhoInfoDiv = document.getElementById('tabela');
-            carrinhoInfoDiv.innerHTML = '';
+                carrinho.items.forEach((item,index) => {
+                    carrinhoInfoDiv.innerHTML += `
+                        <tr>
+                            <td>${item.produto.nome}</td>
+                            <td>${item.produto.categoria_id.id}</td>
+                            <td>${item.produto.qt_disponivel}</td>
+                            <td class="quantidade">
+                                <input id="quantidade-${index}" class="input-number" type="number" value="${item.quantidade}" min="1">
+                            </td>
+                            <td>${item.valor.toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+            }
 
-            carrinho.items.forEach(item => {
-                carrinhoInfoDiv.innerHTML += `
-                    <tr>
-                        <td>${item.produto.nome}</td>
-                        <td>${item.produto.categoria_id.id}</td>
-                        <td>${item.produto.qt_disponivel}</td>
-                        <td class="quantidade">
-                            <input class="input-number" type="number" value="${item.produto.qt_disponivel}" min="1">
-                        </td>
-                        <td>${item.valor.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
-        }
+            function preencherCards(carrinho) { 
+                const cards = document.querySelectorAll('.card-item .card-bottom .resultado');
 
-       function preencherCards(carrinho) { 
-            const cards = document.querySelectorAll('.card-item .card-bottom .resultado');
+                const total = carrinho.valor_total && !isNaN(carrinho.valor_total) ? carrinho.valor_total : 0;
+                cards[0].textContent = `R$ ${total.toFixed(2)}`; 
 
-            const total = carrinho.valor_total && !isNaN(carrinho.valor_total) ? carrinho.valor_total : 0;
-            cards[0].textContent = `R$ ${total.toFixed(2)}`; 
+                const status = carrinho.status || '-';
+                cards[1].textContent = status;
 
-            const status = carrinho.status || '-';
-            cards[1].textContent = status;
-
-            const dataCriacao = carrinho.criado_em || '-';
-            cards[2].textContent = dataCriacao;
-        }
-    });
-</script>
+                const dataCriacao = carrinho.criado_em || '-';
+                cards[2].textContent = dataCriacao;
+            }
+        });
+    </script>
 {% endblock %}
+
