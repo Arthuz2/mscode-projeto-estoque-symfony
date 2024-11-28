@@ -26,6 +26,7 @@ class FinalizarVendaService
         $cliente = $this->clienteRepository->find($clienteId);
         $carrinho = $this->carrinhoRepository->buscarUltimoCarrinhoPendente(["cliente" => $cliente]);
 
+
         if(null === $carrinho){
             throw new \Exception("O cliente não possui nenhum carrinho pendente a ser finalizado!!");
         }

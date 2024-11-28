@@ -118,6 +118,7 @@
             } catch (error) {
                 console.error('Erro ao carregar clientes:', error);
             }
+
         }
 
         function habilitarBotaoFinalizarVenda() {
@@ -125,6 +126,7 @@
             const produtosAdicionados = tabela.getElementsByTagName('tr').length > 0;
             const finalizarButton = document.querySelector('.Finalizar-button');
             finalizarButton.disabled = !produtosAdicionados;
+
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -135,6 +137,7 @@
                 const clienteId = this.value;
 
                 if (clienteId) {
+
                     fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
                         .then(response => { 
                             if (false === response.ok) {
@@ -143,6 +146,7 @@
                             return response.json();
                         })
                         .then(data => {
+
                             carrinhoId = data.carrinho.id;
                             displayCarrinhoInfo(data.carrinho);
                             preencherCards(data.carrinho); 
@@ -324,6 +328,19 @@
 
                 const dataCriacao = carrinho.criado_em || '-';
                 cards[2].textContent = dataCriacao;
+            }
+
+            function verificarDescarteCarrinho(carrinhoId){
+                fetch(`/api/carrinho/descartar/${carrinhoId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.error);
+                        }
+                        return response.json();
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             }
         });
     </script>
