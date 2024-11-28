@@ -14,7 +14,7 @@ class FinalizarVendaController extends AbstractController
     public function finalizarVenda(
         Request $request,
         FinalizarVendaService $finalizarVendaService
-    ): JsonResponse 
+    ): JsonResponse
     {
         try
         {
