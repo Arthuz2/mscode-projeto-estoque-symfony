@@ -26,7 +26,7 @@ class FinalizarVendaController extends AbstractController
                 "message" => 'Carrinho alterado para aguardando pagamento.'
             ]);
         } catch (\Throwable $e) {
-            return new JsonResponse(['error' => $e->getMessage()]);
+            return new JsonResponse(['error' => $e->getMessage()], status: 500);
         }
     }
 }
