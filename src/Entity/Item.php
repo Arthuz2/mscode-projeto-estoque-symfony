@@ -29,12 +29,11 @@ class Item implements \JsonSerializable
     private int $quantidade;
 
     public function __construct(
-        Carrinho    $carrinho,
+        Carrinho $carrinho,
         Produto $produto,
         int $valor,
         int $quantidade
-    )
-    {
+    ) {
         $this->produto = $produto;
         $this->valor = $valor;
         $this->carrinho = $carrinho;
