@@ -1,30 +1,31 @@
-# Use a imagem oficial do PHP com Apache
-FROM php:8.3.6-apache
+# Base: PHP 8.3 com Apache
+FROM php:8.3-apache
 
-# Instale as extensões necessárias para Symfony
+# Instale dependências necessárias
 RUN apt-get update && apt-get install -y \
     libicu-dev libpq-dev libzip-dev unzip git \
     && docker-php-ext-install intl pdo pdo_pgsql pdo_mysql zip
 
-# Instale o Composer
+# Instale o Composer 2.7.1
 COPY --from=composer:2.7.1 /usr/bin/composer /usr/bin/composer
 
-# Configure o Apache para o Symfony
-RUN a2enmod rewrite
-COPY ./public /var/www/html
-
-# Copie o restante do projeto
-COPY . /var/www
+# Crie um usuário não-root para evitar problemas de permissões
+RUN useradd -ms /bin/bash symfony
+USER symfony
 WORKDIR /var/www
 
-# Instale dependências do Symfony
-RUN APP_ENV=prod APP_DEBUG=0 composer install --optimize-autoloader --no-dev
+# Copie os arquivos do projeto para o container
+COPY . /var/www
 
-# Configuração de cache
-RUN mkdir -p var/cache var/log && chown -R www-data:www-data var
+# Instale dependências do Symfony com Composer
+RUN composer install --optimize-autoloader --no-dev
 
-# Porta padrão do Symfony
+# Configure cache e assets
+RUN php bin/console cache:clear --env=prod
+RUN php bin/console assets:install public
+
+# Expor a porta 8080
 EXPOSE 8080
 
-# Comando para iniciar o servidor
+# Inicie o servidor embutido do PHP
 CMD ["php", "-S", "0.0.0.0:8080", "-t", "public"]
