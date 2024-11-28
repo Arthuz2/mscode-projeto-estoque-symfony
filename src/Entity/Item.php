@@ -40,7 +40,7 @@ class Item implements \JsonSerializable
         $this->quantidade = $quantidade;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
