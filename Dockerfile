@@ -18,7 +18,7 @@ COPY . /var/www
 WORKDIR /var/www
 
 # Instale dependências do Symfony
-RUN composer install --optimize-autoloader --no-dev
+RUN APP_ENV=prod APP_DEBUG=0 composer install --optimize-autoloader --no-dev
 
 # Configuração de cache
 RUN mkdir -p var/cache var/log && chown -R www-data:www-data var
