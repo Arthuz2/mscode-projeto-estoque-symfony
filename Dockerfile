@@ -26,7 +26,7 @@ COPY . /var/www
 RUN mkdir -p /var/www/vendor
 
 # Instale dependências do Composer
-RUN composer install --optimize-autoloader --no-dev
+RUN composer install
 
 # Configure cache e assets
 RUN php bin/console cache:clear --env=prod
