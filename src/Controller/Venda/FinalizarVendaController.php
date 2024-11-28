@@ -23,7 +23,7 @@ class FinalizarVendaController extends AbstractController
             $produtos = $data["produtos"];
             $finalizarVendaService->execute($clienteId, $produtos);
             return new JsonResponse([
-                "message" => 'aguardando pagamento'
+                "message" => 'Carrinho alterado para aguardando pagamento.'
             ]);
         } catch (\Throwable $e) {
             return new JsonResponse(['error' => $e->getMessage()]);
