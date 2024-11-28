@@ -1,5 +1,5 @@
 # Use a imagem oficial do PHP com Apache
-FROM php:8.3-apache
+FROM php:8.3.6-apache
 
 # Instale as extensões necessárias para Symfony
 RUN apt-get update && apt-get install -y \
