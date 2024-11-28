@@ -27,9 +27,10 @@ class ConsultarController extends AbstractController
             $carrinho = $carrinhoRepository->find($carrinhoId);
             $itensNocarrinho = $itemRepository->findBy(["carrinho" => $carrinho]);
 
-            $produtosNoCarrinho = array_map(function($item){
-                return $item->getProduto()->getId();
-            },$itensNocarrinho);
+            $produtosNoCarrinho = array_map(
+                fn (Item $item) => $item->getProduto()->getId(),
+                $itensNocarrinho
+            );
            
             $produtoFiltro = array_filter($produtos,function($produto) use ($produtosNoCarrinho) {
                 return !in_array($produto->getId(),$produtosNoCarrinho);
