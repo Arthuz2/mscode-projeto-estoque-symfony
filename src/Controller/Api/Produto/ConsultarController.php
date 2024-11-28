@@ -40,7 +40,7 @@ class ConsultarController extends AbstractController
                 return $this->json(['error' => 'Nenhum produto encontrado'], 404);
             }
 
-            return new JsonResponse($serializer->serialize($produtoFiltro, 'json', ['groups' => 'produto']));
+            return $this->json($produtoFiltro, context: ['groups' => 'produto']);
         } catch (\Exception $e) {
             return new JsonResponse(['error' => 'erro na consulta de produtos'], 500);
         }
