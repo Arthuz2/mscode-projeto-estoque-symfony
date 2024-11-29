@@ -164,7 +164,7 @@
                     });
 
                     if (!response.ok) throw new Error('Erro ao carregar produtos');
-                    
+                     
                     const produtos = JSON.parse(await response.json());
                     const produtoSelect = document.getElementById('produto-Select');
 

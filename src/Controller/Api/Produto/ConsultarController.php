@@ -5,7 +5,7 @@ namespace App\Controller\Api\Produto;
 use App\Repository\CarrinhoRepository;
 use App\Repository\ItemRepository;
 use App\Repository\ProdutoRepository;
-use Container3Q2SPOz\getCarrinhoRepositoryService;
+use App\Entity\Item;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -39,8 +39,7 @@ class ConsultarController extends AbstractController
             if(!$produtos){
                 return $this->json(['error' => 'Nenhum produto encontrado'], 404);
             }
-
-            return $this->json($produtoFiltro, context: ['groups' => 'produto']);
+            return new JsonResponse($serializer->serialize($produtoFiltro, 'json', ['groups' => 'produto']));
         } catch (\Exception $e) {
             return new JsonResponse(['error' => 'erro na consulta de produtos'], 500);
         }
