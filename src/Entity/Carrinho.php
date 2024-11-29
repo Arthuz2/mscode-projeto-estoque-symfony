@@ -71,12 +71,12 @@ class Carrinho implements \JsonSerializable
         return $this;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getCliente(): ?Cliente
+    public function getCliente(): Cliente
     {
         return $this->cliente;
     }
@@ -87,12 +87,12 @@ class Carrinho implements \JsonSerializable
         return $this;
     }
 
-    public function getUsuario(): ?Usuario
+    public function getUsuario(): Usuario
     {
         return $this->usuario;
     }
 
-    public function setUsuario(?Usuario $usuario): self
+    public function setUsuario(Usuario $usuario): self
     {
         $this->usuario = $usuario;
         return $this;
@@ -109,7 +109,7 @@ class Carrinho implements \JsonSerializable
         return $this;
     }
 
-    public function getCriadoEm(): ?\DateTimeInterface
+    public function getCriadoEm(): \DateTimeInterface
     {
         return $this->criado_em;
     }

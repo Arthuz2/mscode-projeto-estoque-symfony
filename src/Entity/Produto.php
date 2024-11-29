@@ -52,12 +52,12 @@ class Produto implements \JsonSerializable
     #[Groups('produto')]
     private ?\DateTimeInterface $atualizado_em = null;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getNome(): ?string
+    public function getNome(): string
     {
         return $this->nome;
     }
@@ -81,12 +81,12 @@ class Produto implements \JsonSerializable
         return $this;
     }
 
-    public function getDataCadastro(): ?\DateTimeInterface
+    public function getDataCadastro(): \DateTimeInterface
     {
         return $this->data_cadastro;
     }
 
-    public function setDataCadastro(?\DateTimeInterface $data_cadastro): static
+    public function setDataCadastro(\DateTimeInterface $data_cadastro): static
     {
         $this->data_cadastro = $data_cadastro;
 
@@ -129,12 +129,12 @@ class Produto implements \JsonSerializable
         return $this;
     }
 
-    public function getCategoriaId(): ?Categoria
+    public function getCategoriaId(): Categoria
     {
         return $this->categoria_id;
     }
 
-    public function setCategoriaId(?Categoria $categoria_id): static
+    public function setCategoriaId(Categoria $categoria_id): static
     {
         $this->categoria_id = $categoria_id;
 

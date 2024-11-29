@@ -44,12 +44,12 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Jso
         $this->carrinhos = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -98,7 +98,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Jso
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }

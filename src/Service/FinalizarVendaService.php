@@ -34,13 +34,14 @@ class FinalizarVendaService
         foreach($produtos as $produto){
             $produtoId = $produto['id']; 
             $quantidade = $produto['quantidade']; 
-            
-            $produtoEncontrado = $this->produtoRepository->find($produtoId);
-            $quantidadeDisponivel = $produtoEncontrado->getQuantidadeDisponivel();
 
+            $produtoEncontrado = $this->produtoRepository->find($produtoId);
             if (!$produtoEncontrado) {
                 throw new \Exception("Produto não encontrado");
             }
+
+            $quantidadeDisponivel = $produtoEncontrado->getQuantidadeDisponivel();
+           
             $valorTotalProduto = $quantidade * $produtoEncontrado->getValor();
 
             if ($produtoEncontrado->getQuantidadeDisponivel() < 1) {
