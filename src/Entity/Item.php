@@ -17,22 +17,32 @@ class Item implements \JsonSerializable
     #[ORM\Column]
     private ?int $valor;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Produto $produto;
+    #[ORM\ManyToOne(targetEntity: Produto::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private Produto $produto;
 
-    #[ORM\ManyToOne(inversedBy: 'items')]
+    #[ORM\ManyToOne(targetEntity: Carrinho::class , inversedBy: 'items')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Carrinho $carrinho;
 
-    public function getId(): ?int
-    {
-        return $this->id;
+    #[ORM\Column]
+    private int $quantidade;
+
+    public function __construct(
+        Carrinho $carrinho,
+        Produto $produto,
+        int $valor,
+        int $quantidade
+    ) {
+        $this->produto = $produto;
+        $this->valor = $valor;
+        $this->carrinho = $carrinho;
+        $this->quantidade = $quantidade;
     }
 
-    public function setId(int $id): static
+    public function getId(): int
     {
-        $this->id = $id;
-
-        return $this;
+        return $this->id;
     }
 
     public function getValor(): ?int
@@ -40,23 +50,9 @@ class Item implements \JsonSerializable
         return $this->valor;
     }
 
-    public function setValor(int $valor): static
-    {
-        $this->valor = $valor;
-
-        return $this;
-    }
-
     public function getProduto(): ?Produto
     {
         return $this->produto;
-    }
-
-    public function setProduto(?Produto $produto): static
-    {
-        $this->produto = $produto;
-
-        return $this;
     }
 
     public function getCarrinho(): ?Carrinho
@@ -64,20 +60,13 @@ class Item implements \JsonSerializable
         return $this->carrinho;
     }
 
-    public function setCarrinho(?Carrinho $carrinho): static
-    {
-        $this->carrinho = $carrinho;
-
-        return $this;
-    }
-
     public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
             'valor' => $this->valor,
-            'produto' => $this->produto
-           
+            'produto' => $this->produto,
+            "quantidade" => $this->quantidade,
         ];
     }
 }

@@ -71,12 +71,12 @@ class Carrinho implements \JsonSerializable
         return $this;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getCliente(): ?Cliente
+    public function getCliente(): Cliente
     {
         return $this->cliente;
     }
@@ -87,12 +87,12 @@ class Carrinho implements \JsonSerializable
         return $this;
     }
 
-    public function getUsuario(): ?Usuario
+    public function getUsuario(): Usuario
     {
         return $this->usuario;
     }
 
-    public function setUsuario(?Usuario $usuario): self
+    public function setUsuario(Usuario $usuario): self
     {
         $this->usuario = $usuario;
         return $this;
@@ -109,7 +109,7 @@ class Carrinho implements \JsonSerializable
         return $this;
     }
 
-    public function getCriadoEm(): ?\DateTimeInterface
+    public function getCriadoEm(): \DateTimeInterface
     {
         return $this->criado_em;
     }
@@ -166,7 +166,6 @@ class Carrinho implements \JsonSerializable
     {
         if (!$this->items->contains($item)) {
             $this->items->add($item);
-            $item->setCarrinho($this);
         }
         return $this;
     }
@@ -175,7 +174,6 @@ class Carrinho implements \JsonSerializable
     {
         if ($this->items->removeElement($item)) {
             if ($item->getCarrinho() === $this) {
-                $item->setCarrinho(null);
             }
         }
         return $this;
@@ -189,8 +187,8 @@ class Carrinho implements \JsonSerializable
             'usuario' => $this->usuario,
             'status' => $this->status,
             'valor_total'  => $this->valor_total,
-            'criado_em' => $this->criado_em,
-            'finalizado_em' => $this->finalizado_em,
+            'criado_em' => $this->criado_em->format("d/m/Y"),
+            'finalizado_em' => $this->finalizado_em,   
             'items' => $this->items->toArray(),
         ];
     }

@@ -36,7 +36,7 @@ class Categoria implements \JsonSerializable
         $this->produtos = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -66,18 +66,6 @@ class Categoria implements \JsonSerializable
         if (!$this->produtos->contains($produto)) {
             $this->produtos->add($produto);
             $produto->setCategoriaId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduto(Produto $produto): static
-    {
-        if ($this->produtos->removeElement($produto)) {
-            // set the owning side to null (unless already changed)
-            if ($produto->getCategoriaId() === $this) {
-                $produto->setCategoriaId(null);
-            }
         }
 
         return $this;
