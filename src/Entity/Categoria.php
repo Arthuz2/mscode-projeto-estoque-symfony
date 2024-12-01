@@ -99,6 +99,7 @@ class Categoria implements \JsonSerializable
     {
         return [
             'id' => $this->id,
+            'nome' => $this->nome,
         ];
     }
 }

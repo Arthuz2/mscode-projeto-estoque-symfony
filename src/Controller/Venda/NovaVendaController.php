@@ -14,7 +14,7 @@ class NovaVendaController extends AbstractController
     ){
     }
 
-    #[Route('/novaVenda', name: 'nova_venda')]
+    #[Route('/', name: 'nova_venda')]
     public function novaVenda(): Response
     {
         $carrinhos = $this->carrinhoRepository->findAll();

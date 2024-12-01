@@ -73,23 +73,27 @@
         </section>
 
         <section class="tabela">
-            <table>
-                <thead>
-                    <tr class="tabela-topo">
-                        <th scope="col">Nome</th>
-                        <th scope="col">Categoria</th>
-                        <th scope="col">Estoque</th>
-                        <th scope="col">Quantidade</th>
-                        <th scope="col">Total</th>
+            <div class="table-responsive">
+                <table class=" table-striped ">
+                    <thead class="tabela-topo">
+                        <tr class="tabela-topo">
+                            <th scope="col">Nome</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col">Estoque</th>
+                            <th scope="col">Quantidade</th>
+                            <th scope="col">Total</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela">
+                        <tr>
+                            <td colspan="6">Nenhum carrinho selecionado</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section> 
 
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody id="tabela">
-                     <td>nenhum carrinho selecionado</td>
-                </tbody>
-            </table>
-        </section>
 
     </main>
 {% endblock %}
@@ -195,14 +199,14 @@
 
                                         const novaLinha = document.createElement('tr');
                                         const valorTotalProduto = produtoSelecionado.valor * 1; 
-                                        novaLinha.innerHTML = `
-                                            <td>${produtoSelecionado.nome}</td>
-                                            <td>${produtoSelecionado.categoria || 'Categoria'}</td>
-                                            <td>${produtoSelecionado.qt_disponivel}</td>
-                                            <td>
+                                        novaLinha.innerHTML = ` 
+                                            <td  scope="col">${produtoSelecionado.nome}</td>
+                                            <td  scope="col">${produtoSelecionado.categoria_id.nome || 'Categoria'}</td>
+                                            <td scope="col">${produtoSelecionado.qt_disponivel}</td>
+                                            <td scope="col">
                                                 <input class="input-number rounded" type="number" value="1" min="1" max="${produtoSelecionado.qt_disponivel}" data-valor-unitario="${produtoSelecionado.valor}">
                                             </td>
-                                            <td class="item-total">${valorTotalProduto.toFixed(2)}</td>
+                                            <td  scope="col" class="item-total">${valorTotalProduto.toFixed(2)}</td>
                                         `;
 
                                         tabela.appendChild(novaLinha);
@@ -303,14 +307,14 @@
 
                 carrinho.items.forEach((item,index) => {
                     carrinhoInfoDiv.innerHTML += `
-                        <tr>
-                            <td>${item.produto.nome}</td>
-                            <td>${item.produto.categoria_id.id}</td>
-                            <td>${item.produto.qt_disponivel}</td>
-                            <td class="quantidade">
+                        <tr class="tr-responsivo">
+                            <td scope="col">${item.produto.nome}</td>
+                            <td scope="col">${item.produto.categoria_id.nome}</td>
+                            <td  scope="col">${item.produto.qt_disponivel}</td>
+                            <td  scope="col" class="quantidade">
                                 <input id="quantidade-${index}" class="input-number" type="number" value="${item.quantidade}" min="1">
                             </td>
-                            <td>${item.valor.toFixed(2)}</td>
+                            <td  scope="col">${item.valor.toFixed(2)}</td>
                         </tr>
                     `;
                 });
