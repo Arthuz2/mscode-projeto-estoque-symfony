@@ -26,7 +26,7 @@ table{
 }
 
 thead{
-    background-color: #D93539;
+    background-color: #D93539 ;
     color: white;
 }
 th{
@@ -143,7 +143,7 @@ td{
 }
 .tabela-conteudo{
     background-color: #dcdbdb8d;
-  
+    text-align: center;
 }
 
 .input-nunber{
@@ -161,7 +161,6 @@ td{
 }
 
 
-
 /* Responsividade para telas menores que 520px */
 @media (max-width: 597px) {
 
@@ -176,26 +175,7 @@ td{
     .card-item{
         margin: 20px;
     }
-    table{
-        display: grid;
-        grid-template-columns: repeat(2,1fr);
-    }
-    
-    .tabela-topo{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 0;
-    }
-
-    .tabela-conteudo{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
+   
     th{
         padding: 10px;
     }
@@ -203,34 +183,14 @@ td{
     .input-nunber{
         width: 46px;
     }
+
 }
 /* Ajuste adicional para 320px */
 @media (max-width: 320px) {
   
-
     main{
         height: auto;
         padding-bottom:40px ;
-    }
-
-    table{
-        display: grid;
-        grid-template-columns: repeat(2,1fr);
-    }
-        
-    .tabela-topo{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 0;
-    }
-    
-    .tabela-conteudo{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
     }
     
     th{
