@@ -132,6 +132,13 @@ td{
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.227);
 }
 
+.tabela2{
+    margin: 30px 20px 0px 20px;
+    border-radius: 10px;
+   /*  border: 1px solid rgba(0, 0, 0, 0.274); */
+    box-shadow: 2px 10px 5px rgba(0, 0, 0, 0.212);
+}
+
 
 .dividi{
     display: flex;
