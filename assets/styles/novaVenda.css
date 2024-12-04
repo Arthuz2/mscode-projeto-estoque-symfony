@@ -3,7 +3,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-  
 }
 
 /* css gerais */
@@ -20,7 +19,6 @@ main{
 table{
     width: 100%;
     background-color: white;
-
     border-radius: 8px;
     box-sizing: 5px 5px 5px  rgba(0, 0, 0, 0.312);
 }
