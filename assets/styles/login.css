@@ -5,7 +5,6 @@ body, html {
 }
 
 .background-image {
- 
   height: 100%;
   display: flex;
   justify-content: center;
@@ -36,10 +35,6 @@ h3 {
   margin: 0 5px;
   width: 150px;
   border-radius: 30px;
-}
-
-.form-section {
-  display: none;
 }
 
 .form-section.active {

@@ -1,5 +1,6 @@
 .nav-item a {
-    color: #D93539;
+    color: #D93539 !important;
+    text-decoration: none;
 }
 
 .nav-item a:hover {
