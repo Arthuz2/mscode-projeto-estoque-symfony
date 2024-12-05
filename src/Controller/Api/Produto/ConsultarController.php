@@ -6,6 +6,7 @@ use App\Repository\CarrinhoRepository;
 use App\Repository\ItemRepository;
 use App\Repository\ProdutoRepository;
 use App\Entity\Item;
+use App\Entity\Produto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -32,9 +33,10 @@ class ConsultarController extends AbstractController
                 $itensNocarrinho
             );
            
-            $produtoFiltro = array_filter($produtos,function($produto) use ($produtosNoCarrinho) {
-                return !in_array($produto->getId(),$produtosNoCarrinho);
-            });
+            $produtoFiltro = array_filter(
+                $produtos,
+                fn (Produto $produto) => !in_array($produto->getId(), $produtosNoCarrinho),
+            );
 
             if(!$produtos){
                 return $this->json(['error' => 'Nenhum produto encontrado'], 404);
