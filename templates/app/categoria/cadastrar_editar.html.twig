@@ -1,19 +1,20 @@
 {% extends 'pagesApp.html.twig' %}
 
 {% block content %}
-	<div class="container py-5">
-		<div class="mb-4">
-			<h1>{{ title }} categoria</h1>
+	<div class="container py-5 areaPadrao">
+
+		<div class="areaTop">
+			<h1 class="text-white">{{ title }} categoria</h1>
 		</div>
 
-		<div class="w-50 mt-2">
+		<div class="areaBottom">
 			{% include "mensagens.html.twig" %}
 			<form action="{{ cadastrar ? path('cadastrar_categoria_salvar') : path('editar_categoria_salvar', {id: categoria.id}) }}" method="POST">
 				<div class="mb-3">
 					<label for="nome" class="form-label">Nome:</label>
 					<input type="text" class="form-control" id="nome" name="nome" minlength="3" value="{{ cadastrar ? '' : categoria.nome}}" required>
 				</div>
-				<button type="submit" class="btn btn-primary">{{ cadastrar ? 'Salvar' : 'Atualizar' }}</button>
+				<button type="submit" class="btn btn-danger">{{ cadastrar ? 'Salvar' : 'Atualizar' }}</button>
 			</form>
 		</div>
 	</div>

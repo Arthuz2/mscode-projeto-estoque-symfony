@@ -3,7 +3,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-  
 }
 
 /* css gerais */
@@ -20,7 +19,6 @@ main{
 table{
     width: 100%;
     background-color: white;
-
     border-radius: 8px;
     box-sizing: 5px 5px 5px  rgba(0, 0, 0, 0.312);
 }
@@ -130,6 +128,13 @@ td{
     margin: 30px 20px 0px 20px;
     border-radius: 10px;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.227);
+}
+
+.tabela2{
+    margin: 30px 20px 0px 20px;
+    border-radius: 10px;
+   /*  border: 1px solid rgba(0, 0, 0, 0.274); */
+    box-shadow: 2px 10px 5px rgba(0, 0, 0, 0.212);
 }
 
 
