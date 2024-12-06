@@ -16,8 +16,7 @@ class ListarClienteController extends AbstractController
         return $this->render('cliente/listar.html.twig', [
             'headTitle' => '- clientes',
             'active' => 'clientes',
-            'clientes' => $this->$clienteRepository->findAll(),
+            'clientes' => $clienteRepository->findAll(),
         ]);
     }
 }
-

@@ -41,7 +41,11 @@ class CadastrarUsuarioController extends AbstractController
     }
 
         $senha_hash = $userPasswordHasherInterface->hashPassword($usuario, $data['_password']);
-        $usuario ->setEmail($data['_username']) ->setPassword($senha_hash) ->setRoles(['ROLE_USER']);
+        $usuario 
+
+        ->setEmail($data['_username']) 
+        ->setPassword($senha_hash) 
+        ->setRoles(['ROLE_USER']);
 
         $this->usuarioRepository->salvar($usuario);
 
