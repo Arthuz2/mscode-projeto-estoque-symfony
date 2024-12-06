@@ -204,10 +204,22 @@
                                                 <input class="input-number rounded" type="number" value="1" min="1" max="${produtoSelecionado.qt_disponivel}" data-valor-unitario="${produtoSelecionado.valor}">
                                             </td>
                                             <td  scope="col" class="item-total">${valorTotalProduto.toFixed(2)}</td>
+                                           <td>
+                                                <button class="button btn btn-danger p-1" data-id="${produtoSelecionado.id}"><i class="bi bi-x"></i></button>
+                                            </td>
                                         `;
 
                                         tabela.appendChild(novaLinha);
-                                        
+
+                                        document.getElementById('tabela').addEventListener('click', function(event){
+                                            if(event.target.closest('.button')){
+                                                const produtoId = event.target.closest('.button').getAttribute("data-id");
+
+                                                produtosCarrinho = produtosCarrinho.filter(produto => produto.id != produtoId);
+                                                event.target.closest('tr').remove();
+                                            }
+                                        })
+                                       
                                         const inputQuantidade = novaLinha.querySelector('input[type="number"]');
                                         inputQuantidade.addEventListener('input', function() {
                                             const novaQuantidade = parseInt(this.value); 
@@ -241,6 +253,7 @@
                 } catch (error) {
                     console.error('Erro ao carregar produtos:', error);
                 }
+
             }
 
             function recalcularTotalCarrinho() {
