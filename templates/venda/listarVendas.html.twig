@@ -58,6 +58,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const carrinhos = await carregarCarrinhos();
             carregarCarrinhosTabela('em aberto', carrinhos);
+
             const carrinhoSelect = document.getElementById('statusCarrinho');
             carrinhoSelect.addEventListener('change', function() {
                 const status = carrinhoSelect.value
@@ -77,12 +78,13 @@
                         <th scope='row'>${carrinho.id}</th>
                         <td scope='row'>${carrinho.cliente.nome}</td>
                         <td scope='row'>${carrinho.usuario.email}</td>
-                        <td scope='row'>${carrinho.valor_total != null ? carrinho.valor_total : '-'}</td>
+                        <td scope='row'>${carrinho.valor_total != null ? carrinho.valor_total : '0'}</td>
                         <td scope='row'>${carrinho.criado_em}</td>
-                        <td scope='row'>${carrinho.atualizado_em ? formatarData(carrinho.atualizado_em.date) : '-'}</td>
-                        <td scope='row'>${carrinho.finalizado_em ? formatarData(carrinho.finalizado_em.date) : '-'}</td>
+                        <td scope='row'>${carrinho.atualizado_em ? formatarData(carrinho.atualizado_em.date) : 'N/A'}</td>
+                        <td scope='row'>${carrinho.finalizado_em ? formatarData(carrinho.finalizado_em.date) : 'N/A'}</td>
                         <td scope='row' class='col-2 text-nowrap'>
-                            <a href="/" onclick='reloadPageNovaVenda()' class="${carrinho.status === "em aberto" ? '' : 'disabled'} btn btn-secondary btn-sm">
+                            <a href="/${carrinho.cliente.id}" onclick='reloadPageNovaVenda()'
+                                class="${carrinho.status === "em aberto" ? '' : 'disabled'} btn btn-secondary btn-sm">
                                 <i class='bi bi-pencil'></i>
                             </a>
                         </td>
