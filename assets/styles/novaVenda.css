@@ -123,6 +123,18 @@ td{
    cursor: pointer;
 }
 
+.Finalizar-button2{
+    background-color: #ece9e9;
+    color: #D93539;
+    border: 1px solid #ece9e9;
+    width: 700px;
+    margin-left: 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+}
+
 /* tabela */
 .tabela{
     margin: 30px 20px 0px 20px;

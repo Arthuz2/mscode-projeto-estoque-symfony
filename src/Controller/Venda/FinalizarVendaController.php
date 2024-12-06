@@ -24,7 +24,7 @@ class FinalizarVendaController extends AbstractController
             $produtos = $data["produtos"];
 
             $finalizarVendaService->execute($clienteId, $produtos);
-            return $this->redirectToRoute("confirmarPagamento");
+            return $this->redirectToRoute("confirmarPagamentoShow");
         } catch (\Throwable $e) {
             return new JsonResponse(['error' => $e->getMessage()], status: 500);
         }
