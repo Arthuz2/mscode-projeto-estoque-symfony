@@ -16,7 +16,7 @@ class Cliente implements \JsonSerializable
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column(type: "boolean", options: ["default" => true])]
+    #[ORM\Column(options: ["default" => true])]
     private bool $ativo = true;
 
     /**
@@ -29,7 +29,7 @@ class Cliente implements \JsonSerializable
         #[ORM\Column(length: 255)]
         private string $nome,
         #[ORM\Column(length: 11)]
-        private string $cpf
+        private string $cpf,
     ) {
         $this->cpf = preg_replace("/[^0-9]/", "", $cpf);
 

@@ -3,7 +3,7 @@
 {% block title %}MS Code - Projeto 2024 {% endblock %}
 {% block stylesheets %}
   <link rel="stylesheet" href="{{ asset('styles/header.css') }}">
-  {% block addStylesheet %}{% endblock %}
+{% block addStylesheet %}{% endblock %}
 {% endblock %}
 {% block body %}
 	<main>
@@ -48,11 +48,10 @@
 							</a>
 							<ul class="dropdown-menu">
 								<li>
-									<a class="dropdown-item" href="{{ path('usuario_route_name') }}">Usuário</a>
-
+									<a class="dropdown-item" href="{{ path('cadastrar_usuario_show') }}">Usuário</a>
 								</li>
 								<li>
-									<a class="dropdown-item" href="/clientes">Cliente</a>
+									<a class="dropdown-item" href="{{ path('cadastrar_cliente_show') }}">Cliente</a>
 								</li>
 							</ul>
 						</li>
@@ -75,4 +74,5 @@
 			window.location.href = '/';
 		}
 	</script>
+	
 {% endblock %}

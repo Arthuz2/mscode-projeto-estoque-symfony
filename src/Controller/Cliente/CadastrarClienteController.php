@@ -13,13 +13,10 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class CadastrarClienteController extends AbstractController
 {
-    private ClienteRepository $clienteRepository;
-    private ValidarCpfService $validarCpfService;
-
-    public function __construct(ClienteRepository $clienteRepository, ValidarCpfService $validarCpfService)
-    {
-        $this->clienteRepository = $clienteRepository;
-        $this->validarCpfService = $validarCpfService;
+    public function __construct(
+            private ClienteRepository $clienteRepository,
+            private ValidarCpfService $validarCpfService
+        ) {
     }
 
     #[Route('/cliente/cadastrar/show', name: 'cadastrar_cliente_show')]
@@ -29,24 +26,21 @@ class CadastrarClienteController extends AbstractController
     }
 
     #[Route('/cliente/cadastrar', name: 'cadastrar_cliente')]
-    public function __invoke(Request $request, AuthenticationUtils $authenticationUtils): Response
+    public function cadastrarAction(Request $request, AuthenticationUtils $authenticationUtils): Response
     {
         $data = $request->request->all();
 
-        if (!isset($data['_nome'], $data['_cpf'])) {
+        $nome = $data['_nome'] ?? null;
+        $cpf = $data['_cpf'] ?? null;
+
+        if (null === $nome || null === $cpf) {
             $this->addFlash('error', 'Os dados do formulário estão incompletos.');
             return $this->redirectToRoute('cadastrar_cliente_show'); 
         }
-
-        $nome = $data['_nome'];
-        $cpf = $data['_cpf'];
-
         if (!preg_match('/^[a-zA-ZÀ-ÿ\s]+$/', $nome)) {
             $this->addFlash('error', 'O nome deve conter apenas letras e espaços.');
             return $this->redirectToRoute('cadastrar_cliente_show');
         }
-
-        // Validar o CPF utilizando o serviço ValidarCpfService
         if (!$this->validarCpfService->execute($cpf)) {
             $this->addFlash('error', 'O CPF informado é inválido.');
             return $this->redirectToRoute('cadastrar_cliente_show');
@@ -59,7 +53,6 @@ class CadastrarClienteController extends AbstractController
         }
 
         $cliente = new Cliente($nome, $cpf);
-        $cliente->setNome($nome)->setCpf($cpf);
 
         $this->clienteRepository->salvar($cliente);
 

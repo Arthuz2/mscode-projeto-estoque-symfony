@@ -13,12 +13,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CadastrarUsuarioController extends AbstractController
 {
-    private UsuarioRepository $usuarioRepository;
-
-    public function __construct(UsuarioRepository $usuarioRepository)
-    {
-        $this->usuarioRepository = $usuarioRepository;
-    }
+    public function __construct(
+        private UsuarioRepository $usuarioRepository
+    ){}
 
     #[Route('/usuario/cadastrar/show', name: 'cadastrar_usuario_show')]
     public function index(): Response
@@ -34,7 +31,7 @@ class CadastrarUsuarioController extends AbstractController
 
         if (!isset($data['_password'], $data['_username'])) {
             $this->addFlash('error', 'Os dados do formulário estão incompletos.');
-            return $this->redirectToRoute('cadastrar_usuario'); // Redireciona para a página do formulário
+            return $this->redirectToRoute('cadastrar_usuario'); 
         }
         
         $usuarioExistente = $this->usuarioRepository->findOneBy(['email' => $data['_username']]);

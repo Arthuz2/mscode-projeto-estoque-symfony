@@ -36,9 +36,7 @@ class ValidarCpfService
                 ],
             ]);
 
-            $data = $response->toArray();
-
-            return $data['valid'] ?? false;
+            return $response->toArray()['valid'] ?? false;
 
         } catch (TransportExceptionInterface | ClientExceptionInterface | ServerExceptionInterface $e) {
             $this->logger->error('Erro ao validar CPF na API externa', [
