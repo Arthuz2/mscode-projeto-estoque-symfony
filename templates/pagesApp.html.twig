@@ -9,7 +9,7 @@
 	<main>
 		<div class="mb-2">
 			<div class="container">
-				<header class="d-flex flex-wrap justify-content-center align-items-center py-3">
+				<header class="d-flex flex-wrap justify-content-center align-items-center py-3  top-fixed">
 					<a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
 						<img class="me-2" src="{{ asset('images/logo-light-mscode.png') }}" width="103">
 						<span class="fs-4">pdv
@@ -23,10 +23,10 @@
 							<ul class="dropdown-menu">
 								</li>
 								<li>
-									<a class="dropdown-item" href="/" onclick="reloadPage()">Nova venda</a>
+									<a class="dropdown-item" href="{{ path('nova_venda') }}" onclick="reloadPageNovaVenda()">Nova venda</a>
 								</li>
 								<li>
-									<a class="dropdown-item" href="/vendas">Todas as vendas</a>
+									<a class="dropdown-item" href="{{ path('listar_vendas') }}" onclick="reloadPageListaVendas()">Todas as vendas</a>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
@@ -57,8 +57,11 @@
 {% block javascripts %}
 	{{ parent() }}
 	<script>
-		function reloadPage() {
-			window.location.href = '/';
+		function reloadPageNovaVenda() {
+			window.location.href = "/";
+		}
+		function reloadPageListaVendas() {
+			window.location.href = "/vendas";
 		}
 	</script>
 {% endblock %}

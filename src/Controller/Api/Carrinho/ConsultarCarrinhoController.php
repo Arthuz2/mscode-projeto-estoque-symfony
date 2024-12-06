@@ -3,10 +3,11 @@
 namespace App\Controller\Api\Carrinho;
 
 use App\Service\BuscarTodosCarrinhoService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ConsultarCarrinhoController
+class ConsultarCarrinhoController extends AbstractController
 {
   public function __construct(
     private BuscarTodosCarrinhoService $buscarTodosCarrinhoService,

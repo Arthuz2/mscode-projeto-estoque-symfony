@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ListarVendasController extends AbstractController
 {
-    #[Route('/vendas', name: 'vendas')]
+    #[Route('/vendas', name: 'listar_vendas')]
     public function index(
         
     ): Response

@@ -1,7 +1,8 @@
-<?php 
+<?php
+
 namespace App\Service;
 
-use App\Controller\Exceptions\ProdutoJaAdicionadoAoCarrinhoException;
+use App\Controller\Exception\ProdutoJaAdicionadoAoCarrinhoException;
 use App\Entity\Carrinho;
 use App\Entity\Item;
 use App\Repository\CarrinhoRepository;
@@ -11,29 +12,28 @@ use App\Repository\ItemRepository;
 use App\Repository\ProdutoRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class FinalizarVendaService 
+class FinalizarVendaService
 {
     public function __construct(
         private CarrinhoRepository $carrinhoRepository,
         private ClienteRepository $clienteRepository,
         private ProdutoRepository $produtoRepository,
         private ItemRepository $itemRepository,
-    ) {
-    }
-    
+    ) {}
+
     public function execute(int $clienteId, array $produtos): Carrinho
     {
         $cliente = $this->clienteRepository->find($clienteId);
         $carrinho = $this->carrinhoRepository->buscarUltimoCarrinhoPendente(["cliente" => $cliente]);
 
 
-        if(null === $carrinho){
+        if (null === $carrinho) {
             throw new \Exception("O cliente não possui nenhum carrinho pendente a ser finalizado!!");
         }
-       
-        foreach($produtos as $produto){
-            $produtoId = $produto['id']; 
-            $quantidade = $produto['quantidade']; 
+
+        foreach ($produtos as $produto) {
+            $produtoId = $produto['id'];
+            $quantidade = $produto['quantidade'];
 
             $produtoEncontrado = $this->produtoRepository->find($produtoId);
             if (!$produtoEncontrado) {
@@ -41,7 +41,7 @@ class FinalizarVendaService
             }
 
             $quantidadeDisponivel = $produtoEncontrado->getQuantidadeDisponivel();
-           
+
             $valorTotalProduto = $quantidade * $produtoEncontrado->getValor();
 
             if ($produtoEncontrado->getQuantidadeDisponivel() < 1) {
@@ -51,9 +51,9 @@ class FinalizarVendaService
             if ($this->itemRepository->findOneBy(['carrinho' => $carrinho, 'produto' => $produtoEncontrado])) {
                 throw new ProdutoJaAdicionadoAoCarrinhoException();
             }
-    
+
             $item = new Item(
-                $carrinho, 
+                $carrinho,
                 $produtoEncontrado,
                 $valorTotalProduto,
                 $quantidade
@@ -64,7 +64,7 @@ class FinalizarVendaService
             $produtoEncontrado->setQuantidadeDisponivel($quantidadeDisponivel - $quantidade);
             $this->produtoRepository->salvar($produtoEncontrado);
         }
-        
+
         if ($carrinho->getItems()->isEmpty()) {
             throw new BadRequestHttpException('O carrinho não contém produtos.');
         }
@@ -74,7 +74,11 @@ class FinalizarVendaService
         }
 
         $carrinho->setStatus(StatusEnum::aguardandoPagamento);
+        $carrinho->setValorTotal(
+            $carrinho->getItems()->reduce(function ($carry, $item) {
+                return $carry + $item->getValor();
+            }, 0),
+        );
         return $this->carrinhoRepository->salvar($carrinho);
-    } 
+    }
 }
-

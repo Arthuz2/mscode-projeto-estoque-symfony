@@ -6,8 +6,8 @@
             <h1>Carrinhos</h1>
             <div>
                 <select class="form-select" aria-label="Default select example" name="statusCarrinho" id="statusCarrinho">
-                    <option value="aguardandoPagamento" selected>Carrinhos Pendentes</option>
-                    <option value="finalizados">Carrinhos Finalizados</option>
+                    <option value="em aberto" selected>Carrinhos Pendentes</option>
+                    <option value="finalizado">Carrinhos Finalizados</option>
                     <option value="descartado">Carrinhos Descartados</option>
                 </select>
             </div>
@@ -19,32 +19,20 @@
                 <thead>
                     <tr>
                         <th scope="col">Id</th>
-                        <th scope="col">Clinte</th>
+                        <th scope="col">Cliente</th>
                         <th scope="col">Usuario</th>
-                        <th scope="col">Status</th>
                         <th scope="col">Valor Total</th>
                         <th scope="col">Data Criação</th>
                         <th scope="col">Atualizado</th>
                         <th scope="col">Finalizado</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
-                <tbody id='corpoTabela'>
-                        <tr>    
-                            <th scope="row">1</th>
-                            <td scope='row'>teste</td>
-                            <td scope='row'>teste</td>
-                            <td scope='row'>pendente</td>
-                            <td scope='row'>120</td>
-                            <td scope='row'>12/10/2024</td>
-                            <td scope='row'>15/10/2024</td>
-                            <td scope='row'>15/10/2024</td>
-                        </tr>
-                </tbody>
+                <tbody id='corpoTabela'></tbody>
             </table>
         </div>
     </div>
 {% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
     <script>
@@ -52,31 +40,51 @@
             try {
                 const response = await fetch('/api/carrinho'); 
                 if(!response.ok) throw new Error('erro ao carregar os carrinhos');
-                const carrinhos = await response.json();
+                return await response.json(); 
             } catch(error){
                 console.error('Erro ao carregar os carrinhos', error);
-            }
+                return [];
+            } 
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            carregarCarrinhos();
-
+        document.addEventListener('DOMContentLoaded', async () => {
+            const carrinhos = await carregarCarrinhos();
+            carregarCarrinhosTabela('em aberto', carrinhos);
             const carrinhoSelect = document.getElementById('statusCarrinho');
             carrinhoSelect.addEventListener('change', function() {
                 const status = carrinhoSelect.value
-                carregarCarrinhosTabela(status);
-            }
-        })
-
-        function carregarCarrinhosTabela(status){
-            const tbody = document.getElementById('corpoTabela');
-            carrinhos.forEach(carrinho => {
-
+                carregarCarrinhosTabela(status, carrinhos);
             });
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td scope='row'>${}</td>
-            `;
+        });
+
+        function carregarCarrinhosTabela(status, carrinhos){
+            const tbody = document.getElementById('corpoTabela');
+            tbody.innerHTML = '';
+            carrinhos.forEach(carrinho => {
+                let tr = document.createElement('tr');
+                if(carrinho.status === status){
+                    tr.innerHTML = `
+                        <th scope='row'>${carrinho.id}</th>
+                        <td scope='row'>${carrinho.cliente.nome}</td>
+                        <td scope='row'>${carrinho.usuario.email}</td>
+                        <td scope='row'>${carrinho.valor_total != null ? carrinho.valor_total : '-'}</td>
+                        <td scope='row'>${carrinho.criado_em}</td>
+                        <td scope='row'>${carrinho.atualizado_em ? formatarData(carrinho.atualizado_em.date) : '-'}</td>
+                        <td scope='row'>${carrinho.finalizado_em ? formatarData(carrinho.finalizado_em.date) : '-'}</td>
+                        <td scope='row' class='col-2 text-nowrap'>
+                            <a href="/" onclick='reloadPageNovaVenda()' class="${carrinho.status === "em aberto" ? '' : 'disabled'} btn btn-secondary btn-sm">
+                                <i class='bi bi-pencil'></i>
+                            </a>
+                        </td>
+                    `; 
+                    tbody.appendChild(tr);
+                }
+            });
+        }
+
+        function formatarData(dataString) {
+            const data = new Date(dataString);
+            return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
         }
     </script>
 {% endblock %}

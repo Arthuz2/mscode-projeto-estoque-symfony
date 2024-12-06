@@ -141,7 +141,7 @@
                 const clienteId = this.value;
 
                 if (clienteId) {
-
+                    verificarDescarteCarrinho(clienteId);
                     fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
                         .then(response => { 
                             if (false === response.ok) {
