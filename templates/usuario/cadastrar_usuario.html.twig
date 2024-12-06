@@ -17,7 +17,7 @@
                         </div>
                         {% include "mensagens.html.twig" %}
                         <div id="loginForm" class="form-section active">
-                            <h3 class="text-center mb-4">Cadastro</h3>
+                            <h3 class="text-center mb-4">Cadastro - Usuário</h3>
                             <form method="POST" action='{{ path('cadastrar_usuario') }}'>
                                 {% if error is defined and error %}
                                     <div class="alert alert-danger">
