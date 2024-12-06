@@ -137,23 +137,10 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Jso
         return $this;
     }
 
-    public function removeCarrinho(Carrinho $carrinho): static
-    {
-        if ($this->carrinhos->removeElement($carrinho)) {
-            // set the owning side to null (unless already changed)
-            if ($carrinho->getUsuario() === $this) {
-                $carrinho->setUsuario(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
-            //cria campo nome
         ];
     }
 }

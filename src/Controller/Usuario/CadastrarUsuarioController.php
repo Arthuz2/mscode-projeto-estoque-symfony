@@ -3,33 +3,56 @@
 namespace App\Controller\Usuario;
 
 use App\Entity\Usuario;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\UsuarioRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-#[Route('/usuario/cadastrar', name: 'cadastrar_usuario')]
 class CadastrarUsuarioController extends AbstractController
 {
-    public function __invoke(Request $request, EntityManagerInterface $entityManager): Response
+    private UsuarioRepository $usuarioRepository;
+
+    public function __construct(UsuarioRepository $usuarioRepository)
+    {
+        $this->usuarioRepository = $usuarioRepository;
+    }
+
+    #[Route('/usuario/cadastrar/show', name: 'cadastrar_usuario_show')]
+    public function index(): Response
+    {
+        return $this->render('usuario/cadastrar_usuario.html.twig');
+    }
+
+    #[Route('/usuario/cadastrar', name: 'cadastrar_usuario')]
+    public function __invoke(Request $request, AuthenticationUtils $authenticationUtils, UserPasswordHasherInterface $userPasswordHasherInterface): Response
     {
         $usuario = new Usuario();
+        $data = $request->request->all();
 
-        $form = $this->createForm(Usuario::class, $usuario);
-        $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($usuario);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Usuário cadastrado com sucesso.');
-
-            return $this->redirectToRoute('listar_usuario');
+        if (!isset($data['_password'], $data['_username'])) {
+            $this->addFlash('error', 'Os dados do formulário estão incompletos.');
+            return $this->redirectToRoute('cadastrar_usuario'); // Redireciona para a página do formulário
         }
+        
+        $usuarioExistente = $this->usuarioRepository->findOneBy(['email' => $data['_username']]);
+    if ($usuarioExistente) {
+        $this->addFlash('error', 'O e-mail informado já está cadastrado.');
+        return $this->redirectToRoute('cadastrar_usuario_show'); 
+    }
 
-        return $this->render('usuario/cadastrar.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        $senha_hash = $userPasswordHasherInterface->hashPassword($usuario, $data['_password']);
+        $usuario ->setEmail($data['_username']) ->setPassword($senha_hash) ->setRoles(['ROLE_USER']);
+
+        $this->usuarioRepository->salvar($usuario);
+
+        $this->addFlash('success', 'Usuário cadastrado com sucesso.');
+
+        return $this->redirectToRoute('listar_usuarios');
     }
 }

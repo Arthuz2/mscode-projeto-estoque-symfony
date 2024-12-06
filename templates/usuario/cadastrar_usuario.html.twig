@@ -1,43 +1,57 @@
-{% extends 'base.html.twig' %}
+{% extends 'pagesApp.html.twig' %}
 
-{% block title %}Registrar{% endblock %}
-
-{% block stylesheets %}
+{% block addStylesheet %}
     <link rel="stylesheet" href="{{ asset('styles/login.css') }}">
 {% endblock %}
 
-{% block body %}
-<main class="d-flex align-items-center py-4 bg-body-tertiary">
-    <div class="form-signin w-100 m-auto">
-        <form method="POST">
-            <div class="d-flex align-items-center mb-4">
-                <img class="p-0" src="{{ asset('images/logotipo.svg') }}" width="72" height="57">
+{% block content %}
+<body>
+    <div class="background-image">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="card  rounded-lg border-0 shadow-lg">
+                        <div class="m-auto">
+                            <img class="mb-4 mt-4" src="{{ asset('images/logo-light-mscode.png') }}"  alt="logo-light-mscode">
+                            <span class="pdv-txt"></span>
+                        </div>
+                        {% include "mensagens.html.twig" %}
+                        <div id="loginForm" class="form-section active">
+                            <h3 class="text-center mb-4">Cadastro</h3>
+                            <form method="POST" action='{{ path('cadastrar_usuario') }}'>
+                                {% if error is defined and error %}
+                                    <div class="alert alert-danger">
+                                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                                    </div>
+                                {% endif %}
 
-                <h1 class="h3 fw-normal my-0 ms-2">MS Code - Cadastro</h1>
+                                <div class="mb-3">
+                                    <label for="username">Email</label>
+                                    <input type="email" value="{{ last_username|default('') }}" name="_username" id="username" class="form-control rounded-lg p-3" autocomplete="email" required autofocus placeholder="Email">
+                                    
+                                </div>
+
+                                <div class="mb-3">
+                                 <label for="password">Password</label>
+                                    <input type="password" name="_password" id="password" class="form-control rounded-lg p-3 " autocomplete="current-password" required placeholder="Password">
+                                   
+                                </div>
+
+                                <input type="hidden" name="_csrf_token"
+                                    value="{{ csrf_token('authenticate') }}"
+                                >
+
+                               <div class="d-grid gap-2">
+                                    <button type="submit" id="button-login" class="btn rounded-lg p-2 btn-block">Cadastrar<i class="fas fa-sign-in-alt"></i></button>
+                                </div>
+                            </form>
+                        <div>
+                    <div>
+                <div>
             </div>
-
-            <div class="form-floating">
-                <input type="text" name="name" id="name" class="form-control" autocomplete="name" required autofocus placeholder="Nome">
-                <label for="name">Nome</label>
-            </div>
-
-            <div class="form-floating">
-                <input type="email" name="email" id="email" class="form-control" autocomplete="email" required placeholder="Email">
-                <label for="email">Email</label>
-            </div>
-
-            <div class="form-floating">
-                <input type="password" name="password" id="password" class="form-control" autocomplete="new-password" required placeholder="Senha">
-                <label for="password">Senha</label>
-            </div>
-
-            <input type="hidden" name="_csrf_token"
-                value="{{ csrf_token('authenticate') }}"
-            >
-
-            <button class="btn btn-primary w-100 py-2" type="submit">Registrar</button>
-            <p class="mt-5 mb-3 text-body-secondary">&copy; 2017–2024</p>
-        </form>
+        </div>
     </div>
-</main>
+
+</body>
+
 {% endblock %}

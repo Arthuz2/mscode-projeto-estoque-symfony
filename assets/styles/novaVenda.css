@@ -3,7 +3,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-  
 }
 
 /* css gerais */
@@ -20,13 +19,12 @@ main{
 table{
     width: 100%;
     background-color: white;
-
     border-radius: 8px;
     box-sizing: 5px 5px 5px  rgba(0, 0, 0, 0.312);
 }
 
 thead{
-    background-color: #D93539;
+    background-color: #D93539 ;
     color: white;
 }
 th{
@@ -132,6 +130,13 @@ td{
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.227);
 }
 
+.tabela2{
+    margin: 30px 20px 0px 20px;
+    border-radius: 10px;
+   /*  border: 1px solid rgba(0, 0, 0, 0.274); */
+    box-shadow: 2px 10px 5px rgba(0, 0, 0, 0.212);
+}
+
 
 .dividi{
     display: flex;
@@ -143,7 +148,7 @@ td{
 }
 .tabela-conteudo{
     background-color: #dcdbdb8d;
-  
+    text-align: center;
 }
 
 .input-nunber{
@@ -161,7 +166,6 @@ td{
 }
 
 
-
 /* Responsividade para telas menores que 520px */
 @media (max-width: 597px) {
 
@@ -176,26 +180,7 @@ td{
     .card-item{
         margin: 20px;
     }
-    table{
-        display: grid;
-        grid-template-columns: repeat(2,1fr);
-    }
-    
-    .tabela-topo{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 0;
-    }
-
-    .tabela-conteudo{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
+   
     th{
         padding: 10px;
     }
@@ -203,34 +188,14 @@ td{
     .input-nunber{
         width: 46px;
     }
+
 }
 /* Ajuste adicional para 320px */
 @media (max-width: 320px) {
   
-
     main{
         height: auto;
         padding-bottom:40px ;
-    }
-
-    table{
-        display: grid;
-        grid-template-columns: repeat(2,1fr);
-    }
-        
-    .tabela-topo{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 0;
-    }
-    
-    .tabela-conteudo{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
     }
     
     th{

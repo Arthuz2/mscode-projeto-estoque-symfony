@@ -1,14 +1,14 @@
 {% extends 'pagesApp.html.twig' %}
 
 {% block content %}
-  <div class="container py-5">
-    <div class="mb-4">
-      <h1>
+  <div class="container py-5 areaPadrao">
+    <div class="areaTop">
+      <h1 class="text-white">
         {{ title }}
         produto
       </h1>
     </div>
-    <div class="w-50 mt-2">
+    <div class="areaBottom">
       {% include 'mensagens.html.twig' %}
       <form action="{{ cadastrar ? path('cadastrar_produto_salvar') : path('editar_produto_salvar',
       { id: produto.id }) }}" method="POST">
@@ -39,14 +39,14 @@
           </div>
           <div class="mb-3 col-4">
             <label for="quantidade" class="form-label">Quantidade:</label>
-            <input type="number" class="form-control" id="quantidade" name="quantidade" value="{{ cadastrar ? '' : produto.getQuantidadeDisponivel }}" {{ cadastrar ? '' : 'disabled style="background-color: #b1b1b1"' }} />
+            <input type="number" class="form-control" id="quantidade" name="quantidade" min=0 value="{{ cadastrar ? '' : produto.getQuantidadeDisponivel }}" {{ cadastrar ? '' : 'disabled style="background-color: #b1b1b1"' }} />
           </div>
           <div class="mb-3 col-4">
             <label for="valor" class="form-label">Valor:</label>
             <input type="text" class="form-control" id="valor" name="valor" value="{{ cadastrar ? '' : produto.valor }}" />
           </div>
         </div>
-        <button type="submit" class="btn btn-primary">{{ cadastrar ? 'Salvar' : 'Atualizar' }}</button>
+        <button type="submit" class="btn btn-danger">{{ cadastrar ? 'Salvar' : 'Atualizar' }}</button>
       </form>
     </div>
   </div>

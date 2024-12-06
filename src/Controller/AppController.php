@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class AppController extends AbstractController
 {
-    #[Route('/', name: 'app', methods: 'GET')]
+    #[Route('/app', name: 'app', methods: 'GET')]
     public function __invoke(Request $request): Response
     {
         // if (empty($_SESSION['_sf2_attributes']['_csrf/authenticate'])){

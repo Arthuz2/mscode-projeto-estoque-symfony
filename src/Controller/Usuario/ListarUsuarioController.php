@@ -7,15 +7,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/usuario/listar', name: 'listar_usuario')]
 class ListarUsuarioController extends AbstractController
 {
-    public function __invoke(UsuarioRepository $usuarioRepository): Response
-    {
-        $usuarios = $usuarioRepository->findAll();
+    public function __construct(
+        private UsuarioRepository $usuarioRepository
+    ){}
 
+    #[Route('/usuario/listar', name: 'listar_usuarios')]
+    public function index(): Response
+    {
         return $this->render('usuario/listar.html.twig', [
-            'usuarios' => $usuarios,
+            'headTitle' => '- Usuarios',
+            'active' => 'usuarios',
+            'usuarios' => $this->usuarioRepository->findAll(),
         ]);
     }
 }
+
