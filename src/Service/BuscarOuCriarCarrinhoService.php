@@ -41,10 +41,7 @@ class BuscarOuCriarCarrinhoService
             $carrinho = new Carrinho($cliente, $usuario);
             $this->carrinhoRepository->salvar($carrinho);
         }
-<<<<<<< HEAD
-=======
      
->>>>>>> c6d86bf (fazendo logica do js)
         return $carrinho;
     }
 }
