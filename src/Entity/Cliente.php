@@ -6,6 +6,7 @@ use App\Repository\ClienteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 
 #[ORM\Entity(repositoryClass: ClienteRepository::class)]
 class Cliente implements \JsonSerializable
@@ -15,7 +16,7 @@ class Cliente implements \JsonSerializable
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ["default" => true])]
     private bool $ativo = true;
 
     /**

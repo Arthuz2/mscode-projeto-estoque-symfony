@@ -1,0 +1,50 @@
+{% extends 'pagesApp.html.twig' %}
+{% block addStylesheet %}
+    <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
+{% endblock %}
+{% block content %}
+    <div class="container py-5">
+        <div class="mb-4">
+            <div class="mb-4 d-flex flex-row justify-content-between">
+                <h1>Usuários</h1>
+                <div>
+                    <a href="/usuario/cadastrar/show" class="btn btn-danger">
+                        <i class="bi bi-plus"></i> Novo usuário
+                    </a>
+                </div>
+            </div>
+            {% include "mensagens.html.twig" %}
+            <section class="tabela2">
+                <div class="table-responsive">
+                    <table class="table-striped">
+                        <thead class="tabela-topo">
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Email</th>
+                                <th scope="col-2 text-align-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela">
+                            {% for usuario in usuarios %}
+                                <tr>
+                                    <th scope="row">{{ usuario.id }}</th>
+                                    <td>{{ usuario.email }}</td>
+                                    <td class="col-2 text-nowrap">
+                                        <a class="btn btn-secondary btn-sm">
+                                            <i class="bi bi-check"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center">Nenhum usuário encontrado.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="{{ asset('public/assets/script.js') }}"></script>
+{% endblock %}
