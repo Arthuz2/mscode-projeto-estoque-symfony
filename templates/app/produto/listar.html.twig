@@ -84,7 +84,7 @@
 
 			document.querySelectorAll('.add-estoque-btn').forEach(button => {
 				button.addEventListener('click', (e) => {
-					produtoId = button.getAttribute('data-id');
+					produtoId = button.getAttribute('data-id') || null;
 					const nome = button.getAttribute('data-nome');
 					popupProdutoNome.innerText = `Produto: ${nome}`;
 					popup.style.display = 'flex';
@@ -107,16 +107,16 @@
         const url = `/produto/add/${produtoId}/${quantidade}`;
         fetch(url, { method: 'GET' })
 				.then(response => {
-					if (response.ok) {
+					if (! response.ok) {
+						alert('Erro ao atualizar o estoque. Tente novamente.');
+						return;
+					}
+					
 						const estoqueField = document.querySelector(`.estoque-quantidade[data-id="${produtoId}"]`);
 						const estoqueAtual = parseInt(estoqueField.innerText);
 						estoqueField.innerText = estoqueAtual + quantidade;
-
 						popup.style.display = 'none';
 						quantidadeInput.value = '';
-					} else {
-						alert('Erro ao atualizar o estoque. Tente novamente.');
-					}
 				})
 				.catch(error => {
 					console.error('Erro ao enviar a requisição:', error);

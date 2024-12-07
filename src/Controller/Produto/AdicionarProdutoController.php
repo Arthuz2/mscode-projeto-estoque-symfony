@@ -15,7 +15,7 @@ class AdicionarProdutoController extends AbstractController
     ){}
 
     #[Route('/produto/add/{id}/{quantidade}', name: 'adicionar_produto')]
-    public function index(int|string $id, int $quantidade): Response
+    public function index(int $id, int $quantidade): Response
     {
         $produto = $this->produtoRepository->find($id);
 

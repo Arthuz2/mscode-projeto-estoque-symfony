@@ -42,7 +42,7 @@ class EditarCategoriaController extends AbstractController
             return $this->redirectToRoute('editar_categoria_show', ['id' => $id]);
         }
 
-        if(preg_match('/[0-9]/', $request->request->get('nome')) || empty(trim($request->request->get('nome')))){
+        if(preg_match('/[0-9]/', $nomeCategoria) || empty(trim($nomeCategoria))){
             $this->addFlash('danger', 'Nome invalido');
             return $this->redirectToRoute('editar_categoria_show', ['id' => $id]);
         }

@@ -2,7 +2,6 @@
 
 namespace App\Controller\Produto;
 
-use App\Entity\Produto;
 use App\Repository\CategoriaRepository;
 use App\Repository\ProdutoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,25 +36,24 @@ class EditarProdutoController extends AbstractController
     #[Route('/produto/editar/salvar/{id}', name: 'editar_produto_salvar')]
     public function editar(Request $request, int $id): Response
     {
-        $nomeProduto = $request->request->get('nome');
-        if (strlen($nomeProduto) > 100) {
+        list('nome' => $nome, 'valor' => $valor) = $request->request->all();
+        if (strlen($nome) > 100) {
             $this->addFlash('danger', 'Nome deve ter no máximo 100 caracteres!');
             return $this->redirectToRoute('editar_produto_show',  ['id' => $id]);
         }
 
-        $produtoExiste = $this->produtoRepository->findOneBy(['nome' => $nomeProduto]);
+        $produtoExiste = $this->produtoRepository->findOneBy(['nome' => $nome]);
         if ($produtoExiste && $produtoExiste->getId() != $id) {
             $this->addFlash('danger', 'Já Existe um produto com este nome!');
             $this->redirectToRoute('editar_produto_show', ['id' => $id]);
         }
 
-        $request = $request->request;
-        if(preg_match('/[0-9]/', $request->get('nome')) || empty(trim($request->get('nome')))){
+        if(preg_match('/[0-9]/', $nome) || empty(trim($nome))){
             $this->addFlash('danger', 'Nome invalido');
             return $this->redirectToRoute('editar_produto_show', ['id' => $id]);
         }
 
-        if($request->get('valor') <= 0 || $request->get('valor') == ''){
+        if($valor <= 0 || $valor == ''){
             $this->addFlash('danger', 'Valor invalido');
             return $this->redirectToRoute('editar_produto_show', ['id' => $id]);
         }
@@ -64,10 +62,10 @@ class EditarProdutoController extends AbstractController
         
         $produto = $this->produtoRepository->find($id);
 
-        $produto->setNome($nomeProduto);
+        $produto->setNome($nome);
         $produto->setDescricao($request->get('descricao'));
         $produto->setCategoriaId($categoria);
-        $produto->setValor($request->get('valor'));
+        $produto->setValor($valor);
 
         $this->produtoRepository->getEntityManager()->flush();
 
