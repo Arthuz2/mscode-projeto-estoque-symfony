@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FinalizarVendaController extends AbstractController
 {
+    private const ROUTE_SHOW_CONFIRMAR_PAGAMENTO = ShowConfirmacaoPagamentoController::ROUTE_NAME;
+
     #[Route("novaVenda/finalizarCarrinho", name: "finalizarCarrinho", methods:"POST")]
     public function finalizarVenda(
         Request $request,
@@ -23,8 +25,8 @@ class FinalizarVendaController extends AbstractController
             $clienteId = $data["cliente"];
             $produtos = $data["produtos"];
 
-            $finalizarVendaService->execute($clienteId, $produtos);
-            return $this->redirectToRoute("confirmarPagamentoShow");
+            $carrinho = $finalizarVendaService->execute($clienteId, $produtos);
+            return $this->redirectToRoute(self::ROUTE_SHOW_CONFIRMAR_PAGAMENTO);
         } catch (\Throwable $e) {
             return new JsonResponse(['error' => $e->getMessage()], status: 500);
         }

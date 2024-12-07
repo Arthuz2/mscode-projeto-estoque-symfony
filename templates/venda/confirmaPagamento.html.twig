@@ -8,10 +8,14 @@
 {% endblock %}
 {% block content %}
     <main class="py-5">
-        <div class="container">
-            <section class="tabela2">
-                <div class="table-responsive">
-                    <table class="table-striped">
+        <div class="cart-header container">
+            <div class="cart-icon">🛒</div>
+            <div class="cart-title">Meu carrinho</div>
+        </div>
+        <div class="container d-flex justify-content-between flex-wrap">
+            <section class="tabela-confirmarPay">
+                <div class="table-responsive tes">
+                    <table class="table-striped mb-5 mt-2">
                         <thead class="tabela-topo">
                             <tr class="tabela-topo">
                                 <th scope="col">Produto</th>
@@ -22,57 +26,30 @@
                             </tr>
                         </thead>
                         <tbody  id="tabela">
+                            {% for item in carrinho.items%}
+                                <td>{{ item.produto.nome }}</td>
+                                <td>{{ item.getQuantidade }}</td> 
+                                <td>R${{ item.produto.valor | number_format(2, ',', '.') }}</td>
+                                <td>R${{ item.valor | number_format(2, ',', '.') }}</td>
+                                <td>
+                                  
+                                </td>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </section>
+            <div class="cart-summary">
+                <div class="cart-summary-title">Resumo do pedido</div>
+                <div class="cart-summary-item">
+                    <span>Total:</span>
+                    <span class="cart-summary-total">$ {{ carrinho.getvalorTotal | number_format(2, ',', '.') }}</span>
+                </div>
+                <a  href="{{ path("confirmarPagamento",{id:carrinho.id})}}" class="btn btn-success">Finalizar compra</a>
+            </div>
         </div>
     </main> 
 {% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        async function carregarCarrinho() {
-            try{
-                const response = await fetch('/api/buscarCarrinhoAguardandoPagamento',{
-                    method: 'GET',
-                    headers:{
-                        'Content-Type': 'application/json'
-                    }
-                }).then(response => {
-                    if(false === response.ok) throw new Error("Erro ao buscar carrinhos")
-                    return response.json();
-                })
-                .then(data => {
-                    data.forEach(index => {
-                        preencherTabela(index);
-                    });
-                })
-            }catch(error){
-                console.error('Erro ao carregar carrinhos:', error);
-            }
-        }
 
-        function preencherTabela(carrinho){
-            const carrinhoInfoDiv = document.getElementById('tabela');
-            carrinho.items.forEach(item =>{
-                let tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>${item.produto.nome}</td>
-                    <td>${item.quantidade}</td>
-                    <td>R$${item.produto.valor}</td>
-                    <td>R$ ${item.valor.toFixed(2)}</td>
-                    <td>
-                        <a href="/confirmarPagamento/${carrinho.id}" class="Finalizar-button2 w-50 text-nowrap p-2">
-                            <strong>Finalizar venda</strong>
-                        </a>
-                    </td>
-                `;
-                carrinhoInfoDiv.appendChild(tr);
-            })
-        }
-        carregarCarrinho();
-    </script>
-{% endblock %}
 
 

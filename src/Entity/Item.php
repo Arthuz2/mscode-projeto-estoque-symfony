@@ -55,6 +55,10 @@ class Item implements \JsonSerializable
         return $this->produto;
     }
 
+    public function getQuantidade(): int
+    {
+        return $this->quantidade;
+    }
     public function getCarrinho(): ?Carrinho
     {
         return $this->carrinho;
@@ -66,17 +70,7 @@ class Item implements \JsonSerializable
             'id' => $this->id,
             'valor' => $this->valor,
             'produto' => $this->produto,
-            "quantidade" => $this->quantidade,
-        ];
-    }
-
-    public function jsonSerialize(): array
-    {
-        return [
-            'id' => $this->id,
-            'valor' => $this->valor,
-            'produto' => $this->produto
-           
+            "quantidade" => $this->quantidade
         ];
     }
 }
