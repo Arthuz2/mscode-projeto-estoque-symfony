@@ -1,0 +1,57 @@
+{% extends 'pagesApp.html.twig' %}
+
+{% block addStylesheet %}
+    <link rel="stylesheet" href="{{ asset('styles/login.css') }}">
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="background-image">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="card  rounded-lg border-0 shadow-lg">
+                        <div class="m-auto">
+                            <img class="mb-4 mt-4" src="{{ asset('images/logo-light-mscode.png') }}"  alt="logo-light-mscode">
+                            <span class="pdv-txt"></span>
+                        </div>
+                        {% include "mensagens.html.twig" %}
+                        <div id="loginForm" class="form-section active">
+                            <h3 class="text-center mb-4">Cadastro - Usuário</h3>
+                            <form method="POST" action='{{ path('cadastrar_usuario') }}'>
+                                {% if error is defined and error %}
+                                    <div class="alert alert-danger">
+                                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                                    </div>
+                                {% endif %}
+
+                                <div class="mb-3">
+                                    <label for="username">Email</label>
+                                    <input type="email" value="{{ last_username|default('') }}" name="_username" id="username" class="form-control rounded-lg p-3" autocomplete="email" required autofocus placeholder="Email">
+                                    
+                                </div>
+
+                                <div class="mb-3">
+                                 <label for="password">Password</label>
+                                    <input type="password" name="_password" id="password" class="form-control rounded-lg p-3 " autocomplete="current-password" required placeholder="Password">
+                                   
+                                </div>
+
+                                <input type="hidden" name="_csrf_token"
+                                    value="{{ csrf_token('authenticate') }}"
+                                >
+
+                               <div class="d-grid gap-2">
+                                    <button type="submit" id="button-login" class="btn rounded-lg p-2 btn-block">Cadastrar<i class="fas fa-sign-in-alt"></i></button>
+                                </div>
+                            </form>
+                        <div>
+                    <div>
+                <div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+{% endblock %}

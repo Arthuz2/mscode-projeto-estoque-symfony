@@ -1,8 +1,5 @@
 {% extends "pagesApp.html.twig" %}
 
-{% block title %}
-    Nova venda
-{% endblock %}
 {% block addStylesheet %}
     <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
 {% endblock %}
@@ -131,13 +128,13 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             carregarClientes();
-
+            
             const clienteSelect = document.getElementById('cliente-Select');
             clienteSelect.addEventListener('change', function() {
                 const clienteId = this.value;
 
                 if (clienteId) {
-
+                    verificarDescarteCarrinho(clienteId);
                     fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
                         .then(response => { 
                             if (false === response.ok) {

@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Carrinho;
 use App\Entity\Item;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
