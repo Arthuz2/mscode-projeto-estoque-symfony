@@ -1,20 +1,20 @@
 <?php 
 
-namespace App\Controller\Api\Cliente;
+namespace App\Controller\Api\Usuario;
 
-use App\Entity\Cliente;
+use App\Entity\Usuario;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Service\BuscarClientesAtivosService;
+use App\Service\BuscarUsuariosAtivosService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route("/api/clientes", name:"buscar_clientes")]
-class ClienteController extends AbstractController
+#[Route("/api/usuarios", name:"buscar_usuarios")]
+class UsuarioController extends AbstractController
 {
     public function __invoke(
-       BuscarClientesAtivosService $service,
+       BuscarUsuariosAtivosService $service,
     ): JsonResponse {
         try {
             return new JsonResponse($service->execute());
@@ -26,26 +26,26 @@ class ClienteController extends AbstractController
         }
     }
 
-    #[Route('/cliente/ativar/{id}', name: '_ativar')]
+    #[Route('/usuario/ativar/{id}', name: '_ativar')]
     public function ativarOuDesativar(int $id, EntityManagerInterface $entityManager): Response
     {
-        $cliente = $entityManager->getRepository(Cliente::class)->find($id);
+        $usuario = $entityManager->getRepository(Usuario::class)->find($id);
     
-        if (!$cliente) {
-            throw $this->createNotFoundException('Cliente não encontrado');
+        if (!$usuario) {
+            throw $this->createNotFoundException('Usuario não encontrado');
         }
         
-        if (!$cliente->isAtivo()){
-        $this->addFlash('sucess', 'O cliente foi ativado.');
-        $cliente->setStatus(true);
+        if (!$usuario->taAtivo()){
+        $this->addFlash('sucess', 'O usuario foi ativado.');
+        $usuario->setStatus(true);
         }
         else{
-        $this->addFlash('sucess', 'O cliente foi desativado.');
-        $cliente->setStatus(false);
+        $this->addFlash('sucess', 'O usuario foi desativado.');
+        $usuario->setStatus(false);
         }
 
         $entityManager->flush();
     
-        return $this->redirectToRoute('listar_clientes');
+        return $this->redirectToRoute('listar_usuarios');
     }
 }    

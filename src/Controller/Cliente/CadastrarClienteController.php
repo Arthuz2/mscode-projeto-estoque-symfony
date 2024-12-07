@@ -14,10 +14,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class CadastrarClienteController extends AbstractController
 {
     public function __construct(
-            private ClienteRepository $clienteRepository,
-            private ValidarCpfService $validarCpfService
-        ) {
-    }
+        private ClienteRepository $clienteRepository,
+        private ValidarCpfService $validarCpfService
+    ) {}
 
     #[Route('/cliente/cadastrar/show', name: 'cadastrar_cliente_show')]
     public function index(): Response
@@ -33,9 +32,14 @@ class CadastrarClienteController extends AbstractController
         $nome = $data['_nome'] ?? null;
         $cpf = $data['_cpf'] ?? null;
 
+
         if (null === $nome || null === $cpf) {
             $this->addFlash('error', 'Os dados do formulário estão incompletos.');
-            return $this->redirectToRoute('cadastrar_cliente_show'); 
+            return $this->redirectToRoute('cadastrar_cliente_show');
+        }
+        if (empty(trim($nome))) {
+            $this->addFlash('error', 'O nome não pode ser vazio ou consistir apenas de espaços em branco.');
+            return $this->redirectToRoute('cadastrar_cliente_show');
         }
         if (!preg_match('/^[a-zA-ZÀ-ÿ\s]+$/', $nome)) {
             $this->addFlash('error', 'O nome deve conter apenas letras e espaços.');
