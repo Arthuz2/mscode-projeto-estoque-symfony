@@ -7,8 +7,8 @@
     color: #f1272a;
 }
 
-.nav-item .exit-button:hover {
-    color: #fff;
+.exit-button:hover {
+    color: #fff !important;
     background-color: #f1272a;
 }
 
