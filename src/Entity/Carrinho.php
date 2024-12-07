@@ -188,8 +188,8 @@ class Carrinho implements \JsonSerializable
             'status' => $this->status,
             'valor_total'  => $this->valor_total,
             'criado_em' => $this->criado_em->format("d/m/Y"),
-            'finalizado_em' => $this->finalizado_em,
-            'atualizado_em' => $this->atualizado_em,
+            'finalizado_em' => $this->finalizado_em?->format("d/m/Y"),
+            'atualizado_em' => $this->atualizado_em?->format("d/m/Y"),
             'items' => $this->items->toArray(),
         ];
     }

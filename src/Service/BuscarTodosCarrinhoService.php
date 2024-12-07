@@ -12,14 +12,13 @@ class BuscarTodosCarrinhoService
     private CarrinhoRepository $carrinhoRepository,
   ) {}
 
-  public function execute(): array | Exception
+  /** @return Carrinho[] */
+  public function execute(): array
   {
     $carrinhos = $this->carrinhoRepository->findAll();
-
     if (!$carrinhos) {
-      return new NaoExistemCarrinhosException();
+      throw new NaoExistemCarrinhosException();
     }
-
     return $carrinhos;
   }
 }

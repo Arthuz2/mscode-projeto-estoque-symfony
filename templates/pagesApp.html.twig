@@ -9,7 +9,7 @@
 	<main>
 		<div class="mb-2">
 			<div class="container">
-				<header class="d-flex flex-wrap justify-content-center align-items-center py-3  top-fixed">
+				<header class="d-flex flex-wrap justify-content-center align-items-center py-3 top-fixed">
 					<a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
 						<img class="me-2" src="{{ asset('images/logo-light-mscode.png') }}" width="103">
 						<span class="fs-4">pdv
@@ -70,11 +70,14 @@
 {% block javascripts %}
 	{{ parent() }}
 	<script>
+		function redirect(path) {
+      window.location.href = path;
+    }
 		function reloadPageNovaVenda() {
-			window.location.href = "/";
+			redirect("/");
 		}
 		function reloadPageListaVendas() {
-			window.location.href = "/vendas";
+			redirect("/vendas");
 		}
 	</script>
 	

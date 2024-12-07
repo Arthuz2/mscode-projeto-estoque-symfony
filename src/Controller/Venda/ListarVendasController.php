@@ -9,9 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class ListarVendasController extends AbstractController
 {
     #[Route('/vendas', name: 'listar_vendas')]
-    public function index(
-        
-    ): Response
+    public function index(): Response
     {
         return $this->render('venda/listarVendas.html.twig');
     }

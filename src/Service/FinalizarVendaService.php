@@ -75,9 +75,7 @@ class FinalizarVendaService
 
         $carrinho->setStatus(StatusEnum::aguardandoPagamento);
         $carrinho->setValorTotal(
-            $carrinho->getItems()->reduce(function ($carry, $item) {
-                return $carry + $item->getValor();
-            }, 0),
+            $carrinho->getItems()->reduce(fn ($acc, $item) => $acc + $item->getValor(), 0),
         );
         return $this->carrinhoRepository->salvar($carrinho);
     }

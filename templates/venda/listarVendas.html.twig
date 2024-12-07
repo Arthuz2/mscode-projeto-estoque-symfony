@@ -31,7 +31,7 @@
                                 <th scope="col">Data Criação</th>
                                 <th scope="col">Atualizado</th>
                                 <th scope="col">Finalizado</th>
-                                <th scope="col">Actions</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody id='corpoTabela'></tbody>
@@ -80,8 +80,8 @@
                         <td scope='row'>${carrinho.usuario.email}</td>
                         <td scope='row'>${carrinho.valor_total != null ? carrinho.valor_total : '0'}</td>
                         <td scope='row'>${carrinho.criado_em}</td>
-                        <td scope='row'>${carrinho.atualizado_em ? formatarData(carrinho.atualizado_em.date) : 'N/A'}</td>
-                        <td scope='row'>${carrinho.finalizado_em ? formatarData(carrinho.finalizado_em.date) : 'N/A'}</td>
+                        <td scope='row'>${carrinho.atualizado_em ? carrinho.atualizado_em : 'N/A'}</td>
+                        <td scope='row'>${carrinho.finalizado_em ? carrinho.finalizado_em : 'N/A'}</td>
                         <td scope='row' class='col-2 text-nowrap'>
                             <a href="/${carrinho.cliente.id}" onclick='reloadPageNovaVenda()'
                                 class="${carrinho.status === "em aberto" ? '' : 'disabled'} btn btn-secondary btn-sm">
@@ -99,11 +99,6 @@
                 `;
                 tbody.appendChild(tr);
             }
-        }
-
-        function formatarData(dataString) {
-            const data = new Date(dataString);
-            return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
         }
     </script>
 {% endblock %}
