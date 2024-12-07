@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Exceptions;
+namespace App\Controller\Exception;
 
 class ProdutoJaAdicionadoAoCarrinhoException extends \Exception
 {

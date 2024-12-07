@@ -8,6 +8,7 @@
 /public/bundles/
 /var/
 /vendor/
+/.phpactor.json
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###

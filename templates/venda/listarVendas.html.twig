@@ -1,0 +1,104 @@
+{% extends 'pagesApp.html.twig' %}
+
+{% block addStylesheet %}
+    <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container py-5">
+        <div class="mb-4 d-flex flex-row justify-content-between">
+            <h1>Carrinhos</h1>
+            <div>
+                <select class="form-select" aria-label="Default select example" name="statusCarrinho" id="statusCarrinho">
+                    <option value="em aberto" selected>Carrinhos Pendentes</option>
+                    <option value="finalizado">Carrinhos Finalizados</option>
+                    <option value="descartado">Carrinhos Descartados</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="w-90 mt-2">
+            {% include "mensagens.html.twig" %}
+            <section class='tabela2'>
+                <div class='table-responsive'>
+                    <table class="table-striped">
+                        <thead class='table-topo'>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">Usuario</th>
+                                <th scope="col">Valor Total</th>
+                                <th scope="col">Data Criação</th>
+                                <th scope="col">Atualizado</th>
+                                <th scope="col">Finalizado</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id='corpoTabela'></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        async function carregarCarrinhos() {
+            try {
+                const response = await fetch('/api/carrinho'); 
+                if(!response.ok) throw new Error('erro ao carregar os carrinhos');
+                return await response.json(); 
+            } catch(error){
+                console.error('Erro ao carregar os carrinhos', error);
+                return [];
+            } 
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const carrinhos = await carregarCarrinhos();
+            carregarCarrinhosTabela('em aberto', carrinhos);
+
+            const carrinhoSelect = document.getElementById('statusCarrinho');
+            carrinhoSelect.addEventListener('change', function() {
+                const status = carrinhoSelect.value
+                carregarCarrinhosTabela(status, carrinhos);
+            });
+        });
+
+        function carregarCarrinhosTabela(status, carrinhos){
+            const tbody = document.getElementById('corpoTabela');
+            tbody.innerHTML = '';
+            let contador = 0;
+            carrinhos.forEach(carrinho => {
+                let tr = document.createElement('tr');
+                if(carrinho.status === status){
+                    contador++;
+                    tr.innerHTML = `
+                        <th scope='row'>${carrinho.id}</th>
+                        <td scope='row'>${carrinho.cliente.nome}</td>
+                        <td scope='row'>${carrinho.usuario.email}</td>
+                        <td scope='row'>${carrinho.valor_total != null ? carrinho.valor_total : '0'}</td>
+                        <td scope='row'>${carrinho.criado_em}</td>
+                        <td scope='row'>${carrinho.atualizado_em ? carrinho.atualizado_em : 'N/A'}</td>
+                        <td scope='row'>${carrinho.finalizado_em ? carrinho.finalizado_em : 'N/A'}</td>
+                        <td scope='row' class='col-2 text-nowrap'>
+                            <a href="/${carrinho.cliente.id}" onclick='reloadPageNovaVenda()'
+                                class="${carrinho.status === "em aberto" ? '' : 'disabled'} btn btn-secondary btn-sm">
+                                <i class='bi bi-pencil'></i>
+                            </a>
+                        </td>
+                    `; 
+                    tbody.appendChild(tr);
+                }
+            });
+            if(contador === 0){
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td colspan='8' class='text-center'>Nenhum carrinho ${status} encontrado</td
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+    </script>
+{% endblock %}
