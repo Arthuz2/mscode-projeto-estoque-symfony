@@ -46,6 +46,21 @@ class CadastrarProdutoController extends AbstractController
         }
 
         $request = $request->request;
+        
+        if(preg_match('/[0-9]/', $request->get('nome')) || empty($request->get('nome'))){
+            $this->addFlash('danger', 'Nome invalido');
+            return $this->redirectToRoute('cadastrar_produto_show');
+        }
+
+        if($request->get('quantidade') <= 0 || $request->get('quantidade') == ''){
+            $this->addFlash('danger', 'Quantidade invalida');
+            return $this->redirectToRoute('cadastrar_produto_show');
+        }
+
+        if($request->get('valor') <= 0 || $request->get('valor') == ''){
+            $this->addFlash('danger', 'Valor invalido');
+            return $this->redirectToRoute('cadastrar_produto_show');
+        }
 
         $categoria = $this->categoriaRepository->findBy(['id' => $request->get('categoriaId')])[0];
 
