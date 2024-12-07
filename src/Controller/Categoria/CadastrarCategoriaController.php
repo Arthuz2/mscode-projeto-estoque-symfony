@@ -44,6 +44,11 @@ class CadastrarCategoriaController extends AbstractController
             return $this->redirectToRoute('cadastrar_categoria_show');
         }
 
+        if(preg_match('/[0-9]/', $nomeCategoria) || empty(trim($nomeCategoria))){
+            $this->addFlash('danger', 'Nome invalido');
+            return $this->redirectToRoute('cadastrar_categoria_show');
+        }
+
         $categoria = new Categoria();
         $categoria->setNome($nomeCategoria);
 
