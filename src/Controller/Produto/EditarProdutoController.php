@@ -50,6 +50,15 @@ class EditarProdutoController extends AbstractController
         }
 
         $request = $request->request;
+        if(preg_match('/[0-9]/', $request->get('nome')) || empty(trim($request->get('nome')))){
+            $this->addFlash('danger', 'Nome invalido');
+            return $this->redirectToRoute('editar_produto_show', ['id' => $id]);
+        }
+
+        if($request->get('valor') <= 0 || $request->get('valor') == ''){
+            $this->addFlash('danger', 'Valor invalido');
+            return $this->redirectToRoute('editar_produto_show', ['id' => $id]);
+        }
 
         $categoria = $this->categoriaRepository->findBy(['id' => $request->get('categoriaId')])[0];
         

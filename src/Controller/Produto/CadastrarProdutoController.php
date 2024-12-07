@@ -47,7 +47,7 @@ class CadastrarProdutoController extends AbstractController
 
         $request = $request->request;
         
-        if(preg_match('/[0-9]/', $request->get('nome')) || empty($request->get('nome'))){
+        if(preg_match('/[0-9]/', $request->get('nome')) || empty(trim($request->get('nome')))){
             $this->addFlash('danger', 'Nome invalido');
             return $this->redirectToRoute('cadastrar_produto_show');
         }

@@ -1,6 +1,6 @@
 {% extends 'pagesApp.html.twig' %}
 {% block addStylesheet %}
-    <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
+  <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
 {% endblock %}
 {% block content %}
 	<div class="container py-5">
@@ -8,15 +8,15 @@
 			<div class="mb-4 d-flex flex-row justify-content-between">
 				<h1>Produtos</h1>
 				<div>
-			
 					<a href="/produtos/cadastrar" class="btn btn-danger">
-						<i class="bi bi-plus"></i>Novo produto</a> 
+						<i class="bi bi-plus"></i>Novo produto
+					</a>
 				</div>
 			</div>
 			{% include "mensagens.html.twig" %}
 			<section class="tabela2">
 				<div class="table-responsive">
-					<table class="table-striped ">
+					<table class="table-striped">
 						<thead class="tabela-topo">
 							<tr>
 								<th scope="col">id</th>
@@ -31,17 +31,21 @@
 						<tbody id="tabela">
 							{% for produto in produtos %}
 								<tr>
-									<th scope='row'>{{ produto.id }}</th>
-									<td scope='row'>{{ produto.nome }}</td>
-									<td scope='row'>{{ produto.descricao }}</td>
-									<td scope='row'>{{ produto.getCategoriaId.getId }}</td>
-									<td scope='row'>{{ produto.getQuantidadeDisponivel }}</td>
-									<td scope='row'>R$ {{ produto.valor }},00</td>
+									<th scope="row">{{ produto.id }}</th>
+									<td>{{ produto.nome }}</td>
+									<td>{{ produto.descricao }}</td>
+									<td>{{ produto.getCategoriaId.getId }}</td>
+									<td class="estoque-quantidade" data-id="{{ produto.id }}">{{ produto.getQuantidadeDisponivel }}</td>
+									<td>R$ {{ produto.valor }},00</td>
 									<td class="col-2 text-nowrap">
-										<a href='/produto/add/{{ produto.id }}' class="btn btn-light btn-sm"><i class="bi bi-plus"></i></a>
+										<button 
+											class="btn btn-light btn-sm add-estoque-btn" 
+											data-id="{{ produto.id }}"
+											data-nome="{{ produto.nome }}">
+											<i class="bi bi-plus"></i>
+										</button>
 										<a href="/produto/editar/{{ produto.id }}" class="btn btn-secondary btn-sm">
 											<i class="bi bi-pencil"></i>
-										</a>
 										</a>
 									</td>
 								</tr>
@@ -52,4 +56,73 @@
 			</section>
 		</div>
 	</div>
+
+	<div id="popupAddEstoque" class="popup-container">
+		<div class="popup-content">
+			<h3>Adicionar Estoque</h3>
+			<p id="popupProdutoNome"></p>
+			<input type="number" id="quantidadeInput" class="form-control" placeholder="Quantidade" min="1">
+			<div class="popup-buttons">
+				<button id="confirmarAddEstoque" class="btn btn-success">Confirmar</button>
+				<button id="fecharPopup" class="btn btn-danger">Cancelar</button>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const popup = document.getElementById('popupAddEstoque');
+			const fecharPopup = document.getElementById('fecharPopup');
+			const confirmarAddEstoque = document.getElementById('confirmarAddEstoque');
+			const quantidadeInput = document.getElementById('quantidadeInput');
+			const popupProdutoNome = document.getElementById('popupProdutoNome');
+
+			let produtoId = null;
+
+			document.querySelectorAll('.add-estoque-btn').forEach(button => {
+				button.addEventListener('click', (e) => {
+					produtoId = button.getAttribute('data-id');
+					const nome = button.getAttribute('data-nome');
+					popupProdutoNome.innerText = `Produto: ${nome}`;
+					popup.style.display = 'flex';
+				});
+			});
+
+			fecharPopup.addEventListener('click', () => {
+				popup.style.display = 'none';
+				quantidadeInput.value = '';
+			});
+
+			confirmarAddEstoque.addEventListener('click', () => {
+        const quantidade = parseInt(quantidadeInput.value);
+
+        if (!quantidade || quantidade <= 0) {
+					alert('Insira uma quantidade válida.');
+					return;
+        }
+
+        const url = `/produto/add/${produtoId}/${quantidade}`;
+        fetch(url, { method: 'GET' })
+				.then(response => {
+					if (response.ok) {
+						const estoqueField = document.querySelector(`.estoque-quantidade[data-id="${produtoId}"]`);
+						const estoqueAtual = parseInt(estoqueField.innerText);
+						estoqueField.innerText = estoqueAtual + quantidade;
+
+						popup.style.display = 'none';
+						quantidadeInput.value = '';
+					} else {
+						alert('Erro ao atualizar o estoque. Tente novamente.');
+					}
+				})
+				.catch(error => {
+					console.error('Erro ao enviar a requisição:', error);
+					alert('Erro de conexão. Tente novamente.');
+				});
+    	});
+		});
+	</script>
 {% endblock %}
