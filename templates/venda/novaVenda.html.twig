@@ -3,23 +3,24 @@
 {% block addStylesheet %}
     <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
 {% endblock %}
+
 {% block content %}
     <main>
         <h2 class="text-white h2 p-2 mb-3">Nova Venda</h2>
 
         <section>
             <div class="card-area">
-               <div class="card-item">
-                <div class="card-top">
-                    <span class="card-titulo">Total</span>
-                    <div class="card-right">
-                        <img src="{{ asset('images/simbolo-do-dolar.png') }}" alt="simbolo-do-dolar.png">
+                <div class="card-item">
+                    <div class="card-top">
+                        <span class="card-titulo">Total</span>
+                        <div class="card-right">
+                            <img src="{{ asset('images/simbolo-do-dolar.png') }}" alt="simbolo-do-dolar.png">
+                        </div>
+                    </div>
+                    <div class="card-bottom">
+                        <p class="resultado">R$ - </p> 
                     </div>
                 </div>
-                <div class="card-bottom">
-                    <p class="resultado">R$ - </p> 
-                </div>
-            </div>
                 <div class="card-item">
                     <div class="card-top">
                         <span class="card-titulo">Status</span>
@@ -57,7 +58,6 @@
                     </button>
                 </div>
 
-              
                 <div id="produtosHidden"></div>
 
                 <p class="texto">Produto*</p>
@@ -92,11 +92,13 @@
         </section> 
     </main>
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script>
-        let carrinhoId; 
+        let carrinhoId;
         let produtosCarrinho = [];
+
         async function carregarClientes() {
             try {
                 const response = await fetch('/api/clientes', {
@@ -116,13 +118,11 @@
             } catch (error) {
                 console.error('Erro ao carregar clientes:', error);
             }
-
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             carregarClientes();
-            
-            
+
             const clienteSelect = document.getElementById('cliente-Select');
             clienteSelect.addEventListener('change', function() {
                 const clienteId = this.value;
@@ -130,45 +130,45 @@
                 if (clienteId) {
                     verificarDescarteCarrinho(clienteId);
                     fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
-                        .then(response => { 
-                            if (false === response.ok) {
-                                return Promise.reject(response);
-                            }
-                            return response.json();
-                        })
+                        .then(response => response.json())
                         .then(data => {
                             carrinhoId = data.carrinho.id;
                             const carrinhoStatus = data.carrinho.status;
-                            
-                            if(carrinhoStatus === "aguardando pagamento"){
-                                window.location.href = "{{ path('confirmarPagamentoShow', {carrinho: 'CARRINHO_ID' }) }}"
-                                .replace('CARRINHO_ID',carrinhoId);
-                            }else{
+
+                            if (carrinhoStatus === "aguardando pagamento") {
+                                window.location.href = "{{ path('confirmarPagamentoShow', {carrinho: 'CARRINHO_ID' }) }}".replace('CARRINHO_ID', carrinhoId);
+                            } else {
+                                produtosCarrinho = [];
+                                const tabela = document.getElementById('tabela');
+                                tabela.innerHTML = '';
                                 displayCarrinhoInfo(data.carrinho);
-                                preencherCards(data.carrinho); 
+                                preencherCards(data.carrinho);
                                 carregarProdutos();
                             }
                         })
-                        .catch(response => response.json().then(data => alert(data.error)))
+                        .catch(response => response.json().then(data => alert(data.error)));
                 }
             });
 
-            async function carregarProdutos() { 
-                try {  
+            async function carregarProdutos() {
+                try {
                     const response = await fetch(`/api/produto/consultar/${carrinhoId}`, {
                         method: 'GET',
                         headers: { 'Content-Type': 'application/json' }
                     });
 
                     if (!response.ok) throw new Error('Erro ao carregar produtos');
-                     
+
                     const produtos = JSON.parse(await response.json());
                     const produtoSelect = document.getElementById('produto-Select');
-
+                    produtoSelect.innerHTML = `
+                        <option selected>Selecione um produto</option>
+                    `;
+                    
                     if (Array.isArray(produtos)) {
                         produtos?.forEach(produto => {
                             const option = document.createElement('option');
-                            option.value = produto.id; 
+                            option.value = produto.id;
                             option.textContent = produto.nome;
                             produtoSelect.appendChild(option);
 
@@ -183,17 +183,17 @@
                                         return;
                                     } else {
                                         const tabela = document.getElementById('tabela');
-                                        
+
                                         produtosCarrinho.push({
                                             id: produtoSelecionado.id,
                                             quantidade: 1,
-                                            valorUnitario: produtoSelecionado.valor  
+                                            valorUnitario: produtoSelecionado.valor
                                         });
 
                                         const novaLinha = document.createElement('tr');
-                                        const valorTotalProduto = produtoSelecionado.valor * 1; 
+                                        const valorTotalProduto = produtoSelecionado.valor * 1;
                                         const valorTotalFormatado = valorTotalProduto.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-                                        
+
                                         novaLinha.innerHTML = ` 
                                             <td  scope="col">${produtoSelecionado.nome}</td>
                                             <td  scope="col">${produtoSelecionado.categoria_id.nome || 'Categoria'}</td>
@@ -202,34 +202,35 @@
                                                 <input class="input-number rounded" type="number" value="1" min="1" max="${produtoSelecionado.qt_disponivel}" data-valor-unitario="${produtoSelecionado.valor}">
                                             </td>
                                             <td  scope="col" class="item-total">${valorTotalProduto.toFixed(2)}</td>
-                                           <td>
+                                            <td>
                                                 <button class="button btn btn-danger p-1" data-id="${produtoSelecionado.id}"><i class="bi bi-x"></i></button>
                                             </td>
                                         `;
 
                                         tabela.appendChild(novaLinha);
-                                        
-                                        document.getElementById('tabela').addEventListener('click', function(event){
-                                            if(event.target.closest('.button')){
+
+                                        document.getElementById('tabela').addEventListener('click', function(event) {
+                                            if (event.target.closest('.button')) {
                                                 const produtoId = event.target.closest('.button').getAttribute("data-id");
 
                                                 produtosCarrinho = produtosCarrinho.filter(produto => produto.id != produtoId);
                                                 event.target.closest('tr').remove();
+
+                                                recalcularTotalCarrinho();
                                             }
-                                        })
-                                       
+                                        });
+
                                         const inputQuantidade = novaLinha.querySelector('input[type="number"]');
                                         inputQuantidade.addEventListener('input', function() {
-                                            const novaQuantidade = parseInt(this.value); 
-                                            const valorUnitario = parseFloat(this.getAttribute('data-valor-unitario'));  
-                                            
+                                            const novaQuantidade = parseInt(this.value);
+                                            const valorUnitario = parseFloat(this.getAttribute('data-valor-unitario'));
+
                                             if (isNaN(novaQuantidade) || isNaN(valorUnitario)) {
                                                 console.error('Erro ao calcular o valor total: quantidade ou valor unitário inválido');
                                                 return;
                                             }
 
                                             const itemTotalCell = novaLinha.querySelector('.item-total');
-
                                             const novoTotalItem = valorUnitario * novaQuantidade;
                                             itemTotalCell.textContent = novoTotalItem.toFixed(2);
 
@@ -243,32 +244,31 @@
                                     }
                                 }
                             });
+
                         });
                     }
                 } catch (error) {
-                    alert("Não existe produtos")
+                    alert("Não existe produtos");
                     console.error('Erro ao carregar produtos:', error);
                 }
-
             }
 
             function recalcularTotalCarrinho() {
                 let totalCarrinho = 0;
-               
+
                 const totaisItens = document.querySelectorAll('.item-total');
-              
+
                 totaisItens.forEach(itemTotal => {
                     const itemTotalValue = parseFloat(itemTotal.textContent);
-                    
+
                     if (!isNaN(itemTotalValue)) {
                         totalCarrinho += itemTotalValue;
-                        
                     }
                 });
-               
+
                 const totalCard = document.querySelector('.card-item .resultado');
                 if (totalCard) {
-                    totalCard.textContent = totalCarrinho.toLocaleString('pt-BR',{
+                    totalCard.textContent = totalCarrinho.toLocaleString('pt-BR', {
                         style: 'currency',
                         currency: 'BRL'
                     });
@@ -279,15 +279,15 @@
             form.addEventListener("submit", function(event) {
                 event.preventDefault();
 
-                if(produtosCarrinho.length === 0){
+                if (produtosCarrinho.length === 0) {
                     alert("O carrinho não contém produtos. Por favor, adicione produtos antes de continuar.");
                     return;
                 }
-                
+
                 const tabela = document.getElementById('tabela');
                 const linhas = tabela.getElementsByTagName('tr');
 
-                produtosCarrinho.forEach((produto,index) =>{
+                produtosCarrinho.forEach((produto, index) => {
                     const inputQuantidade = linhas[index].querySelector('input[type="number"]')
                     produto.quantidade = inputQuantidade.value;
                 })
@@ -310,7 +310,7 @@
                 .then(response => {
                     if (response.ok) {
                         window.location.href = "{{ path('confirmarPagamentoShow', {carrinho: 'CARRINHO_ID' }) }}"
-                            .replace('CARRINHO_ID',carrinhoId);
+                            .replace('CARRINHO_ID', carrinhoId);
                     }
 
                     response.json()
@@ -323,12 +323,11 @@
                 });
             });
 
-            function displayCarrinhoInfo(carrinho) { 
+            function displayCarrinhoInfo(carrinho) {
                 const carrinhoInfoDiv = document.getElementById('tabela');
                 carrinhoInfoDiv.innerHTML = '';
-                
-                carrinho.items.forEach((item,index) => {
-                   
+
+                carrinho.items.forEach((item, index) => {
                     carrinhoInfoDiv.innerHTML += `
                         <tr class="tr-responsivo">
                             <td scope="col">${item.produto.nome}</td>
@@ -344,11 +343,11 @@
                 recalcularTotalCarrinho();
             }
 
-            function preencherCards(carrinho) { 
+            function preencherCards(carrinho) {
                 const cards = document.querySelectorAll('.card-item .card-bottom .resultado');
 
                 const total = carrinho.valor_total && !isNaN(carrinho.valor_total) ? carrinho.valor_total : 0;
-                cards[0].textContent = `R$ ${total}`; 
+                cards[0].textContent = `R$ ${total}`;
 
                 const status = carrinho.status || '-';
                 cards[1].textContent = status;
@@ -357,7 +356,7 @@
                 cards[2].textContent = dataCriacao;
             }
 
-            function verificarDescarteCarrinho(carrinhoId){
+            function verificarDescarteCarrinho(carrinhoId) {
                 fetch(`/api/carrinho/descartar/${carrinhoId}`)
                     .then(response => {
                         if (!response.ok) {
