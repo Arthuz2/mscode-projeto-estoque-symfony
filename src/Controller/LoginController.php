@@ -33,7 +33,6 @@ class LoginController extends AbstractController
     public function ativoOuInativo(AuthenticationUtils $authenticationUtils, EntityManagerInterface $entityManager)
     {
 
-        $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
         $user = $entityManager->getRepository(Usuario::class)->findOneBy(['email' => $lastUsername]);
 

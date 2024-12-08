@@ -10,23 +10,23 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route("/api/clientes", name:"buscar_clientes")]
 class ClienteController extends AbstractController
 {
-    public function __invoke(
+    #[Route("/api/clientes", name:"buscar_clientes")]
+    public function index(
        BuscarClientesAtivosService $service,
     ): JsonResponse {
         try {
             return new JsonResponse($service->execute());
         } catch (\Throwable $e) {
             return new JsonResponse(
-              ['error' => $e->getMessage()],
-             Response::HTTP_INTERNAL_SERVER_ERROR,
+                ['error' => $e->getMessage()],
+                Response::HTTP_INTERNAL_SERVER_ERROR,
             );
         }
     }
 
-    #[Route('/cliente/ativar/{id}', name: '_ativar')]
+    #[Route('/api/clientes/ativar/{id}', name: 'buscar_clientes_ativar')]
     public function ativarOuDesativar(int $id, EntityManagerInterface $entityManager): Response
     {
         $cliente = $entityManager->getRepository(Cliente::class)->find($id);
@@ -36,12 +36,12 @@ class ClienteController extends AbstractController
         }
         
         if (!$cliente->isAtivo()){
-        $this->addFlash('sucess', 'O cliente foi ativado.');
-        $cliente->setStatus(true);
+            $this->addFlash('success', 'O cliente foi ativado.');
+            $cliente->setStatus(true);
         }
         else{
-        $this->addFlash('sucess', 'O cliente foi desativado.');
-        $cliente->setStatus(false);
+            $this->addFlash('success', 'O cliente foi desativado.');
+            $cliente->setStatus(false);
         }
 
         $entityManager->flush();
