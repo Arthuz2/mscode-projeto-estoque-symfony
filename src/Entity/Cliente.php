@@ -71,6 +71,17 @@ class Cliente implements \JsonSerializable
 
         return $this;
     }
+    
+    public function isAtivo(): bool
+    {
+        return $this->ativo;
+    }
+
+    public function setStatus(bool $ativo): self
+    {
+        $this->ativo = $ativo;
+        return $this;
+    }
 
     /**
      * @return Collection<int, Carrinho>

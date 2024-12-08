@@ -9,11 +9,10 @@
 	<main>
 		<div class="mb-2">
 			<div class="container">
-				<header class="d-flex flex-wrap justify-content-center align-items-center py-3">
+				<header class="d-flex flex-wrap justify-content-center align-items-center py-3 top-fixed">
 					<a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
 						<img class="me-2" src="{{ asset('images/logo-light-mscode.png') }}" width="103">
-						<span class="fs-4">pdv
-							</span>
+						<span class="fs-4">pdv</span>
 					</a>
 					<ul class="nav nav-pills d-flex align-items-center">
 						<li class="nav-item dropdown">
@@ -21,12 +20,12 @@
 								Vendas
 							</a>
 							<ul class="dropdown-menu">
-								<li>
-									<a class="dropdown-item" href="/error">Vendas realizadas</a>
 								</li>
 								<li>
-									<a class="dropdown-item" href="/" onclick="reloadPage()">Nova venda</a>
+									<a class="dropdown-item" href="{{ path('nova_venda') }}" onclick="reloadPageNovaVenda()">Nova venda</a>
 								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('listar_vendas') }}" onclick="reloadPageListaVendas()">Todas as vendas</a>
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
@@ -55,8 +54,21 @@
 								</li>
 							</ul>
 						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								Listar
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a class="dropdown-item" href="{{ path('listar_usuarios') }}">Usuários</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('listar_clientes') }}">Clientes</a>
+								</li>
+							</ul>
+						</li>
 						<li class="nav-item">
-							<a href="{{ path('login') }}" class="btn btn-outline-danger m-0 ms-4 exit-button" aria-current="page">Sair</a>
+							<a href="{{ path('app_logout') }}" class="btn btn-outline-danger m-0 ms-4 exit-button" aria-current="page">Sair</a>
 						</li>
 					</ul>
 				</header>
@@ -70,8 +82,14 @@
 {% block javascripts %}
 	{{ parent() }}
 	<script>
-		function reloadPage() {
-			window.location.href = '/';
+		function redirect(path) {
+      window.location.href = path;
+    }
+		function reloadPageNovaVenda() {
+			redirect("/");
+		}
+		function reloadPageListaVendas() {
+			redirect("/vendas");
 		}
 	</script>
 	

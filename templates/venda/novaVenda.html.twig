@@ -1,8 +1,5 @@
 {% extends "pagesApp.html.twig" %}
 
-{% block title %}
-    Nova venda
-{% endblock %}
 {% block addStylesheet %}
     <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
 {% endblock %}
@@ -55,8 +52,8 @@
                     <select class="form-select" id="cliente-Select" name="cliente" required>
                         <option value="">Selecione um cliente</option>
                     </select>
-                    <button type="submit" class="Finalizar-button" >
-                        <strong>Finalizar venda</strong>
+                    <button type="submit" class="Finalizar-button">
+                        <strong>Ir para pagamento</strong>
                     </button>
                 </div>
 
@@ -93,8 +90,6 @@
                 </table>
             </div>
         </section> 
-
-
     </main>
 {% endblock %}
 {% block javascripts %}
@@ -102,7 +97,6 @@
     <script>
         let carrinhoId; 
         let produtosCarrinho = [];
-
         async function carregarClientes() {
             try {
                 const response = await fetch('/api/clientes', {
@@ -125,23 +119,16 @@
 
         }
 
-        function habilitarBotaoFinalizarVenda() {
-            const tabela = document.getElementById('tabela');
-            const produtosAdicionados = tabela.getElementsByTagName('tr').length > 0;
-            const finalizarButton = document.querySelector('.Finalizar-button');
-            finalizarButton.disabled = !produtosAdicionados;
-
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             carregarClientes();
-
+            
+            
             const clienteSelect = document.getElementById('cliente-Select');
             clienteSelect.addEventListener('change', function() {
                 const clienteId = this.value;
 
                 if (clienteId) {
-
+                    verificarDescarteCarrinho(clienteId);
                     fetch(`/api/buscar-ou-criar-carrinho/${clienteId}`)
                         .then(response => { 
                             if (false === response.ok) {
@@ -150,11 +137,17 @@
                             return response.json();
                         })
                         .then(data => {
-
                             carrinhoId = data.carrinho.id;
-                            displayCarrinhoInfo(data.carrinho);
-                            preencherCards(data.carrinho); 
-                            carregarProdutos();
+                            const carrinhoStatus = data.carrinho.status;
+                            
+                            if(carrinhoStatus === "aguardando pagamento"){
+                                window.location.href = "{{ path('confirmarPagamentoShow', {carrinho: 'CARRINHO_ID' }) }}"
+                                .replace('CARRINHO_ID',carrinhoId);
+                            }else{
+                                displayCarrinhoInfo(data.carrinho);
+                                preencherCards(data.carrinho); 
+                                carregarProdutos();
+                            }
                         })
                         .catch(response => response.json().then(data => alert(data.error)))
                 }
@@ -199,6 +192,8 @@
 
                                         const novaLinha = document.createElement('tr');
                                         const valorTotalProduto = produtoSelecionado.valor * 1; 
+                                        const valorTotalFormatado = valorTotalProduto.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+                                        
                                         novaLinha.innerHTML = ` 
                                             <td  scope="col">${produtoSelecionado.nome}</td>
                                             <td  scope="col">${produtoSelecionado.categoria_id.nome || 'Categoria'}</td>
@@ -213,7 +208,7 @@
                                         `;
 
                                         tabela.appendChild(novaLinha);
-
+                                        
                                         document.getElementById('tabela').addEventListener('click', function(event){
                                             if(event.target.closest('.button')){
                                                 const produtoId = event.target.closest('.button').getAttribute("data-id");
@@ -228,9 +223,6 @@
                                             const novaQuantidade = parseInt(this.value); 
                                             const valorUnitario = parseFloat(this.getAttribute('data-valor-unitario'));  
                                             
-                                            console.log('Nova Quantidade:', novaQuantidade);
-                                            console.log('Valor Unitário:', valorUnitario);
-
                                             if (isNaN(novaQuantidade) || isNaN(valorUnitario)) {
                                                 console.error('Erro ao calcular o valor total: quantidade ou valor unitário inválido');
                                                 return;
@@ -254,6 +246,7 @@
                         });
                     }
                 } catch (error) {
+                    alert("Não existe produtos")
                     console.error('Erro ao carregar produtos:', error);
                 }
 
@@ -261,26 +254,35 @@
 
             function recalcularTotalCarrinho() {
                 let totalCarrinho = 0;
-
                
                 const totaisItens = document.querySelectorAll('.item-total');
+              
                 totaisItens.forEach(itemTotal => {
                     const itemTotalValue = parseFloat(itemTotal.textContent);
+                    
                     if (!isNaN(itemTotalValue)) {
                         totalCarrinho += itemTotalValue;
+                        
                     }
                 });
-
                
                 const totalCard = document.querySelector('.card-item .resultado');
                 if (totalCard) {
-                    totalCard.textContent = `R$ ${totalCarrinho.toFixed(2)}`;
+                    totalCard.textContent = totalCarrinho.toLocaleString('pt-BR',{
+                        style: 'currency',
+                        currency: 'BRL'
+                    });
                 }
             }
 
             const form = document.getElementById('finalizarVendaForm');
             form.addEventListener("submit", function(event) {
                 event.preventDefault();
+
+                if(produtosCarrinho.length === 0){
+                    alert("O carrinho não contém produtos. Por favor, adicione produtos antes de continuar.");
+                    return;
+                }
                 
                 const tabela = document.getElementById('tabela');
                 const linhas = tabela.getElementsByTagName('tr');
@@ -305,7 +307,14 @@
                     },
                     body: JSON.stringify(dados)
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "{{ path('confirmarPagamentoShow', {carrinho: 'CARRINHO_ID' }) }}"
+                            .replace('CARRINHO_ID',carrinhoId);
+                    }
+
+                    response.json()
+                })
                 .then(data => {
                     alert(data.message || data.error);
                 })
@@ -317,17 +326,18 @@
             function displayCarrinhoInfo(carrinho) { 
                 const carrinhoInfoDiv = document.getElementById('tabela');
                 carrinhoInfoDiv.innerHTML = '';
-
+                
                 carrinho.items.forEach((item,index) => {
+                   
                     carrinhoInfoDiv.innerHTML += `
                         <tr class="tr-responsivo">
                             <td scope="col">${item.produto.nome}</td>
                             <td scope="col">${item.produto.categoria_id.nome}</td>
                             <td  scope="col">${item.produto.qt_disponivel}</td>
                             <td  scope="col" class="quantidade">
-                                <input id="quantidade-${index}" class="input-number" type="number" value="${item.quantidade}" min="1">
+                                <input id="quantidade-${index}" class="input-number qt" type="number" value="${item.quantidade}" min="1">
                             </td>
-                            <td  scope="col">${item.valor.toFixed(2)}</td>
+                            <td  scope="col">${item.valor.toLocaleString("pt-BR")}</td>
                         </tr>
                     `;
                 });
@@ -338,7 +348,7 @@
                 const cards = document.querySelectorAll('.card-item .card-bottom .resultado');
 
                 const total = carrinho.valor_total && !isNaN(carrinho.valor_total) ? carrinho.valor_total : 0;
-                cards[0].textContent = `R$ ${total.toFixed(2)}`; 
+                cards[0].textContent = `R$ ${total}`; 
 
                 const status = carrinho.status || '-';
                 cards[1].textContent = status;
@@ -362,4 +372,3 @@
         });
     </script>
 {% endblock %}
-

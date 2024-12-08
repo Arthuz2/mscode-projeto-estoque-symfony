@@ -14,12 +14,12 @@ class AdicionarProdutoController extends AbstractController
         private ProdutoRepository $produtoRepository,
     ){}
 
-    #[Route('/produto/add/{id}', name: 'adicionar_produto')]
-    public function index(int|string $id): Response
+    #[Route('/produto/add/{id}/{quantidade}', name: 'adicionar_produto')]
+    public function index(int $id, int $quantidade): Response
     {
         $produto = $this->produtoRepository->find($id);
 
-        $produto->setQuantidadeDisponivel($produto->getQuantidadeDisponivel() + 1);
+        $produto->setQuantidadeDisponivel($produto->getQuantidadeDisponivel() + $quantidade);
 
         $this->produtoRepository->getEntityManager()->flush();
 

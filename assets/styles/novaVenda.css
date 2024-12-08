@@ -23,12 +23,19 @@ table{
     box-sizing: 5px 5px 5px  rgba(0, 0, 0, 0.312);
 }
 
+.tabela-confirmarPay  thead{
+    background-color: white;
+    color: #D93539;
+}
 thead{
     background-color: #D93539 ;
     color: white;
 }
 th{
     padding: 20px;
+}
+.tabela-confirmarPay td{
+    font-weight: 500;
 }
 td{
     padding: 10px;
@@ -123,6 +130,18 @@ td{
    cursor: pointer;
 }
 
+.Finalizar-button2{
+    background-color: #ece9e9;
+    color: #D93539;
+    border: 1px solid #ece9e9;
+    width: 700px;
+    margin-left: 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+}
+
 /* tabela */
 .tabela{
     margin: 30px 20px 0px 20px;
@@ -165,6 +184,119 @@ td{
     margin-left: 4px;
 }
 
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.popup-buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.popup-buttons button {
+    width: 100px;
+}
+
+/* parte de confirmar paamento  */
+
+.cart-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.cart-icon {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.cart-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.tabela-confirmarPay{
+    width: 900px;
+    text-transform: uppercase;
+}
+.tes{
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.tabela-confirmarPay td{
+    padding: 20px;
+}
+
+.cart-summary {
+    width: 300px;
+    background-color: #f5f2f2;
+    padding: 20px;
+    margin-left: 20px;
+    border: 2px solid #f5f2f2;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+    
+.cart-summary-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+    
+.cart-summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+    
+.cart-summary-total {
+    font-weight: bold;
+    font-size: 18px;
+}
+    
+.checkout-button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+    
+.checkout-button:hover {
+    background-color: #218838;
+}
+
+.qt{
+    border: 1px solid #DCDBDB;
+    outline: 0;
+}
+
+@media (max-width:1400px){
+    .cart-summary {
+        margin-top: 50px;
+    }
+}
 
 /* Responsividade para telas menores que 520px */
 @media (max-width: 597px) {

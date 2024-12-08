@@ -33,6 +33,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Jso
     #[ORM\Column]
     private ?string $password;
 
+    #[ORM\Column(options: ["default" => true])]
+    private bool $ativo = true;
+
     /**
      * @var Collection<int, Carrinho>
      */
@@ -110,6 +113,17 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Jso
         return $this;
     }
 
+    public function taAtivo(): bool
+    {
+        return $this->ativo;
+    }
+
+    public function setStatus(bool $ativo): self
+    {
+        $this->ativo = $ativo;
+        return $this;
+    }
+
     /**
      * @see UserInterface
      */
@@ -141,6 +155,15 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Jso
     {
         return [
             'id' => $this->id,
+            'email' => $this->email,
         ];
+    }
+
+
+    public function setAtivo(bool $ativo): static
+    {
+        $this->ativo = $ativo;
+
+        return $this;
     }
 }

@@ -33,24 +33,37 @@ class CadastrarProdutoController extends AbstractController
     #[Route('/produtos/cadastrar', name: 'cadastrar_produto_salvar', methods: 'POST')]
     public function salvar(Request $request): Response
     {
-        $nomeProduto = $request->request->get('nome');
-        if (strlen($nomeProduto) > 100) {
+        list('nome' => $nome, 'quantidade' => $quantidade, 'valor' => $valor) = $request->request->all();
+        if (strlen($nome) > 100) {
             $this->addFlash('danger', 'Nome deve ter no máximo 100 caracteres!');
             return $this->redirectToRoute('cadastrar_produto_show');
         }
 
-        $produtoExistente = $this->produtoRepository->findBy(['nome' => $nomeProduto]);
+        $produtoExistente = $this->produtoRepository->findBy(['nome' => $nome]);
         if ($produtoExistente) {
-            $this->addFlash('danger', "Produto com nome \"{$nomeProduto}\" já existe!");
+            $this->addFlash('danger', "Produto com nome \"{$nome}\" já existe!");
             return $this->redirectToRoute('cadastrar_produto_show');
         }
 
-        $request = $request->request;
+        if(preg_match('/[0-9]/', $nome) || empty(trim($nome))){
+            $this->addFlash('danger', 'Nome invalido');
+            return $this->redirectToRoute('cadastrar_produto_show');
+        }
+
+        if($quantidade <= 0 || $quantidade == ''){
+            $this->addFlash('danger', 'Quantidade invalida');
+            return $this->redirectToRoute('cadastrar_produto_show');
+        }
+
+        if($valor <= 0 || $valor == ''){
+            $this->addFlash('danger', 'Valor invalido');
+            return $this->redirectToRoute('cadastrar_produto_show');
+        }
 
         $categoria = $this->categoriaRepository->findBy(['id' => $request->get('categoriaId')])[0];
 
         $produto = new Produto();
-        $produto->setNome($nomeProduto);
+        $produto->setNome($nome);
         $produto->setDescricao($request->get('descricao'));
         $produto->setCategoriaId($categoria);
         $produto->setQuantidadeInicial($request->get('quantidade'));

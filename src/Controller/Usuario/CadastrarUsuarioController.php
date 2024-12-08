@@ -15,7 +15,7 @@ class CadastrarUsuarioController extends AbstractController
 {
     public function __construct(
         private UsuarioRepository $usuarioRepository
-    ){}
+    ) {}
 
     #[Route('/usuario/cadastrar/show', name: 'cadastrar_usuario_show')]
     public function index(): Response
@@ -31,21 +31,21 @@ class CadastrarUsuarioController extends AbstractController
 
         if (!isset($data['_password'], $data['_username'])) {
             $this->addFlash('error', 'Os dados do formulário estão incompletos.');
-            return $this->redirectToRoute('cadastrar_usuario'); 
+            return $this->redirectToRoute('cadastrar_usuario');
         }
-        
+
         $usuarioExistente = $this->usuarioRepository->findOneBy(['email' => $data['_username']]);
-    if ($usuarioExistente) {
-        $this->addFlash('error', 'O e-mail informado já está cadastrado.');
-        return $this->redirectToRoute('cadastrar_usuario_show'); 
-    }
+        if ($usuarioExistente) {
+            $this->addFlash('error', 'O e-mail informado já está cadastrado.');
+            return $this->redirectToRoute('cadastrar_usuario_show');
+        }
 
         $senha_hash = $userPasswordHasherInterface->hashPassword($usuario, $data['_password']);
-        $usuario 
+        $usuario
 
-        ->setEmail($data['_username']) 
-        ->setPassword($senha_hash) 
-        ->setRoles(['ROLE_USER']);
+            ->setEmail($data['_username'])
+            ->setPassword($senha_hash)
+            ->setRoles(['ROLE_USER']);
 
         $this->usuarioRepository->salvar($usuario);
 
