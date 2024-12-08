@@ -1,0 +1,55 @@
+{% extends "pagesApp.html.twig" %}
+
+{% block title %}
+    Confirmação de Pagamento 
+{% endblock %}
+{% block addStylesheet %}
+    <link rel="stylesheet" href="{{ asset('styles/novaVenda.css') }}">
+{% endblock %}
+{% block content %}
+    <main class="py-5">
+        <div class="cart-header container">
+            <div class="cart-icon">🛒</div>
+            <div class="cart-title">Meu carrinho</div>
+        </div>
+        <div class="container d-flex justify-content-between flex-wrap">
+            <section class="tabela-confirmarPay">
+                <div class="table-responsive tes">
+                    <table class="table-striped mb-5 mt-2">
+                        <thead class="tabela-topo">
+                            <tr class="tabela-topo">
+                                <th scope="col">Produto</th>
+                                <th scope="col">Quantidade</th>
+                                <th scope="col">Preço Unitário</th>
+                                <th scope="col">Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody  id="tabela">
+                            {% for item in carrinho.items%}
+                                <td>{{ item.produto.nome }}</td>
+                                <td>{{ item.getQuantidade }}</td> 
+                                <td>R${{ item.produto.valor | number_format(2, ',', '.') }}</td>
+                                <td>R${{ item.valor | number_format(2, ',', '.') }}</td>
+                                <td>
+                                  
+                                </td>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <div class="cart-summary">
+                <div class="cart-summary-title">Resumo do pedido</div>
+                <div class="cart-summary-item">
+                    <span>Total:</span>
+                    <span class="cart-summary-total">$ {{ carrinho.getvalorTotal | number_format(2, ',', '.') }}</span>
+                </div>
+                <a  href="{{ path("confirmarPagamento",{id:carrinho.id})}}" class="btn btn-success">Finalizar compra</a>
+            </div>
+        </div>
+    </main> 
+{% endblock %}
+
+
+

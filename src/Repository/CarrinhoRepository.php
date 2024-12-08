@@ -22,7 +22,7 @@ class CarrinhoRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
         return $carrinho;
     }
-    public function buscarUltimoCarrinhoPendente($cliente): ?Carrinho
+    public function buscarUltimoCarrinhoAbertoPendente($cliente): Carrinho
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.cliente = :cliente')
@@ -35,4 +35,17 @@ class CarrinhoRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function buscarUltimoCarrinhoPendente($cliente): Carrinho
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.cliente = :cliente')
+            ->andWhere('c.finalizado_em IS NULL')  // Carrinho não finalizado
+            ->setParameter('cliente', $cliente)
+            ->orderBy('c.id', 'DESC')  // Busca o mais recente
+            ->setMaxResults(1)  // Apenas 1 resultado
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 }
