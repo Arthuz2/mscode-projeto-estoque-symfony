@@ -15,7 +15,7 @@
         <div class="container d-flex justify-content-between flex-wrap">
             <section class="tabela-confirmarPay">
                 <div class="table-responsive tes">
-                    <table class="table-striped mb-5 mt-2">
+                    <table class="table-striped mb-5 mt-2 ">
                         <thead class="tabela-topo">
                             <tr class="tabela-topo">
                                 <th scope="col">Produto</th>
@@ -25,15 +25,14 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody  id="tabela">
+                        <tbody   id="tabela">
                             {% for item in carrinho.items%}
-                                <td>{{ item.produto.nome }}</td>
-                                <td>{{ item.getQuantidade }}</td> 
-                                <td>R${{ item.produto.valor | number_format(2, ',', '.') }}</td>
-                                <td>R${{ item.valor | number_format(2, ',', '.') }}</td>
-                                <td>
-                                  
-                                </td>
+                                <tr>
+                                    <td>{{ item.produto.nome }}</td>
+                                    <td>{{ item.getQuantidade }}</td> 
+                                    <td>R${{ item.produto.valor | number_format(2, ',', '.') }}</td>
+                                    <td>R${{ item.valor | number_format(2, ',', '.') }}</td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
