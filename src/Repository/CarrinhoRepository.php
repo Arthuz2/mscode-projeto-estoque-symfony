@@ -36,7 +36,7 @@ class CarrinhoRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function buscarUltimoCarrinhoPendente($cliente): Carrinho
+    public function buscarUltimoCarrinhoPendente($cliente): ?Carrinho
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.cliente = :cliente')

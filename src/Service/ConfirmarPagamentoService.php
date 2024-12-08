@@ -7,14 +7,12 @@ use App\Entity\StatusEnum;
 use App\Repository\CarrinhoRepository;
 use Exception;
 
-use function PHPUnit\Framework\throwException;
-
 class ConfirmarPagamentoService 
 {
     public function __construct(
         private CarrinhoRepository $carrinhoRepository,
-    )
-    {
+    ) {
+
     }
 
     public function execute(int $id): Carrinho
@@ -25,6 +23,8 @@ class ConfirmarPagamentoService
 
         $carrinho = $this->carrinhoRepository->findOneBy(['id' => $id]);
         $carrinho->setStatus(StatusEnum::finalizado);
+        $carrinho->updateFinalizadoEm();
+        $carrinho->updateAtualizadoEm();
         return $this->carrinhoRepository->salvar($carrinho);
     }
 }
