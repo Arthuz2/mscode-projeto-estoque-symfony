@@ -28,7 +28,7 @@
                         <tbody   id="tabela">
                             {% for item in carrinho.items%}
                                 <tr>
-                                     <td>{{ item.produto.nome }}</td>
+                                    <td>{{ item.produto.nome }}</td>
                                     <td>{{ item.getQuantidade }}</td> 
                                     <td>R${{ item.produto.valor | number_format(2, ',', '.') }}</td>
                                     <td>R${{ item.valor | number_format(2, ',', '.') }}</td>
