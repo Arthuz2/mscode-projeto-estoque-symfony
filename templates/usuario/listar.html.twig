@@ -29,12 +29,18 @@
                                 <tr>
                                     <th scope="row">{{ usuario.id }}</th>
                                     <td>{{ usuario.email }}</td>
-                                    <td class="col-2 text-nowrap">
+                                   {#  <td class="col-2 text-nowrap">
                                         <a href="{{ path('buscar_usuarios_ativar', {'id': usuario.id}) }}" class="btn btn-secondary btn-sm">
                                             <i class="bi bi-check"></i>
                                         </a>
-                                    </td>
-                                </tr>
+                                    </td> #}
+                                    <td>
+                                       <div class="form-check form-switch">
+                                            <a href="{{ path('buscar_usuarios_ativar', {'id': usuario.id}) }}">
+                                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                                                <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                            </a>
+                                        </div>
                             {% else %}
                                 <tr>
                                     <td colspan="3" class="text-center">Nenhum usuário encontrado.</td>
