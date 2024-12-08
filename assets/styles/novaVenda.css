@@ -256,6 +256,10 @@ td{
     background-color: #218838;
 }
 
+.qt{
+    border: 1px solid #DCDBDB;
+    outline: 0;
+}
 
 @media (max-width:1400px){
     .cart-summary {

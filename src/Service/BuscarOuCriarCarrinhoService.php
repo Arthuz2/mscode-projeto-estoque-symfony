@@ -22,15 +22,13 @@ class BuscarOuCriarCarrinhoService
 
     public function execute(int $id): Carrinho
     {
-        //em abeto , aguardando pagamento , finalizo,
         $cliente = $this->clienteRepository->find($id);
         if (null === $cliente) {
             throw new \Exception("Cliente não encontrado!");
         }
 
         $carrinho = $this->carrinhoRepository->buscarUltimoCarrinhoPendente($cliente);
-       
-        //um carrinho finalizado nao é nulo 
+        
         if (null === $carrinho || $carrinho->getStatus() === StatusEnum::finalizado) {
             $usuario = $this->security->getUser();
             $carrinho = new Carrinho($cliente, $usuario);
