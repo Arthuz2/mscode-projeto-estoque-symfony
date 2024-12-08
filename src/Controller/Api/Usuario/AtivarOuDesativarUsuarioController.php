@@ -15,7 +15,7 @@ class AtivarOuDesativarUsuarioController extends AbstractController
    ) {
     
    }
-
+   
     #[Route('/verificar/ativar/{id}', name: '_verificar_ativar')]
     public function __invoke(int $id): RedirectResponse
     {
