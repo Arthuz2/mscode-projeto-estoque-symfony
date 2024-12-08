@@ -38,4 +38,12 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
         $this->getEntityManager()->persist($usuario);
         $this->getEntityManager()->flush();
     }
+
+    public function toggleStatus(Usuario $usuario): void
+    {
+        $usuario->setStatus(!$usuario->isAtivo());
+
+        $this->getEntityManager()->persist($usuario);
+        $this->getEntityManager()->flush();
+    }
 }
