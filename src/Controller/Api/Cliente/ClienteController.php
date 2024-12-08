@@ -2,8 +2,6 @@
 
 namespace App\Controller\Api\Cliente;
 
-use App\Entity\Cliente;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Service\BuscarClientesAtivosService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,27 +23,4 @@ class ClienteController extends AbstractController
             );
         }
     }
-
-    #[Route('/api/clientes/ativar/{id}', name: 'buscar_clientes_ativar')]
-    public function ativarOuDesativar(int $id, EntityManagerInterface $entityManager): Response
-    {
-        $cliente = $entityManager->getRepository(Cliente::class)->find($id);
-    
-        if (!$cliente) {
-            throw $this->createNotFoundException('Cliente não encontrado');
-        }
-        
-        if (!$cliente->isAtivo()){
-            $this->addFlash('success', 'O cliente foi ativado.');
-            $cliente->setStatus(true);
-        }
-        else{
-            $this->addFlash('success', 'O cliente foi desativado.');
-            $cliente->setStatus(false);
-        }
-
-        $entityManager->flush();
-    
-        return $this->redirectToRoute('listar_clientes');
-    }
-}    
+}
