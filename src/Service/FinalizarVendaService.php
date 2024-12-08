@@ -24,7 +24,7 @@ class FinalizarVendaService
     public function execute(int $clienteId, array $produtos): Carrinho
     {
         $cliente = $this->clienteRepository->find($clienteId);
-        $carrinho = $this->carrinhoRepository->buscarUltimoCarrinhoPendente(["cliente" => $cliente]);
+        $carrinho = $this->carrinhoRepository->buscarUltimoCarrinhoAbertoPendente(["cliente" => $cliente]);
 
 
         if (null === $carrinho) {

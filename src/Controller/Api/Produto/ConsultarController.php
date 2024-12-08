@@ -24,24 +24,12 @@ class ConsultarController extends AbstractController
     ): JsonResponse
     {
         try {
-            $produtos = $produtoRepository->findAll();
-            $carrinho = $carrinhoRepository->find($carrinhoId);
-            $itensNocarrinho = $itemRepository->findBy(["carrinho" => $carrinho]);
-
-            $produtosNoCarrinho = array_map(
-                fn (Item $item) => $item->getProduto()->getId(),
-                $itensNocarrinho
-            );
-           
-            $produtoFiltro = array_filter(
-                $produtos,
-                fn (Produto $produto) => !in_array($produto->getId(), $produtosNoCarrinho),
-            );
+            $produtos = $produtoRepository->buscarTodosComEstoque();
 
             if(!$produtos){
                 return $this->json(['error' => 'Nenhum produto encontrado'], 404);
             }
-            return new JsonResponse($serializer->serialize($produtoFiltro, 'json', ['groups' => 'produto']));
+            return new JsonResponse($serializer->serialize($produtos, 'json', ['groups' => 'produto']));
         } catch (\Exception $e) {
             return new JsonResponse(['error' => 'erro na consulta de produtos'], 500);
         }

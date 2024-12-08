@@ -144,9 +144,17 @@
                         })
                         .then(data => {
                             carrinhoId = data.carrinho.id;
-                            displayCarrinhoInfo(data.carrinho);
-                            preencherCards(data.carrinho); 
-                            carregarProdutos();
+                            const carrinhoStatus = data.carrinho.status;
+                            console.log(carrinhoStatus);
+                            if(carrinhoStatus === "aguardando pagamento"){
+                                window.location.href = "{{ path('confirmarPagamentoShow', {carrinho: 'CARRINHO_ID' }) }}"
+                                .replace('CARRINHO_ID',carrinhoId);
+                            }else{
+                                displayCarrinhoInfo(data.carrinho);
+                                preencherCards(data.carrinho); 
+                                carregarProdutos();
+                                console.log("chowgou fora")
+                            }
                         })
                         .catch(response => response.json().then(data => alert(data.error)))
                 }
@@ -298,7 +306,14 @@
                     },
                     body: JSON.stringify(dados)
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "{{ path('confirmarPagamentoShow', {carrinho: 'CARRINHO_ID' }) }}"
+                            .replace('CARRINHO_ID',carrinhoId);
+                    }
+
+                    response.json()
+                })
                 .then(data => {
                     alert(data.message || data.error);
                 })

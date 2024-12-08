@@ -32,4 +32,13 @@ class ProdutoRepository extends ServiceEntityRepository
         $this->getEntityManager()->remove($produto);
         $this->getEntityManager()->flush();
     }
+
+    /** @return Produto[] */
+    public function buscarTodosComEstoque(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.quantidade_disponivel > 0')
+            ->getQuery()
+            ->getResult();
+    }
 }
