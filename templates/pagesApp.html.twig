@@ -54,6 +54,19 @@
 								</li>
 							</ul>
 						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								Listar
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a class="dropdown-item" href="{{ path('listar_usuarios') }}">Usuários</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('listar_clientes') }}">Clientes</a>
+								</li>
+							</ul>
+						</li>
 						<li class="nav-item">
 							<a href="{{ path('login') }}" class="btn btn-outline-danger m-0 ms-4 exit-button" aria-current="page">Sair</a>
 						</li>

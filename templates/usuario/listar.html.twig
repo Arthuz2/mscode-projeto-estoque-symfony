@@ -30,7 +30,7 @@
                                     <th scope="row">{{ usuario.id }}</th>
                                     <td>{{ usuario.email }}</td>
                                     <td class="col-2 text-nowrap">
-                                        <a class="btn btn-secondary btn-sm">
+                                        <a href="{{ path('buscar_usuarios_ativar', {'id': usuario.id}) }}" class="btn btn-secondary btn-sm">
                                             <i class="bi bi-check"></i>
                                         </a>
                                     </td>
