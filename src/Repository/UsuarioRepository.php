@@ -27,23 +27,18 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
         if (!$user instanceof Usuario) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
-
         $user->setPassword($newHashedPassword);
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
+        $this->salvar($user);
     }
 
     public function salvar(Usuario $usuario): void
     {
-        $this->getEntityManager()->persist($usuario);
-        $this->getEntityManager()->flush();
+        $this->salvar($usuario);
     }
 
     public function toggleStatus(Usuario $usuario): void
     {
         $usuario->setStatus(!$usuario->isAtivo());
-
-        $this->getEntityManager()->persist($usuario);
-        $this->getEntityManager()->flush();
+        $this->salvar($usuario);
     }
 }

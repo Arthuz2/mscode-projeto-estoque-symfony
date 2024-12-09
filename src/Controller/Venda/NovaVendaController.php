@@ -13,8 +13,8 @@ class NovaVendaController extends DefaultController
 {
     public function __construct(
         private CarrinhoRepository $carrinhoRepository,
-
     ){
+        
     }
 
     #[Route('/', name: 'nova_venda')]
