@@ -115,6 +115,13 @@
                     option.textContent = cliente.nome;
                     clienteSelect.appendChild(option);
                 });
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const clienteId = urlParams.get('clienteId');
+                if (clienteId) {
+                    clienteSelect.value = clienteId;
+                    clienteSelect.dispatchEvent(new Event('change'));
+                }
             } catch (error) {
                 console.error('Erro ao carregar clientes:', error);
             }

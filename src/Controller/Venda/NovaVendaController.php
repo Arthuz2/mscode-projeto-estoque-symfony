@@ -11,13 +11,17 @@ class NovaVendaController extends AbstractController
 {
     public function __construct(
         private CarrinhoRepository $carrinhoRepository,
-    ){
+    ) {
+
     }
 
-    #[Route('/', name: 'nova_venda')]
-    public function novaVenda(): Response
+    #[Route('/{clienteId?}', name: 'nova_venda')]
+    public function novaVenda(?string $clienteId = null): Response
     {
         $carrinhos = $this->carrinhoRepository->findAll();
-        return $this->render('venda/novaVenda.html.twig', ["carrinhos" => $carrinhos]);
+        return $this->render('venda/novaVenda.html.twig', [
+            "carrinhos" => $carrinhos,
+            "clienteId" => $clienteId,
+        ]);
     }
 }

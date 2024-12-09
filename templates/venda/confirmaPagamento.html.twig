@@ -44,7 +44,7 @@
                     <span>Total:</span>
                     <span class="cart-summary-total">$ {{ carrinho.getvalorTotal | number_format(2, ',', '.') }}</span>
                 </div>
-                <a  href="{{ path("confirmarPagamento",{id:carrinho.id})}}" class="btn btn-success">Finalizar compra</a>
+                <a  href="{{ path("confirmarPagamento",{id:carrinho.id})}}" class="btn btn-success" onclick='reloadPageNovaVenda()'>Finalizar compra</a>
             </div>
         </div>
     </main> 

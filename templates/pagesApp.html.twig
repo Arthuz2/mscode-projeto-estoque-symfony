@@ -34,7 +34,7 @@
 							</a>
 							<ul class="dropdown-menu">
 								<li>
-									<a class="dropdown-item" href="/produtos">Estoque</a>
+									<a class="dropdown-item" href="/produtos" onclick='reloadPageProdutos()'>Estoque</a>
 								</li>
 								<li>
 									<a class="dropdown-item" href="/categorias">Categorias</a>
@@ -72,12 +72,17 @@
 		function redirect(path) {
       window.location.href = path;
     }
-		function reloadPageNovaVenda() {
-			redirect("/");
+		function reloadPageNovaVenda(clienteId = null) {
+			if (clienteId){
+				return redirect(`/?clienteId=${clienteId}`);
+			}
+			return redirect("/");
 		}
 		function reloadPageListaVendas() {
 			redirect("/vendas");
 		}
+		function reloadPageProdutos() {
+			redirect("/produtos");
+		}
 	</script>
-	
 {% endblock %}
