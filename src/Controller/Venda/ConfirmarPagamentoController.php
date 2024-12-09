@@ -20,7 +20,7 @@ class ConfirmarPagamentoController extends AbstractController
     {
         try{
             $confirmarPagamentoService->execute(id: $id);
-            return $this->redirectToRoute("nova_venda");
+            return $this->redirect("venda/novaVenda.html.twig");
         }catch(\Throwable $e){
             return  $this->redirectToRoute("confirmarPagamentoShow");
         }
