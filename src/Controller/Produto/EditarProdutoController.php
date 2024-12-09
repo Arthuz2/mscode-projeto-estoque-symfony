@@ -41,7 +41,7 @@ class EditarProdutoController extends AbstractController
             $this->addFlash('danger', 'Nome deve ter no máximo 100 caracteres!');
             return $this->redirectToRoute('editar_produto_show',  ['id' => $id]);
         }
-
+        
         $produtoExiste = $this->produtoRepository->findOneBy(['nome' => $nome]);
         if ($produtoExiste && $produtoExiste->getId() != $id) {
             $this->addFlash('danger', 'Já Existe um produto com este nome!');

@@ -7,17 +7,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/cliente/ativar', name: 'toggle')]
+#[Route('/cliente/ativar', name: 'cliente_toggle')]
 class AtivarOuDesativarClienteController extends AbstractController
 {
-    private ClienteRepository $clienteRepository;
+    public function __construct(
+        private ClienteRepository $clienteRepository
+   ) {
 
-    public function __construct(ClienteRepository $clienteRepository)
-    {
-        $this->clienteRepository = $clienteRepository;
-    }
+   }
 
-    
     #[Route('/verificar/ativar/{id}', name: '_verificar_ativar')]
     public function __invoke(int $id): RedirectResponse
     {

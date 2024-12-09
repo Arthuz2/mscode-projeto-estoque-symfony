@@ -113,7 +113,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Jso
         return $this;
     }
 
-    public function taAtivo(): bool
+    public function isAtivo(): bool
     {
         return $this->ativo;
     }
