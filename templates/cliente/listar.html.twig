@@ -36,7 +36,7 @@
                                                 id="flexSwitchCheckChecked{{ cliente.id }}"
                                                 role="switch" 
                                                 {% if cliente.isAtivo %} checked{% endif %}
-                                                onchange="window.location.href = '{{ path('toggle_verificar_ativar', {'id': cliente.id}) }}'">
+                                                onchange="window.location.href = '{{ path('cliente_toggle_verificar_ativar', {'id': cliente.id}) }}'">
                                             <label class="form-check-label" for="flexSwitchCheckChecked{{ cliente.id }}">
                                                 {% if cliente.isAtivo %}
                                                     Desativar

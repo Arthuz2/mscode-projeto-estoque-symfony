@@ -29,29 +29,22 @@ class UsuarioController extends AbstractController
     #[Route('/usuario/ativar/{id}', name: '_ativar')]
     public function ativarOuDesativar(int $id, EntityManagerInterface $entityManager): Response
     {
-        // Carrega o usuário com o ID fornecido
         $usuario = $entityManager->getRepository(Usuario::class)->find($id);
 
-        // Caso o usuário não exista, lança uma exceção
         if (!$usuario) {
             throw $this->createNotFoundException('Usuário não encontrado');
         }
 
-        // Verifica o status atual do usuário e altera o estado
-        if ($usuario->taAtivo()) {
-            // Se o usuário estiver ativo, desativa-o
+        if ($usuario->isAtivo()) {
             $this->addFlash('success', 'O usuário foi desativado.');
-            $usuario->setStatus(false); // Marca como desativado
+            $usuario->setStatus(false); 
         } else {
-            // Se o usuário não estiver ativo, ativa-o
             $this->addFlash('success', 'O usuário foi ativado.');
-            $usuario->setStatus(true); // Marca como ativo
+            $usuario->setStatus(true); 
         }
 
-        // Persiste a mudança no banco de dados
         $entityManager->flush();
 
-        // Redireciona para a página de listagem de usuários
         return $this->redirectToRoute('listar_usuarios');
     }
 }

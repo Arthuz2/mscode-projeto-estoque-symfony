@@ -35,10 +35,10 @@
                                                 type="checkbox" 
                                                 id="flexSwitchCheckChecked{{ usuario.id }}"
                                                 role="switch" 
-                                                {% if usuario.TaAtivo %} checked{% endif %}
+                                                {% if usuario.isAtivo %} checked{% endif %}
                                                 onchange="window.location.href = '{{ path('buscar_usuarios_ativar', {'id': usuario.id}) }}'">
                                             <label class="form-check-label" for="flexSwitchCheckChecked{{ usuario.id }}">
-                                                {% if usuario.TaAtivo %}
+                                                {% if usuario.isAtivo %}
                                                     Desativar
                                                 {% else %}
                                                     Ativar
