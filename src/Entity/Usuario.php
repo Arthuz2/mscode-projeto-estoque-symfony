@@ -156,6 +156,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Jso
         return [
             'id' => $this->id,
             'email' => $this->email,
+            "ativo" => $this->ativo,
         ];
     }
 
