@@ -48,10 +48,10 @@ class EditarProdutoController extends AbstractController
             $this->redirectToRoute('editar_produto_show', ['id' => $id]);
         }
 
-        if(preg_match('/[0-9]/', $nome) || empty(trim($nome))){
-            $this->addFlash('danger', 'Nome invalido');
-            return $this->redirectToRoute('editar_produto_show', ['id' => $id]);
-        }
+        if (ctype_digit(trim($nome)) || empty(trim($nome))) {
+            $this->addFlash('danger', 'Nome inválido');
+            return $this->redirectToRoute('editar_produto_show');
+        }        
 
         if($valor <= 0 || $valor == ''){
             $this->addFlash('danger', 'Valor invalido');

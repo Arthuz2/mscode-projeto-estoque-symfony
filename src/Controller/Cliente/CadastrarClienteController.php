@@ -34,25 +34,25 @@ class CadastrarClienteController extends AbstractController
 
 
         if (null === $nome || null === $cpf) {
-            $this->addFlash('error', 'Os dados do formulário estão incompletos.');
+            $this->addFlash('danger', 'Os dados do formulário estão incompletos.');
             return $this->redirectToRoute('cadastrar_cliente_show');
         }
         if (empty(trim($nome))) {
-            $this->addFlash('error', 'O nome não pode ser vazio ou consistir apenas de espaços em branco.');
+            $this->addFlash('danger', 'O nome não pode ser vazio ou consistir apenas de espaços em branco.');
             return $this->redirectToRoute('cadastrar_cliente_show');
         }
         if (!preg_match('/^[a-zA-ZÀ-ÿ\s]+$/', $nome)) {
-            $this->addFlash('error', 'O nome deve conter apenas letras e espaços.');
+            $this->addFlash('danger', 'O nome deve conter apenas letras e espaços.');
             return $this->redirectToRoute('cadastrar_cliente_show');
         }
         if (!$this->validarCpfService->execute($cpf)) {
-            $this->addFlash('error', 'O CPF informado é inválido.');
+            $this->addFlash('danger', 'O CPF informado é inválido.');
             return $this->redirectToRoute('cadastrar_cliente_show');
         }
 
         $clienteExistente = $this->clienteRepository->findOneBy(['cpf' => $cpf]);
         if ($clienteExistente) {
-            $this->addFlash('error', 'O CPF informado já está cadastrado.');
+            $this->addFlash('danger', 'O CPF informado já está cadastrado.');
             return $this->redirectToRoute('cadastrar_cliente_show');
         }
 

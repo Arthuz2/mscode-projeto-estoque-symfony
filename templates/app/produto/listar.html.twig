@@ -41,7 +41,8 @@
 										<button 
 											class="btn btn-light btn-sm add-estoque-btn" 
 											data-id="{{ produto.id }}"
-											data-nome="{{ produto.nome }}">
+											data-nome="{{ produto.nome }}"
+											data-quantidade="{{ produto.getQuantidadeDisponivel }}">
 											<i class="bi bi-plus"></i>
 										</button>
 										<a href="/produto/editar/{{ produto.id }}" class="btn btn-secondary btn-sm">
@@ -61,6 +62,7 @@
 		<div class="popup-content">
 			<h3>Adicionar Estoque</h3>
 			<p id="popupProdutoNome"></p>
+			<p id="popupProdutoQuantidade"></p>
 			<input type="number" id="quantidadeInput" class="form-control" placeholder="Quantidade" min="1">
 			<div class="popup-buttons">
 				<button id="confirmarAddEstoque" class="btn btn-success">Confirmar</button>
@@ -79,6 +81,7 @@
 			const confirmarAddEstoque = document.getElementById('confirmarAddEstoque');
 			const quantidadeInput = document.getElementById('quantidadeInput');
 			const popupProdutoNome = document.getElementById('popupProdutoNome');
+			const popupPrudutoQuantidade = document.getElementById("popupProdutoQuantidade")
 
 			let produtoId = null;
 
@@ -86,7 +89,9 @@
 				button.addEventListener('click', (e) => {
 					produtoId = button.getAttribute('data-id') || null;
 					const nome = button.getAttribute('data-nome');
+					const quantidade = button.getAttribute('data-quantidade');
 					popupProdutoNome.innerText = `Produto: ${nome}`;
+					popupProdutoQuantidade.innerText = `Quantidade: ${quantidade}`;
 					popup.style.display = 'flex';
 				});
 			});

@@ -12,14 +12,12 @@ class AtivarOuDesativarClienteController extends AbstractController
 {
     public function __construct(
         private ClienteRepository $clienteRepository
-   ) {
-
-   }
+    ) {}
 
     #[Route('/verificar/ativar/{id}', name: '_verificar_ativar')]
     public function __invoke(int $id): RedirectResponse
     {
-    
+
         $cliente = $this->clienteRepository->find($id);
 
         if (!$cliente) {

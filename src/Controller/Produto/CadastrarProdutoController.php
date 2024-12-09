@@ -45,10 +45,10 @@ class CadastrarProdutoController extends AbstractController
             return $this->redirectToRoute('cadastrar_produto_show');
         }
 
-        if(preg_match('/[0-9]/', $nome) || empty(trim($nome))){
-            $this->addFlash('danger', 'Nome invalido');
+        if (ctype_digit(trim($nome)) || empty(trim($nome))) {
+            $this->addFlash('danger', 'Nome inválido');
             return $this->redirectToRoute('cadastrar_produto_show');
-        }
+        }        
 
         if($quantidade <= 0 || $quantidade == ''){
             $this->addFlash('danger', 'Quantidade invalida');
