@@ -25,7 +25,7 @@ ENV APP_DEBUG=0
 
 # Instale dependências do Composer como o usuário padrão (www-data)
 USER www-data
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --verbose
 
 # Configure cache e assets
 RUN php bin/console cache:clear --env=prod && php bin/console cache:warmup --env=prod
