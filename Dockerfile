@@ -20,13 +20,15 @@ COPY . /var/www
 RUN chown -R www-data:www-data /var/www && chmod -R 775 /var/www
 
 # Configure variáveis de ambiente obrigatórias
-ENV APP_ENV=dev
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
 
 # Instale dependências do Composer como o usuário padrão (www-data)
 USER www-data
-RUN composer install
+RUN composer install --no-dev --optimize-autoloader
 
 # Configure cache e assets
+RUN php bin/console cache:clear --env=prod && php bin/console cache:warmup --env=prod
 RUN php bin/console assets:install public
 
 # Exponha a porta 8080
