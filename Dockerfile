@@ -9,21 +9,16 @@ RUN apt-get update && apt-get install -y \
 # Instale o Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Crie o diretório de trabalho e ajuste permissões
+# Configure o diretório de trabalho
 WORKDIR /var/www
-RUN chown -R www-data:www-data /var/www && chmod -R 775 /var/www
 
-# Copie os arquivos do projeto para o container
+# Copie os arquivos do projeto
 COPY . /var/www
 
-# Ajuste permissões para o diretório do projeto
+# Ajuste as permissões do diretório
 RUN chown -R www-data:www-data /var/www && chmod -R 775 /var/www
 
-# Configure variáveis de ambiente obrigatórias
-ENV APP_ENV=prod
-ENV APP_DEBUG=0
-
-# Instale dependências do Composer como o usuário padrão (www-data)
+# Instale dependências do Composer como usuário padrão (www-data)
 USER www-data
 RUN composer install --no-dev --optimize-autoloader --verbose
 
